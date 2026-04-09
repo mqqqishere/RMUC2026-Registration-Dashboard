@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -33,6 +33,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -43,6 +46,23 @@ jobs:
 
       - name: Build dashboard docs
         run: python scripts/build_dashboard.py
+
+      - name: Commit refreshed data
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json docs/data.csv
+          if git diff --cached --quiet; then
+            echo "No data change."
+            exit 0
+          fi
+          git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+          for i in 1 2 3; do
+            if git push; then exit 0; fi
+            git pull --rebase --autostash
+          done
+          exit 1
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

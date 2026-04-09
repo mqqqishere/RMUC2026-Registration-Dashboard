@@ -1,6 +1,6 @@
 {
-  "updated_at_utc": "2026-04-09T14:10:30Z",
-  "updated_at_cst": "2026-04-09 22:10:30",
+  "updated_at_utc": "2026-04-09T14:46:26Z",
+  "updated_at_cst": "2026-04-09 22:46:26",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
@@ -8,26 +8,26 @@
   "title": "RMUC 2026 晋级推演台",
   "capacity": 32,
   "total_teams": 96,
-  "submitted_teams": 87,
+  "submitted_teams": 88,
   "ranks_covered": 96,
   "hosts_seen": 10,
-  "transferred_count": 10,
+  "transferred_count": 9,
   "adjustment_order": [
     "北部",
     "东部",
     "南部"
   ],
   "submission": {
-    "submitted_count": 87,
+    "submitted_count": 88,
     "roster_total": 96,
-    "estimated_count": 9
+    "estimated_count": 8
   },
   "refresh_meta": {
     "status": "success",
     "status_label": "实时抓取成功",
-    "message": "本页展示的是 2026-04-09 22:10:30 的最新轻流刷新结果，当前抓到 87 支已填报学校。",
+    "message": "本页展示的是 2026-04-09 22:46:26 的最新轻流刷新结果，当前抓到 88 支已填报学校。",
     "source": "qingflow_live",
-    "live_submitted_count": 87
+    "live_submitted_count": 88
   },
   "regions": [
     {
@@ -35,8 +35,8 @@
       "name": "南部赛区",
       "city": "长沙市",
       "count": 32,
-      "visible_count": 24,
-      "hidden_count": 8,
+      "visible_count": 25,
+      "hidden_count": 7,
       "counts": {
         "host": 2,
         "volunteer": 30,
@@ -423,6 +423,41 @@
           "boundary_labels": [
             "复活起点"
           ]
+        },
+        {
+          "school": "桂林理工大学",
+          "team": "群星",
+          "city": "桂林市",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "南部",
+          "assigned": "南部",
+          "dist_km": 420,
+          "rank": 69,
+          "points": 8.25,
+          "team_type": "甲级",
+          "is_host": false,
+          "full_form_ranking": 58,
+          "detail_2025": "division",
+          "detail_2025_cn": "分区赛",
+          "rmul_2026_top4": "runner_up",
+          "rmul_2026_top4_cn": "亚军",
+          "strength_score": 23.851,
+          "strength_components": {
+            "rmul_bonus": 15.5,
+            "full_form_score": 5.381,
+            "history_bonus": 0.0,
+            "points_score": 2.97
+          },
+          "strength_rank_global": 42,
+          "strength_rank_region": 12,
+          "qualification_status": "revival",
+          "qualification_label": "复活赛",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
         },
         {
           "school": "仲恺农业工程学院",
@@ -953,41 +988,6 @@
           "strength_rank_region": 8,
           "qualification_status": "national",
           "qualification_label": "国赛",
-          "volunteer_source": "nearest_estimate",
-          "volunteer_source_label": "就近估算",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
-          "school": "桂林理工大学",
-          "team": "群星",
-          "city": "桂林市",
-          "status": "volunteer",
-          "status_cn": "志愿",
-          "original_volunteer": "南部",
-          "assigned": "南部",
-          "dist_km": 420,
-          "rank": 69,
-          "points": 8.25,
-          "team_type": "甲级",
-          "is_host": false,
-          "full_form_ranking": 58,
-          "detail_2025": "division",
-          "detail_2025_cn": "分区赛",
-          "rmul_2026_top4": "runner_up",
-          "rmul_2026_top4_cn": "亚军",
-          "strength_score": 23.851,
-          "strength_components": {
-            "rmul_bonus": 15.5,
-            "full_form_score": 5.381,
-            "history_bonus": 0.0,
-            "points_score": 2.97
-          },
-          "strength_rank_global": 42,
-          "strength_rank_region": 12,
-          "qualification_status": "revival",
-          "qualification_label": "复活赛",
           "volunteer_source": "nearest_estimate",
           "volunteer_source_label": "就近估算",
           "is_submitted": false,
@@ -2391,8 +2391,8 @@
       "hidden_count": 0,
       "counts": {
         "host": 3,
-        "volunteer": 20,
-        "transfer": 9
+        "volunteer": 21,
+        "transfer": 8
       },
       "national_spots": 9,
       "revival_spots": 6,
@@ -3208,9 +3208,9 @@
           "school": "天津大学",
           "team": "北洋机甲",
           "city": "天津市",
-          "status": "transfer",
-          "status_cn": "调剂",
-          "original_volunteer": "南部",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "北部",
           "assigned": "北部",
           "dist_km": 579,
           "rank": 46,
@@ -5263,9 +5263,9 @@
       "strength_rank_region": 12,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
@@ -5732,10 +5732,10 @@
       "team": "北洋机甲",
       "city": "天津市",
       "team_type": "甲级",
-      "volunteer": "南部",
+      "volunteer": "北部",
       "assigned": "北部",
-      "status": "transfer",
-      "status_cn": "调剂",
+      "status": "volunteer",
+      "status_cn": "志愿",
       "rank": 46,
       "points": 10.86,
       "full_form_ranking": 63,
@@ -9153,9 +9153,9 @@
       "strength_rank_region": 12,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
@@ -9622,10 +9622,10 @@
       "team": "北洋机甲",
       "city": "天津市",
       "team_type": "甲级",
-      "volunteer": "南部",
+      "volunteer": "北部",
       "assigned": "北部",
-      "status": "transfer",
-      "status_cn": "调剂",
+      "status": "volunteer",
+      "status_cn": "志愿",
       "rank": 46,
       "points": 10.86,
       "full_form_ranking": 63,
@@ -11555,12 +11555,12 @@
       "strength_rank_region": 31
     },
     "observed_state": {
-      "submitted_count": 87,
+      "submitted_count": 88,
       "roster_total": 96,
       "submitted_by_region": {
         "南部": 26,
         "东部": 38,
-        "北部": 23
+        "北部": 24
       },
       "projected_by_region": {
         "南部": 32,
