@@ -1,6 +1,6 @@
 {
-  "updated_at_utc": "2026-04-09T14:46:26Z",
-  "updated_at_cst": "2026-04-09 22:46:26",
+  "updated_at_utc": "2026-04-09T14:49:20Z",
+  "updated_at_cst": "2026-04-09 22:49:20",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
@@ -25,7 +25,7 @@
   "refresh_meta": {
     "status": "success",
     "status_label": "实时抓取成功",
-    "message": "本页展示的是 2026-04-09 22:46:26 的最新轻流刷新结果，当前抓到 88 支已填报学校。",
+    "message": "本页展示的是 2026-04-09 22:49:20 的最新轻流刷新结果，当前抓到 88 支已填报学校。",
     "source": "qingflow_live",
     "live_submitted_count": 88
   },
