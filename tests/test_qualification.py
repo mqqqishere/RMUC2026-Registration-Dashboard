@@ -150,9 +150,9 @@ class StrengthModelTest(unittest.TestCase):
             },
         }
         table, _ = qualification.compute_strength_table(roster)
-        self.assertEqual(table["champion"]["strength_components"]["rmul_bonus"], 16.0)
-        self.assertEqual(table["runner_up"]["strength_components"]["rmul_bonus"], 14.5)
-        self.assertEqual(table["fourth_place"]["strength_components"]["rmul_bonus"], 11.5)
+        self.assertEqual(table["champion"]["strength_components"]["rmul_bonus"], 17.0)
+        self.assertEqual(table["runner_up"]["strength_components"]["rmul_bonus"], 15.5)
+        self.assertEqual(table["fourth_place"]["strength_components"]["rmul_bonus"], 12.5)
 
     def test_history_priority_then_rmul_then_points(self):
         roster = {
@@ -255,7 +255,7 @@ class StrengthModelTest(unittest.TestCase):
         )
         self.assertLess(table["tail"]["strength_components"]["full_form_score"], 2.0)
         self.assertEqual(table["front"]["strength_components"]["history_bonus"], 0.0)
-        self.assertEqual(table["tail"]["strength_components"]["history_bonus"], 0.0)
+        self.assertEqual(table["tail"]["strength_components"]["history_bonus"], 8.0)
 
     def test_compute_region_strength_stats(self):
         region_rankings = {

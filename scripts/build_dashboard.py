@@ -29,6 +29,7 @@ sys.path.insert(0, ROOT)
 import allocator         # noqa: E402
 import qualification     # noqa: E402
 import shark_decision    # noqa: E402
+import swiss_simulation  # noqa: E402
 
 BOARD_URL = "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02"
 ANNOUNCEMENT_URL = (
@@ -92,6 +93,7 @@ def _base_payload(fetch_error: str | None = None) -> dict:
             ),
         },
         "shark_decision": None,
+        "swiss_simulation": None,
         "fetch_error": fetch_error,
     }
 
@@ -377,6 +379,16 @@ def build_payload() -> dict:
         distances,
         roster=roster,
         strength_info=strength_info,
+    )
+    payload["swiss_simulation"] = swiss_simulation.build_swiss_simulation(
+        result.regions,
+        strength_info,
+        roster,
+        panel["national_by_region"],
+        panel["revival_by_region"],
+        updated_at_utc=payload["updated_at_utc"],
+        updated_at_cst=payload["updated_at_cst"],
+        default_school=shark_decision.SHARK_SCHOOL,
     )
     return payload
 

@@ -120,12 +120,16 @@ class DashboardPayloadTest(unittest.TestCase):
         self.assertIn("strength_ranking", payload)
         self.assertIn("advancement_panel", payload)
         self.assertIn("shark_decision", payload)
+        self.assertIn("swiss_simulation", payload)
         self.assertIsNotNone(payload["shark_decision"])
+        self.assertIsNotNone(payload["swiss_simulation"])
         self.assertEqual(
             [option["shark_volunteer"] for option in payload["shark_decision"]["options"]],
             list(allocator.REGIONS),
         )
         self.assertNotIn("sensitivity", payload["shark_decision"])
+        self.assertEqual(payload["swiss_simulation"]["default_school"], shark_decision.SHARK_SCHOOL)
+        self.assertEqual(len(payload["swiss_simulation"]["schools"]), len(payload["teams"]))
 
 
 class FrontendTemplateSmokeTest(unittest.TestCase):
@@ -139,6 +143,10 @@ class FrontendTemplateSmokeTest(unittest.TestCase):
         self.assertIn("renderSharkDecision(data);", html)
         self.assertNotIn("decision.sensitivity.length", html)
         self.assertNotIn("情景矩阵", html)
+        self.assertIn('data-tab="swiss-simulation"', html)
+        self.assertIn('id="panel-swiss-simulation"', html)
+        self.assertIn("function renderSwissSimulation(data)", html)
+        self.assertIn("renderSwissSimulation(data);", html)
 
 
 if __name__ == "__main__":

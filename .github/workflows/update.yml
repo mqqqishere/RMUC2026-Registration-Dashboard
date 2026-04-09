@@ -9,6 +9,7 @@ on:
     paths:
       - "allocator.py"
       - "qualification.py"
+      - "swiss_simulation.py"
       - "qingflow.py"
       - "distances.csv"
       - "ranks.csv"

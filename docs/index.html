@@ -218,7 +218,8 @@ h1 {
 #panel-advancement.active,
 #panel-strength.active,
 #panel-region-strength.active,
-#panel-shark-decision.active {
+#panel-shark-decision.active,
+#panel-swiss-simulation.active {
   display: grid;
   gap: 10px;
   overflow: hidden;
@@ -231,6 +232,9 @@ h1 {
   grid-template-rows: auto 1fr;
 }
 #panel-shark-decision.active {
+  grid-template-rows: auto;
+}
+#panel-swiss-simulation.active {
   grid-template-rows: auto;
 }
 .banner,
@@ -976,6 +980,169 @@ tr.unsubmitted td { color: var(--muted); }
   border-top: 1px solid var(--line);
   padding-top: 10px;
 }
+.sim-stage {
+  display: grid;
+  gap: 10px;
+}
+.sim-overview,
+.sim-detail-card,
+.sim-bubble-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+}
+.sim-overview {
+  padding: 14px 16px;
+  display: grid;
+  gap: 12px;
+}
+.sim-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sim-head h2,
+.sim-detail-card h3,
+.sim-bubble-card h3 {
+  margin: 0 0 4px;
+}
+.sim-head p,
+.sim-detail-card p,
+.sim-bubble-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.sim-control-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sim-select-wrap {
+  display: grid;
+  gap: 4px;
+  min-width: min(420px, 100%);
+}
+.sim-select-wrap label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sim-select {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+.sim-detail-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 10px;
+}
+.sim-detail-card,
+.sim-bubble-card {
+  padding: 14px;
+}
+.sim-profile-grid,
+.sim-prob-grid,
+.sim-stage-list,
+.sim-bubble-list {
+  display: grid;
+  gap: 8px;
+}
+.sim-profile-grid,
+.sim-prob-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.sim-stat {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 11px;
+  background: rgba(255, 255, 255, 0.86);
+}
+.sim-stat .k {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sim-stat .v {
+  display: block;
+  margin-top: 6px;
+  font-size: 21px;
+  line-height: 1;
+  font-weight: 800;
+}
+.sim-stat .hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.sim-stage-list {
+  margin-top: 12px;
+}
+.sim-stage-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+.sim-stage-row .label {
+  color: var(--muted);
+}
+.sim-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(23, 32, 51, 0.08);
+  overflow: hidden;
+}
+.sim-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(34, 86, 200, 0.5), rgba(34, 86, 200, 0.92));
+}
+.sim-bubble-list {
+  margin-top: 12px;
+}
+.sim-bubble-row {
+  display: grid;
+  grid-template-columns: 84px 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 11px;
+  background: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+}
+.sim-bubble-row .tag {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sim-bubble-row .school {
+  font-weight: 700;
+}
+.sim-bubble-row .meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+.sim-bubble-row .metric {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
 .muted { color: var(--muted); }
 footer {
   color: var(--muted);
@@ -988,13 +1155,17 @@ footer {
   .region-grid { grid-template-columns: 1fr; }
   .strength-grid { grid-template-columns: 1fr; }
   .shark-overview-grid,
-  .shark-route-grid { grid-template-columns: 1fr; }
+  .shark-route-grid,
+  .sim-detail-grid { grid-template-columns: 1fr; }
+  .sim-profile-grid,
+  .sim-prob-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .strength-mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .formula-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #panel-advancement.active,
   #panel-strength.active,
   #panel-region-strength.active,
-  #panel-shark-decision.active { overflow: visible; }
+  #panel-shark-decision.active,
+  #panel-swiss-simulation.active { overflow: visible; }
   .region-card,
   .ranking-card { min-height: auto; }
   .member-list,
@@ -1005,10 +1176,14 @@ footer {
   .spot-strip,
   .formula-grid,
   .shark-route-kpis,
-  .shark-rate-grid { grid-template-columns: 1fr; }
+  .shark-rate-grid,
+  .sim-profile-grid,
+  .sim-prob-grid { grid-template-columns: 1fr; }
   .strength-mini-grid { grid-template-columns: 1fr; }
   .shark-mini-grid { grid-template-columns: 1fr; }
   .strength-metric { grid-template-columns: 64px 1fr auto; }
+  .sim-stage-row,
+  .sim-bubble-row { grid-template-columns: 1fr; }
   .member { grid-template-columns: 1fr; }
   .member-side { text-align: left; }
   .tabs { width: 100%; display: flex; }
@@ -1046,12 +1221,14 @@ footer {
 
   <div class="tabs" role="tablist" aria-label="Dashboard Tabs">
     <button class="tab-btn active" data-tab="advancement" type="button">晋级推演台</button>
+    <button class="tab-btn" data-tab="swiss-simulation" type="button">瑞士轮模拟</button>
     <button class="tab-btn" data-tab="region-strength" type="button">赛区强度</button>
     <button class="tab-btn" data-tab="strength" type="button">综合实力榜</button>
     <button class="tab-btn" data-tab="shark-decision" type="button">SHARK 决策</button>
   </div>
 
   <section id="panel-advancement" class="panel active"></section>
+  <section id="panel-swiss-simulation" class="panel"></section>
   <section id="panel-region-strength" class="panel"></section>
   <section id="panel-strength" class="panel"></section>
   <section id="panel-shark-decision" class="panel"></section>
@@ -1064,10 +1241,21 @@ footer {
 <script>
 const REGION_ORDER = { "南部": 0, "东部": 1, "北部": 2 };
 let currentData = null;
+let swissSelectedSchool = "";
 const currentHost = window.location.hostname || "";
 const POLL_INTERVAL_MS = 60 * 1000;
 const MAX_SORT = 10 ** 9;
 const QUALIFICATION_ORDER = { national: 0, revival: 1, none: 2 };
+const SWISS_STAGE_ORDER = ["champion", "runner_up", "top4", "top8", "national", "revival", "out"];
+const SWISS_STAGE_LABELS = {
+  champion: "冠军",
+  runner_up: "亚军",
+  top4: "四强",
+  top8: "八强",
+  national: "国赛线",
+  revival: "复活线",
+  out: "未晋级",
+};
 const STRENGTH_SORT_DEFAULTS = {
   strength_rank_global: "asc",
   school: "asc",
@@ -1152,11 +1340,23 @@ function fixedOr(value, digits = 1, fallback = "—") {
   return Number.isFinite(num) ? num.toFixed(digits) : fallback;
 }
 
+function percentOr(value, digits = 1, fallback = "—") {
+  const num = Number(value);
+  return Number.isFinite(num) ? `${(num * 100).toFixed(digits)}%` : fallback;
+}
+
 function signedOr(value, zeroLabel = "压线", fallback = "—") {
   const num = Number(value);
   if (!Number.isFinite(num)) return fallback;
   if (num === 0) return zeroLabel;
   return `${num > 0 ? "+" : ""}${num}`;
+}
+
+function signedPercentOr(value, digits = 1, fallback = "—") {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  if (num === 0) return `${(0).toFixed(digits)}%`;
+  return `${num > 0 ? "+" : ""}${(num * 100).toFixed(digits)}%`;
 }
 
 function inferSubmitted(member) {
@@ -1360,6 +1560,53 @@ function normalizeSharkDecision(decision) {
         numOr(REGION_ORDER[b.shark_volunteer], 9),
       )),
     recommendation: decision.recommendation || {},
+  };
+}
+
+function normalizeSwissSchool(entry = {}) {
+  const stageProbabilities = entry.stage_probabilities || {};
+  return {
+    ...entry,
+    assigned: entry.assigned || "—",
+    seed_rank_region: entry.seed_rank_region ?? null,
+    seed_tier: entry.seed_tier || "—",
+    strength_score: numOr(entry.strength_score),
+    strength_rank_global: entry.strength_rank_global ?? null,
+    strength_rank_region: entry.strength_rank_region ?? null,
+    national_probability: numOr(entry.national_probability),
+    revival_probability: numOr(entry.revival_probability),
+    revival_only_probability: numOr(entry.revival_only_probability),
+    out_probability: numOr(entry.out_probability),
+    top8_probability: numOr(entry.top8_probability),
+    top4_probability: numOr(entry.top4_probability),
+    average_rank: numOr(entry.average_rank),
+    most_likely_stage: entry.most_likely_stage || "out",
+    most_likely_stage_label: entry.most_likely_stage_label || "未晋级",
+    most_likely_stage_probability: numOr(entry.most_likely_stage_probability),
+    stage_probabilities: Object.fromEntries(
+      SWISS_STAGE_ORDER.map((stage) => [stage, numOr(stageProbabilities[stage])])
+    ),
+  };
+}
+
+function normalizeSwissSimulation(simulation) {
+  if (!simulation) return null;
+  const schools = [...(simulation.schools || [])]
+    .map((entry) => normalizeSwissSchool(entry))
+    .sort((a, b) => (
+      compareNumber(numOr(REGION_ORDER[a.assigned], 9), numOr(REGION_ORDER[b.assigned], 9))
+      || compareNumber(numOr(a.average_rank), numOr(b.average_rank))
+      || compareNumber(nullableRank(a.seed_rank_region), nullableRank(b.seed_rank_region))
+      || compareText(a.school, b.school)
+    ));
+  const regions = [...(simulation.regions || [])]
+    .sort((a, b) => compareNumber(numOr(REGION_ORDER[a.region], 9), numOr(REGION_ORDER[b.region], 9)));
+  return {
+    default_school: simulation.default_school || schools[0]?.school || "",
+    model_note: simulation.model_note || "",
+    meta: simulation.meta || {},
+    schools,
+    regions,
   };
 }
 
@@ -1829,6 +2076,198 @@ function renderSharkDecision(data) {
   `;
 }
 
+function renderSwissSimulation(data) {
+  const panel = document.getElementById("panel-swiss-simulation");
+  const simulation = normalizeSwissSimulation(data.swiss_simulation);
+  if (!simulation || !simulation.schools.length) {
+    panel.innerHTML = `<div class="empty">当前还没有生成瑞士轮模拟数据，请先构建并发布最新 data.json。</div>`;
+    return;
+  }
+
+  const schoolByName = Object.fromEntries(simulation.schools.map((entry) => [entry.school, entry]));
+  if (!swissSelectedSchool || !schoolByName[swissSelectedSchool]) {
+    swissSelectedSchool = simulation.default_school || simulation.schools[0].school;
+  }
+  const selected = schoolByName[swissSelectedSchool];
+  const region = simulation.regions.find((entry) => entry.region === selected.assigned) || {};
+  const meta = simulation.meta || {};
+  const bubble = region.bubble || {};
+
+  const schoolOptions = simulation.regions.map((entry) => {
+    const members = simulation.schools.filter((school) => school.assigned === entry.region);
+    return `
+      <optgroup label="${esc(entry.region)}赛区">
+        ${members.map((school) => `
+          <option value="${esc(school.school)}" ${school.school === selected.school ? "selected" : ""}>
+            ${esc(school.school)} · ${esc(school.team)} · ${esc(school.seed_tier)}
+          </option>
+        `).join("")}
+      </optgroup>
+    `;
+  }).join("");
+
+  const stageRows = SWISS_STAGE_ORDER.map((stage) => {
+    const value = numOr(selected.stage_probabilities?.[stage]);
+    return `
+      <div class="sim-stage-row">
+        <span class="label">${esc(SWISS_STAGE_LABELS[stage])}</span>
+        <div class="sim-track"><div class="sim-fill" style="width:${fixedOr(value * 100, 1, "0.0")}%"></div></div>
+        <span class="metric">${percentOr(value)}</span>
+      </div>
+    `;
+  }).join("");
+
+  const bubbleRows = [
+    ["国赛线", bubble.last_national, "national_probability"],
+    ["复活起点", bubble.first_revival, "revival_probability"],
+    ["复活线", bubble.last_revival, "revival_probability"],
+    ["落选线", bubble.first_out, "out_probability"],
+  ].map(([label, entry, key]) => {
+    if (!entry) {
+      return `
+        <div class="sim-bubble-row">
+          <span class="tag">${esc(label)}</span>
+          <span class="school">—</span>
+          <span class="meta">当前没有对应边界学校</span>
+          <span class="metric">—</span>
+        </div>
+      `;
+    }
+    const value = numOr(entry[key]);
+    return `
+      <div class="sim-bubble-row">
+        <span class="tag">${esc(label)}</span>
+        <div>
+          <div class="school">${esc(entry.school)}</div>
+          <div class="meta">种子 #${entry.seed_rank_region ?? "—"} · ${esc(entry.seed_tier || "—")} · 平均名次 ${fixedOr(entry.average_rank, 2, "—")}</div>
+        </div>
+        <span class="metric">${key === "out_probability" ? "出局" : key === "national_probability" ? "国赛" : "复活及以上"} ${percentOr(value)}</span>
+        <span class="metric">差值 ${signedPercentOr(numOr(selected[key]) - value)}</span>
+      </div>
+    `;
+  }).join("");
+
+  panel.innerHTML = `
+    <section class="sim-stage">
+      <section class="sim-overview">
+        <div class="sim-head">
+          <div>
+            <h2>瑞士轮模拟</h2>
+            <p>${esc(simulation.model_note || "基于最新调剂快照与 2025 场序规则，对每个赛区独立多次模拟并汇总 2026 口径的国赛/复活赛概率。")}</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>迭代</strong>${numOr(meta.iterations)}</span>
+            <span class="pill"><strong>口径</strong>${esc(meta.quota_mode || "2026")}</span>
+            <span class="pill"><strong>默认学校</strong>${esc(simulation.default_school || "—")}</span>
+          </div>
+        </div>
+        <div class="sim-control-row">
+          <div class="sim-select-wrap">
+            <label for="swissSchoolSelect">学校分析</label>
+            <select id="swissSchoolSelect" class="sim-select">${schoolOptions}</select>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>赛区</strong>${esc(selected.assigned)}</span>
+            <span class="pill"><strong>种子</strong>#${selected.seed_rank_region ?? "—"} · ${esc(selected.seed_tier)}</span>
+            <span class="pill"><strong>最可能</strong>${esc(selected.most_likely_stage_label)} ${percentOr(selected.most_likely_stage_probability)}</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="sim-detail-grid">
+        <article class="sim-detail-card">
+          <h3>${esc(selected.school)}</h3>
+          <p>${esc(selected.team)} · ${esc(selected.city)} · ${esc(selected.team_type)} · RMUL ${esc(selected.rmul_2026_top4_cn || "—")} · 2025 ${esc(selected.detail_2025_cn || "—")}</p>
+          <div class="sim-profile-grid" style="margin-top:12px;">
+            <div class="sim-stat">
+              <span class="k">综合分</span>
+              <span class="v">${fixedOr(selected.strength_score)}</span>
+              <span class="hint">全局 #${selected.strength_rank_global ?? "—"} · 赛区 #${selected.strength_rank_region ?? "—"}</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">积分 / 排名</span>
+              <span class="v">${selected.points != null ? fixedOr(selected.points, 3) : "—"}</span>
+              <span class="hint">积分榜 #${selected.rank ?? "—"}</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">完整形态</span>
+              <span class="v">#${selected.full_form_ranking ?? "—"}</span>
+              <span class="hint">当前 boost 只取完整形态分组件与 RMUL 档位</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">平均名次</span>
+              <span class="v">${fixedOr(selected.average_rank, 2)}</span>
+              <span class="hint">基于 ${numOr(meta.iterations)} 次模拟</span>
+            </div>
+          </div>
+          <div class="sim-stage-list">${stageRows}</div>
+        </article>
+
+        <article class="sim-detail-card">
+          <h3>概率卡片</h3>
+          <p>“复活及以上”包含国赛概率；“仅复活”表示压线留在复活赛区间。</p>
+          <div class="sim-prob-grid" style="margin-top:12px;">
+            <div class="sim-stat">
+              <span class="k">国赛概率</span>
+              <span class="v">${percentOr(selected.national_probability)}</span>
+              <span class="hint">最终名次落在赛区前 ${region.national_spots ?? "—"}</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">复活及以上</span>
+              <span class="v">${percentOr(selected.revival_probability)}</span>
+              <span class="hint">当前总晋级线前 ${numOr(region.national_spots) + numOr(region.revival_spots)}</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">仅复活赛</span>
+              <span class="v">${percentOr(selected.revival_only_probability)}</span>
+              <span class="hint">未进国赛但卡进复活赛区间</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">出局概率</span>
+              <span class="v">${percentOr(selected.out_probability)}</span>
+              <span class="hint">最终落在本赛区复活线外</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">Top 8</span>
+              <span class="v">${percentOr(selected.top8_probability)}</span>
+              <span class="hint">进入 8 强后的总体概率</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">Top 4</span>
+              <span class="v">${percentOr(selected.top4_probability)}</span>
+              <span class="hint">进入半决赛的总体概率</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">名额口径</span>
+              <span class="v">${numOr(region.national_spots)} + ${numOr(region.revival_spots)}</span>
+              <span class="hint">${esc(selected.assigned)}赛区当前国赛 / 复活名额</span>
+            </div>
+            <div class="sim-stat">
+              <span class="k">随机基准</span>
+              <span class="v">${esc(String(meta.seed_basis_hash || "—").slice(0, 8))}</span>
+              <span class="hint">同一快照下结果可复现</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="sim-bubble-card">
+        <h3>${esc(selected.assigned)}赛区泡泡位</h3>
+        <p>边界学校按当前模拟概率排序得到，用来对比这支学校与国赛线、复活线的相对位置。</p>
+        <div class="sim-bubble-list">${bubbleRows}</div>
+      </article>
+    </section>
+  `;
+
+  const select = panel.querySelector("#swissSchoolSelect");
+  if (select) {
+    select.addEventListener("change", (event) => {
+      swissSelectedSchool = event.target.value;
+      if (currentData) renderSwissSimulation(currentData);
+    });
+  }
+}
+
 function renderStrength(data) {
   const ranking = [...(data.strength_ranking || [])]
     .sort((a, b) => compareStrengthTeams(a, b, strengthSortState.key, strengthSortState.direction));
@@ -1924,6 +2363,7 @@ function render(data) {
   renderMeta(data);
   renderStats(data);
   renderAdvancement(data);
+  renderSwissSimulation(data);
   renderRegionStrength(data);
   renderStrength(data);
   renderSharkDecision(data);
@@ -2008,6 +2448,7 @@ if (LOCAL_REFRESH_ENABLED) {
     await refreshPublishedData(true);
   } catch (error) {
     document.getElementById("panel-advancement").innerHTML = `<div class="empty">数据加载失败：${esc(error.message)}</div>`;
+    document.getElementById("panel-swiss-simulation").innerHTML = `<div class="empty">当前尚未发布瑞士轮模拟数据。</div>`;
     document.getElementById("panel-region-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
     document.getElementById("panel-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
     document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">当前尚未发布 SHARK 决策数据。</div>`;
