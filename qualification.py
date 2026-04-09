@@ -23,6 +23,7 @@ import allocator as A
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROSTER_PATH = os.path.join(HERE, "robomaster_2026_teams.csv")
+RANKS_PATH = os.path.join(HERE, "ranks.csv")
 
 REGIONS = A.REGIONS
 
@@ -58,10 +59,10 @@ RMUL_CN = {
 }
 
 RMUL_BONUS = {
-    "champion": 16.0,
-    "runner_up": 14.5,
-    "third_place": 13.0,
-    "fourth_place": 11.5,
+    "champion": 17.0,
+    "runner_up": 15.5,
+    "third_place": 14.0,
+    "fourth_place": 12.5,
 }
 
 HISTORY_BONUS = {
@@ -72,6 +73,7 @@ HISTORY_BONUS = {
     "quarter_finalist": 25.0,
     "top_16": 20.0,
     "top_32": 16.0,
+    "revival": 8.0,
 }
 
 QUALIFICATION_LABEL = {
@@ -117,8 +119,82 @@ def _float_or_none(v: Optional[str]) -> Optional[float]:
     return float(v)
 
 
+def _normalize_school_name(name: str) -> str:
+    return (
+        (name or "")
+        .strip()
+        .replace("（", "(")
+        .replace("）", ")")
+        .replace(" ", "")
+    )
+
+
 def _round(v: float) -> float:
     return round(v, 4)
+
+
+def _load_rank_scores(path: str = RANKS_PATH) -> Tuple[Dict[str, float], Dict[int, List[float]]]:
+    by_school: Dict[str, float] = {}
+    by_rank: Dict[int, List[float]] = defaultdict(list)
+    if not os.path.exists(path):
+        return by_school, by_rank
+
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        for raw in csv.DictReader(f):
+            school = _normalize_school_name(raw.get("school") or "")
+            rank = _int_or_none(raw.get("rank"))
+            score = _float_or_none(raw.get("score"))
+            if score is None:
+                continue
+            if school:
+                by_school[school] = score
+            if rank is not None:
+                by_rank[rank].append(score)
+    return by_school, by_rank
+
+
+def _estimate_points_from_rank(points_rank: Optional[int], scores_by_rank: Dict[int, List[float]]) -> Optional[float]:
+    if points_rank is None or not scores_by_rank:
+        return None
+    if points_rank in scores_by_rank:
+        values = scores_by_rank[points_rank]
+        return sum(values) / len(values)
+
+    lower = [rank for rank in scores_by_rank if rank < points_rank]
+    upper = [rank for rank in scores_by_rank if rank > points_rank]
+    lower_rank = max(lower) if lower else None
+    upper_rank = min(upper) if upper else None
+
+    if lower_rank is None and upper_rank is None:
+        return None
+    if lower_rank is None:
+        values = scores_by_rank[upper_rank]
+        return sum(values) / len(values)
+    if upper_rank is None:
+        values = scores_by_rank[lower_rank]
+        return sum(values) / len(values)
+
+    low_score = sum(scores_by_rank[lower_rank]) / len(scores_by_rank[lower_rank])
+    high_score = sum(scores_by_rank[upper_rank]) / len(scores_by_rank[upper_rank])
+    span = upper_rank - lower_rank
+    if span <= 0:
+        return low_score
+    weight = (points_rank - lower_rank) / span
+    return low_score + (high_score - low_score) * weight
+
+
+def _backfill_missing_points(roster: Dict[str, dict]):
+    school_scores, rank_scores = _load_rank_scores()
+    for row in roster.values():
+        if row["points"] is not None or row["points_rank"] is None:
+            continue
+        school_key = _normalize_school_name(row["school"])
+        if school_key in school_scores:
+            row["points"] = school_scores[school_key]
+            continue
+        estimated = _estimate_points_from_rank(row["points_rank"], rank_scores)
+        if estimated is not None:
+            row["points"] = round(estimated, 3)
 
 
 def _strength_sort_key(team: A.Team, strength_info: Dict[str, dict]):
@@ -181,6 +257,7 @@ def load_roster(path: str = ROSTER_PATH) -> Dict[str, dict]:
             "rmul_2026_top4_cn": RMUL_CN.get((raw.get("rmul_2026_top4") or "").strip(), "—"),
         }
         roster[school] = row
+    _backfill_missing_points(roster)
     return roster
 
 

@@ -1,12 +1,14 @@
-name: Update dashboard
+name: Build and deploy dashboard
 
 on:
-  # 定时更新已迁移至 Ubuntu (100.86.45.11) 本地 crontab，不再依赖 GitHub schedule。
   workflow_dispatch: {}
+  schedule:
+    - cron: "2-57/5 * * * *"
   push:
     branches: [main]
     paths:
       - "allocator.py"
+      - "qualification.py"
       - "qingflow.py"
       - "distances.csv"
       - "ranks.csv"
@@ -17,11 +19,13 @@ on:
       - ".github/workflows/update.yml"
 
 concurrency:
-  group: dashboard
-  cancel-in-progress: false
+  group: github-pages
+  cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -34,22 +38,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Build docs/data.json
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build dashboard docs
         run: python scripts/build_dashboard.py
 
-      - name: Commit if changed
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data.json docs/data.csv
-          if git diff --cached --quiet; then
-            echo "No change."
-            exit 0
-          fi
-          git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
-          # 重试一次以避免与并发 push 冲突
-          for i in 1 2 3; do
-            if git push; then exit 0; fi
-            git pull --rebase --autostash
-          done
-          exit 1
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

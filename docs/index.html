@@ -1031,7 +1031,7 @@ footer {
     </div>
     <div class="hero-meta">
       <span>更新时间 <strong id="updated">—</strong></span>
-      <span id="syncStatus" class="sync-status idle">当前页面显示的是本地已生成数据。</span>
+      <span id="syncStatus" class="sync-status idle">当前页面显示的是最近一次已生成的数据快照。</span>
       <span class="links">
         <a id="src" href="#" target="_blank" rel="noopener">参赛反馈看板</a>
         <a id="ann" href="#" target="_blank" rel="noopener">公告 1910</a>
@@ -1056,14 +1056,16 @@ footer {
   <section id="panel-strength" class="panel"></section>
   <section id="panel-shark-decision" class="panel"></section>
 
-  <footer>
-    全国赛名额按公告精确计算；复活赛名额为模型推演值。点击刷新会重新抓取轻流并更新本地页面。
+  <footer id="footerNote">
+    全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 5 分钟自动同步；页面每 60 秒检查新发布数据。
   </footer>
 </div>
 
 <script>
 const REGION_ORDER = { "南部": 0, "东部": 1, "北部": 2 };
 let currentData = null;
+const currentHost = window.location.hostname || "";
+const POLL_INTERVAL_MS = 60 * 1000;
 const MAX_SORT = 10 ** 9;
 const QUALIFICATION_ORDER = { national: 0, revival: 1, none: 2 };
 const STRENGTH_SORT_DEFAULTS = {
@@ -1082,6 +1084,26 @@ let strengthSortState = {
   key: "strength_rank_global",
   direction: STRENGTH_SORT_DEFAULTS.strength_rank_global,
 };
+
+function isPrivateIPv4(host) {
+  if (/^10\./.test(host) || /^192\.168\./.test(host)) return true;
+  const match = host.match(/^172\.(\d+)\./);
+  if (!match) return false;
+  const second = Number(match[1]);
+  return second >= 16 && second <= 31;
+}
+
+function canUseLocalRefresh() {
+  return (
+    currentHost === "localhost" ||
+    currentHost === "127.0.0.1" ||
+    currentHost === "::1" ||
+    currentHost.endsWith(".local") ||
+    isPrivateIPv4(currentHost)
+  );
+}
+
+const LOCAL_REFRESH_ENABLED = canUseLocalRefresh();
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
@@ -1593,7 +1615,7 @@ function renderSharkDecision(data) {
   const panel = document.getElementById("panel-shark-decision");
   const decision = normalizeSharkDecision(data.shark_decision);
   if (!decision) {
-    panel.innerHTML = `<div class="empty">当前数据还没有生成 SHARK 决策面板，请先刷新并生成 data.json。</div>`;
+    panel.innerHTML = `<div class="empty">当前数据还没有生成 SHARK 决策面板，请先构建并发布最新 data.json。</div>`;
     return;
   }
 
@@ -1921,13 +1943,33 @@ function setTab(tab) {
   });
 }
 
-async function loadInitialData() {
+function updateRuntimeHints() {
+  const button = document.getElementById("refreshBtn");
+  const footer = document.getElementById("footerNote");
+  if (LOCAL_REFRESH_ENABLED) {
+    button.hidden = false;
+    footer.textContent = "全国赛名额按公告精确计算；复活赛名额为模型推演值。当前为本地模式，可点击刷新直接抓取轻流；页面每 60 秒检查 data.json 更新。";
+    return;
+  }
+  button.hidden = true;
+  footer.textContent = "全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 5 分钟自动同步；页面每 60 秒检查新发布数据。";
+}
+
+async function loadData() {
   const res = await fetch(`./data.json?t=${Date.now()}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return await res.json();
 }
 
+async function refreshPublishedData(force = false) {
+  const payload = await loadData();
+  if (force || !currentData || payload.updated_at_utc !== currentData.updated_at_utc) {
+    render(payload);
+  }
+}
+
 async function refreshData() {
+  if (!LOCAL_REFRESH_ENABLED) return;
   const button = document.getElementById("refreshBtn");
   const previous = button.textContent;
   button.disabled = true;
@@ -1953,22 +1995,33 @@ async function refreshData() {
   }
 }
 
+updateRuntimeHints();
 document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => setTab(btn.dataset.tab));
 });
-document.getElementById("refreshBtn").addEventListener("click", refreshData);
+if (LOCAL_REFRESH_ENABLED) {
+  document.getElementById("refreshBtn").addEventListener("click", refreshData);
+}
 
 (async () => {
   try {
-    render(await loadInitialData());
+    await refreshPublishedData(true);
   } catch (error) {
     document.getElementById("panel-advancement").innerHTML = `<div class="empty">数据加载失败：${esc(error.message)}</div>`;
-    document.getElementById("panel-region-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
-    document.getElementById("panel-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
-    document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">请先刷新并生成 SHARK 决策数据。</div>`;
+    document.getElementById("panel-region-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
+    document.getElementById("panel-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
+    document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">当前尚未发布 SHARK 决策数据。</div>`;
     showError(`初始加载失败：${error.message}`);
   }
 })();
+
+setInterval(async () => {
+  try {
+    await refreshPublishedData(false);
+  } catch (error) {
+    console.warn("auto refresh failed:", error);
+  }
+}, POLL_INTERVAL_MS);
 </script>
 </body>
 </html>
