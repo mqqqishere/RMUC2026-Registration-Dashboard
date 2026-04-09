@@ -1,6 +1,6 @@
 {
-  "updated_at_utc": "2026-04-09T11:26:39Z",
-  "updated_at_cst": "2026-04-09 19:26:39",
+  "updated_at_utc": "2026-04-09T12:29:01Z",
+  "updated_at_cst": "2026-04-09 20:29:01",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
@@ -8,26 +8,26 @@
   "title": "RMUC 2026 晋级推演台",
   "capacity": 32,
   "total_teams": 96,
-  "submitted_teams": 77,
+  "submitted_teams": 81,
   "ranks_covered": 96,
   "hosts_seen": 10,
-  "transferred_count": 16,
+  "transferred_count": 15,
   "adjustment_order": [
     "北部",
     "东部",
     "南部"
   ],
   "submission": {
-    "submitted_count": 77,
+    "submitted_count": 81,
     "roster_total": 96,
-    "estimated_count": 19
+    "estimated_count": 15
   },
   "refresh_meta": {
     "status": "success",
     "status_label": "实时抓取成功",
-    "message": "本页展示的是 2026-04-09 19:26:39 的最新轻流刷新结果，当前抓到 77 支已填报学校。",
+    "message": "本页展示的是 2026-04-09 20:29:01 的最新轻流刷新结果，当前抓到 81 支已填报学校。",
     "source": "qingflow_live",
-    "live_submitted_count": 77
+    "live_submitted_count": 81
   },
   "regions": [
     {
@@ -35,23 +35,23 @@
       "name": "南部赛区",
       "city": "长沙市",
       "count": 32,
-      "visible_count": 18,
-      "hidden_count": 14,
+      "visible_count": 19,
+      "hidden_count": 13,
       "counts": {
         "host": 3,
         "volunteer": 29,
         "transfer": 0
       },
       "national_spots": 10,
-      "revival_spots": 6,
+      "revival_spots": 5,
       "top16_count": 5,
       "floating_spots": 2,
-      "advancing_total": 16,
+      "advancing_total": 15,
       "boundary_teams": {
         "last_national": "广州城市理工学院",
         "first_revival": "哈尔滨工业大学（深圳）",
-        "last_revival": "华中科技大学",
-        "first_out": "桂林电子科技大学"
+        "last_revival": "南方科技大学",
+        "first_out": "华中科技大学"
       },
       "strength_stats": {
         "team_count": 32,
@@ -452,12 +452,8 @@
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [
-            "first_out"
-          ],
-          "boundary_labels": [
-            "落选线"
-          ]
+          "boundary_markers": [],
+          "boundary_labels": []
         },
         {
           "school": "广州航海学院",
@@ -486,6 +482,41 @@
           },
           "strength_rank_global": 49,
           "strength_rank_region": 18,
+          "qualification_status": "none",
+          "qualification_label": "未晋级",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
+          "school": "长沙理工大学",
+          "team": "云嵌",
+          "city": "长沙市",
+          "status": "host",
+          "status_cn": "承办",
+          "original_volunteer": "南部",
+          "assigned": "南部",
+          "dist_km": 0,
+          "rank": 105,
+          "points": 5.975,
+          "team_type": "非甲级",
+          "is_host": true,
+          "full_form_ranking": 51,
+          "detail_2025": "division",
+          "detail_2025_cn": "分区赛",
+          "rmul_2026_top4": "",
+          "rmul_2026_top4_cn": "—",
+          "strength_score": 9.4462,
+          "strength_components": {
+            "rmul_bonus": 0.0,
+            "full_form_score": 7.2952,
+            "history_bonus": 0.0,
+            "points_score": 2.151
+          },
+          "strength_rank_global": 64,
+          "strength_rank_region": 22,
           "qualification_status": "none",
           "qualification_label": "未晋级",
           "volunteer_source": "submitted",
@@ -882,8 +913,12 @@
           "volunteer_source": "nearest_estimate",
           "volunteer_source_label": "就近估算",
           "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
+          "boundary_markers": [
+            "last_revival"
+          ],
+          "boundary_labels": [
+            "复活线"
+          ]
         },
         {
           "school": "华中科技大学",
@@ -912,16 +947,16 @@
           },
           "strength_rank_global": 47,
           "strength_rank_region": 16,
-          "qualification_status": "revival",
-          "qualification_label": "复活赛",
+          "qualification_status": "none",
+          "qualification_label": "未晋级",
           "volunteer_source": "nearest_estimate",
           "volunteer_source_label": "就近估算",
           "is_submitted": false,
           "boundary_markers": [
-            "last_revival"
+            "first_out"
           ],
           "boundary_labels": [
-            "复活线"
+            "落选线"
           ]
         },
         {
@@ -1025,41 +1060,6 @@
           "qualification_label": "未晋级",
           "volunteer_source": "nearest_estimate",
           "volunteer_source_label": "就近估算",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
-          "school": "长沙理工大学",
-          "team": "云嵌",
-          "city": "长沙市",
-          "status": "host",
-          "status_cn": "承办",
-          "original_volunteer": "南部",
-          "assigned": "南部",
-          "dist_km": 0,
-          "rank": 105,
-          "points": 5.975,
-          "team_type": "非甲级",
-          "is_host": true,
-          "full_form_ranking": 51,
-          "detail_2025": "division",
-          "detail_2025_cn": "分区赛",
-          "rmul_2026_top4": "",
-          "rmul_2026_top4_cn": "—",
-          "strength_score": 9.4462,
-          "strength_components": {
-            "rmul_bonus": 0.0,
-            "full_form_score": 7.2952,
-            "history_bonus": 0.0,
-            "points_score": 2.151
-          },
-          "strength_rank_global": 64,
-          "strength_rank_region": 22,
-          "qualification_status": "none",
-          "qualification_label": "未晋级",
-          "volunteer_source": "host_default",
-          "volunteer_source_label": "承办默认",
           "is_submitted": false,
           "boundary_markers": [],
           "boundary_labels": []
@@ -1211,35 +1211,35 @@
       "name": "东部赛区",
       "city": "济南市",
       "count": 32,
-      "visible_count": 30,
-      "hidden_count": 2,
+      "visible_count": 31,
+      "hidden_count": 1,
       "counts": {
         "host": 4,
         "volunteer": 23,
         "transfer": 5
       },
-      "national_spots": 8,
-      "revival_spots": 4,
-      "top16_count": 4,
-      "floating_spots": 0,
-      "advancing_total": 12,
+      "national_spots": 9,
+      "revival_spots": 5,
+      "top16_count": 5,
+      "floating_spots": 1,
+      "advancing_total": 14,
       "boundary_teams": {
         "last_national": "合肥工业大学（宣城校区）",
         "first_revival": "华东理工大学",
-        "last_revival": "合肥工业大学",
-        "first_out": "安徽信息工程学院"
+        "last_revival": "福建师范大学",
+        "first_out": "武汉科技大学"
       },
       "strength_stats": {
         "team_count": 32,
-        "avg_strength_score": 20.5714,
+        "avg_strength_score": 21.4806,
         "median_strength_score": 10.2882,
-        "stdev_strength_score": 19.9389,
-        "top8_avg_strength_score": 50.3847,
+        "stdev_strength_score": 21.1344,
+        "top8_avg_strength_score": 53.5782,
         "min_strength_score": 1.4945,
         "max_strength_score": 69.3186,
         "q1_strength_score": 6.8483,
-        "q3_strength_score": 36.6381,
-        "iqr_strength_score": 29.7899
+        "q3_strength_score": 37.0903,
+        "iqr_strength_score": 30.242
       },
       "members": [
         {
@@ -1313,6 +1313,41 @@
           "boundary_labels": []
         },
         {
+          "school": "太原工业学院",
+          "team": "火线",
+          "city": "太原市",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "东部",
+          "assigned": "东部",
+          "dist_km": 426,
+          "rank": 17,
+          "points": 17.0,
+          "team_type": "甲级",
+          "is_host": false,
+          "full_form_ranking": 13,
+          "detail_2025": "top_16",
+          "detail_2025_cn": "十六强",
+          "rmul_2026_top4": "runner_up",
+          "rmul_2026_top4_cn": "亚军",
+          "strength_score": 62.5782,
+          "strength_components": {
+            "rmul_bonus": 14.5,
+            "full_form_score": 21.9582,
+            "history_bonus": 20.0,
+            "points_score": 6.12
+          },
+          "strength_rank_global": 8,
+          "strength_rank_region": 3,
+          "qualification_status": "national",
+          "qualification_label": "国赛",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
           "school": "浙江大学",
           "team": "Hello World",
           "city": "杭州市",
@@ -1338,7 +1373,7 @@
             "points_score": 7.596
           },
           "strength_rank_global": 9,
-          "strength_rank_region": 3,
+          "strength_rank_region": 4,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1373,7 +1408,7 @@
             "points_score": 5.148
           },
           "strength_rank_global": 10,
-          "strength_rank_region": 4,
+          "strength_rank_region": 5,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1408,7 +1443,7 @@
             "points_score": 6.4944
           },
           "strength_rank_global": 23,
-          "strength_rank_region": 5,
+          "strength_rank_region": 6,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1443,7 +1478,7 @@
             "points_score": 5.256
           },
           "strength_rank_global": 25,
-          "strength_rank_region": 6,
+          "strength_rank_region": 7,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1478,7 +1513,7 @@
             "points_score": 6.4584
           },
           "strength_rank_global": 26,
-          "strength_rank_region": 7,
+          "strength_rank_region": 8,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1513,7 +1548,7 @@
             "points_score": 6.3699
           },
           "strength_rank_global": 27,
-          "strength_rank_region": 8,
+          "strength_rank_region": 9,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -1552,7 +1587,7 @@
             "points_score": 2.9574
           },
           "strength_rank_global": 28,
-          "strength_rank_region": 9,
+          "strength_rank_region": 10,
           "qualification_status": "revival",
           "qualification_label": "复活赛",
           "volunteer_source": "submitted",
@@ -1564,41 +1599,6 @@
           "boundary_labels": [
             "复活起点"
           ]
-        },
-        {
-          "school": "江南大学霞客湾校区",
-          "team": "SHARK",
-          "city": "无锡市",
-          "status": "volunteer",
-          "status_cn": "志愿",
-          "original_volunteer": "东部",
-          "assigned": "东部",
-          "dist_km": 636,
-          "rank": 220,
-          "points": 3.125,
-          "team_type": "非甲级",
-          "is_host": false,
-          "full_form_ranking": 22,
-          "detail_2025": "",
-          "detail_2025_cn": "—",
-          "rmul_2026_top4": "runner_up",
-          "rmul_2026_top4_cn": "亚军",
-          "strength_score": 33.4846,
-          "strength_components": {
-            "rmul_bonus": 14.5,
-            "full_form_score": 17.8596,
-            "history_bonus": 0.0,
-            "points_score": 1.125
-          },
-          "strength_rank_global": 32,
-          "strength_rank_region": 10,
-          "qualification_status": "revival",
-          "qualification_label": "复活赛",
-          "volunteer_source": "submitted",
-          "volunteer_source_label": "实时提交",
-          "is_submitted": true,
-          "boundary_markers": [],
-          "boundary_labels": []
         },
         {
           "school": "南京理工大学",
@@ -1667,12 +1667,8 @@
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [
-            "last_revival"
-          ],
-          "boundary_labels": [
-            "复活线"
-          ]
+          "boundary_markers": [],
+          "boundary_labels": []
         },
         {
           "school": "安徽信息工程学院",
@@ -1701,17 +1697,13 @@
           },
           "strength_rank_global": 52,
           "strength_rank_region": 13,
-          "qualification_status": "none",
-          "qualification_label": "未晋级",
+          "qualification_status": "revival",
+          "qualification_label": "复活赛",
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [
-            "first_out"
-          ],
-          "boundary_labels": [
-            "落选线"
-          ]
+          "boundary_markers": [],
+          "boundary_labels": []
         },
         {
           "school": "福建师范大学",
@@ -1740,13 +1732,17 @@
           },
           "strength_rank_global": 54,
           "strength_rank_region": 14,
-          "qualification_status": "none",
-          "qualification_label": "未晋级",
+          "qualification_status": "revival",
+          "qualification_label": "复活赛",
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [],
-          "boundary_labels": []
+          "boundary_markers": [
+            "last_revival"
+          ],
+          "boundary_labels": [
+            "复活线"
+          ]
         },
         {
           "school": "武汉科技大学",
@@ -1780,8 +1776,12 @@
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [],
-          "boundary_labels": []
+          "boundary_markers": [
+            "first_out"
+          ],
+          "boundary_labels": [
+            "落选线"
+          ]
         },
         {
           "school": "江苏大学",
@@ -2064,6 +2064,41 @@
           "boundary_labels": []
         },
         {
+          "school": "齐鲁工业大学",
+          "team": "Adam",
+          "city": "济南市",
+          "status": "host",
+          "status_cn": "承办",
+          "original_volunteer": "东部",
+          "assigned": "东部",
+          "dist_km": 0,
+          "rank": 48,
+          "points": 10.615,
+          "team_type": "甲级",
+          "is_host": true,
+          "full_form_ranking": 66,
+          "detail_2025": "division",
+          "detail_2025_cn": "分区赛",
+          "rmul_2026_top4": "",
+          "rmul_2026_top4_cn": "—",
+          "strength_score": 7.3376,
+          "strength_components": {
+            "rmul_bonus": 0.0,
+            "full_form_score": 3.5162,
+            "history_bonus": 0.0,
+            "points_score": 3.8214
+          },
+          "strength_rank_global": 74,
+          "strength_rank_region": 24,
+          "qualification_status": "none",
+          "qualification_label": "未晋级",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
           "school": "上海大学",
           "team": "SRM",
           "city": "上海市",
@@ -2311,41 +2346,6 @@
       ],
       "hidden_members": [
         {
-          "school": "齐鲁工业大学",
-          "team": "Adam",
-          "city": "济南市",
-          "status": "host",
-          "status_cn": "承办",
-          "original_volunteer": "东部",
-          "assigned": "东部",
-          "dist_km": 0,
-          "rank": 48,
-          "points": 10.615,
-          "team_type": "甲级",
-          "is_host": true,
-          "full_form_ranking": 66,
-          "detail_2025": "division",
-          "detail_2025_cn": "分区赛",
-          "rmul_2026_top4": "",
-          "rmul_2026_top4_cn": "—",
-          "strength_score": 7.3376,
-          "strength_components": {
-            "rmul_bonus": 0.0,
-            "full_form_score": 3.5162,
-            "history_bonus": 0.0,
-            "points_score": 3.8214
-          },
-          "strength_rank_global": 74,
-          "strength_rank_region": 24,
-          "qualification_status": "none",
-          "qualification_label": "未晋级",
-          "volunteer_source": "host_default",
-          "volunteer_source_label": "承办默认",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
           "school": "常州大学",
           "team": "Climber",
           "city": "常州市",
@@ -2387,35 +2387,35 @@
       "name": "北部赛区",
       "city": "沈阳市",
       "count": 32,
-      "visible_count": 29,
-      "hidden_count": 3,
+      "visible_count": 31,
+      "hidden_count": 1,
       "counts": {
         "host": 3,
-        "volunteer": 18,
-        "transfer": 11
+        "volunteer": 19,
+        "transfer": 10
       },
-      "national_spots": 10,
+      "national_spots": 9,
       "revival_spots": 6,
-      "top16_count": 6,
-      "floating_spots": 2,
-      "advancing_total": 16,
+      "top16_count": 5,
+      "floating_spots": 1,
+      "advancing_total": 15,
       "boundary_teams": {
         "last_national": "大连理工大学",
         "first_revival": "北京理工大学",
-        "last_revival": "吉林大学",
-        "first_out": "河北科技大学"
+        "last_revival": "山东科技大学",
+        "first_out": "吉林大学"
       },
       "strength_stats": {
         "team_count": 32,
-        "avg_strength_score": 28.9206,
+        "avg_strength_score": 28.0115,
         "median_strength_score": 26.3779,
-        "stdev_strength_score": 20.6828,
-        "top8_avg_strength_score": 57.2139,
+        "stdev_strength_score": 19.8041,
+        "top8_avg_strength_score": 54.8871,
         "min_strength_score": 2.7008,
         "max_strength_score": 78.5683,
         "q1_strength_score": 11.7502,
-        "q3_strength_score": 44.067,
-        "iqr_strength_score": 32.3169
+        "q3_strength_score": 42.2315,
+        "iqr_strength_score": 30.4813
       },
       "members": [
         {
@@ -2489,41 +2489,6 @@
           "boundary_labels": []
         },
         {
-          "school": "太原工业学院",
-          "team": "火线",
-          "city": "太原市",
-          "status": "volunteer",
-          "status_cn": "志愿",
-          "original_volunteer": "北部",
-          "assigned": "北部",
-          "dist_km": 1026,
-          "rank": 17,
-          "points": 17.0,
-          "team_type": "甲级",
-          "is_host": false,
-          "full_form_ranking": 13,
-          "detail_2025": "top_16",
-          "detail_2025_cn": "十六强",
-          "rmul_2026_top4": "runner_up",
-          "rmul_2026_top4_cn": "亚军",
-          "strength_score": 62.5782,
-          "strength_components": {
-            "rmul_bonus": 14.5,
-            "full_form_score": 21.9582,
-            "history_bonus": 20.0,
-            "points_score": 6.12
-          },
-          "strength_rank_global": 8,
-          "strength_rank_region": 3,
-          "qualification_status": "national",
-          "qualification_label": "国赛",
-          "volunteer_source": "submitted",
-          "volunteer_source_label": "实时提交",
-          "is_submitted": true,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
           "school": "西北工业大学",
           "team": "WMJ",
           "city": "西安市",
@@ -2549,7 +2514,7 @@
             "points_score": 4.5
           },
           "strength_rank_global": 11,
-          "strength_rank_region": 4,
+          "strength_rank_region": 3,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -2562,9 +2527,9 @@
           "school": "哈尔滨工业大学（威海）",
           "team": "HERO",
           "city": "威海市",
-          "status": "transfer",
-          "status_cn": "调剂",
-          "original_volunteer": "东部",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "北部",
           "assigned": "北部",
           "dist_km": 490,
           "rank": 15,
@@ -2584,7 +2549,7 @@
             "points_score": 6.192
           },
           "strength_rank_global": 13,
-          "strength_rank_region": 5,
+          "strength_rank_region": 4,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -2619,6 +2584,41 @@
             "points_score": 5.184
           },
           "strength_rank_global": 14,
+          "strength_rank_region": 5,
+          "qualification_status": "national",
+          "qualification_label": "国赛",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
+          "school": "太原科技大学",
+          "team": "NewMaker",
+          "city": "太原市",
+          "status": "transfer",
+          "status_cn": "调剂",
+          "original_volunteer": "东部",
+          "assigned": "北部",
+          "dist_km": 1026,
+          "rank": 75,
+          "points": 8.0,
+          "team_type": "非甲级",
+          "is_host": false,
+          "full_form_ranking": 5,
+          "detail_2025": "",
+          "detail_2025_cn": "—",
+          "rmul_2026_top4": "champion",
+          "rmul_2026_top4_cn": "冠军",
+          "strength_score": 44.7937,
+          "strength_components": {
+            "rmul_bonus": 16.0,
+            "full_form_score": 25.9137,
+            "history_bonus": 0.0,
+            "points_score": 2.88
+          },
+          "strength_rank_global": 17,
           "strength_rank_region": 6,
           "qualification_status": "national",
           "qualification_label": "国赛",
@@ -2654,7 +2654,7 @@
             "points_score": 6.948
           },
           "strength_rank_global": 18,
-          "strength_rank_region": 8,
+          "strength_rank_region": 7,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -2689,7 +2689,7 @@
             "points_score": 4.0608
           },
           "strength_rank_global": 19,
-          "strength_rank_region": 9,
+          "strength_rank_region": 8,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -2724,7 +2724,7 @@
             "points_score": 6.1848
           },
           "strength_rank_global": 21,
-          "strength_rank_region": 10,
+          "strength_rank_region": 9,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -2763,7 +2763,7 @@
             "points_score": 4.068
           },
           "strength_rank_global": 22,
-          "strength_rank_region": 11,
+          "strength_rank_region": 10,
           "qualification_status": "revival",
           "qualification_label": "复活赛",
           "volunteer_source": "submitted",
@@ -2802,6 +2802,41 @@
             "points_score": 3.96
           },
           "strength_rank_global": 29,
+          "strength_rank_region": 11,
+          "qualification_status": "revival",
+          "qualification_label": "复活赛",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
+          "school": "江南大学霞客湾校区",
+          "team": "SHARK",
+          "city": "无锡市",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "北部",
+          "assigned": "北部",
+          "dist_km": 1171,
+          "rank": 220,
+          "points": 3.125,
+          "team_type": "非甲级",
+          "is_host": false,
+          "full_form_ranking": 22,
+          "detail_2025": "",
+          "detail_2025_cn": "—",
+          "rmul_2026_top4": "runner_up",
+          "rmul_2026_top4_cn": "亚军",
+          "strength_score": 33.4846,
+          "strength_components": {
+            "rmul_bonus": 14.5,
+            "full_form_score": 17.8596,
+            "history_bonus": 0.0,
+            "points_score": 1.125
+          },
+          "strength_rank_global": 32,
           "strength_rank_region": 12,
           "qualification_status": "revival",
           "qualification_label": "复活赛",
@@ -2913,8 +2948,12 @@
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [],
-          "boundary_labels": []
+          "boundary_markers": [
+            "last_revival"
+          ],
+          "boundary_labels": [
+            "复活线"
+          ]
         },
         {
           "school": "吉林大学",
@@ -2943,16 +2982,16 @@
           },
           "strength_rank_global": 37,
           "strength_rank_region": 16,
-          "qualification_status": "revival",
-          "qualification_label": "复活赛",
+          "qualification_status": "none",
+          "qualification_label": "未晋级",
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
           "boundary_markers": [
-            "last_revival"
+            "first_out"
           ],
           "boundary_labels": [
-            "复活线"
+            "落选线"
           ]
         },
         {
@@ -2987,12 +3026,8 @@
           "volunteer_source": "submitted",
           "volunteer_source_label": "实时提交",
           "is_submitted": true,
-          "boundary_markers": [
-            "first_out"
-          ],
-          "boundary_labels": [
-            "落选线"
-          ]
+          "boundary_markers": [],
+          "boundary_labels": []
         },
         {
           "school": "长安大学",
@@ -3161,6 +3196,41 @@
           },
           "strength_rank_global": 53,
           "strength_rank_region": 22,
+          "qualification_status": "none",
+          "qualification_label": "未晋级",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
+          "school": "东北大学秦皇岛分校",
+          "team": "征龙凌沧",
+          "city": "秦皇岛市",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "北部",
+          "assigned": "北部",
+          "dist_km": 383,
+          "rank": 63,
+          "points": 8.515,
+          "team_type": "甲级",
+          "is_host": false,
+          "full_form_ranking": 45,
+          "detail_2025": "division",
+          "detail_2025_cn": "分区赛",
+          "rmul_2026_top4": "",
+          "rmul_2026_top4_cn": "—",
+          "strength_score": 12.204,
+          "strength_components": {
+            "rmul_bonus": 0.0,
+            "full_form_score": 9.1386,
+            "history_bonus": 0.0,
+            "points_score": 3.0654
+          },
+          "strength_rank_global": 57,
+          "strength_rank_region": 24,
           "qualification_status": "none",
           "qualification_label": "未晋级",
           "volunteer_source": "submitted",
@@ -3452,41 +3522,6 @@
       ],
       "hidden_members": [
         {
-          "school": "太原科技大学",
-          "team": "NewMaker",
-          "city": "太原市",
-          "status": "transfer",
-          "status_cn": "调剂",
-          "original_volunteer": "东部",
-          "assigned": "北部",
-          "dist_km": 1026,
-          "rank": 75,
-          "points": 8.0,
-          "team_type": "非甲级",
-          "is_host": false,
-          "full_form_ranking": 5,
-          "detail_2025": "",
-          "detail_2025_cn": "—",
-          "rmul_2026_top4": "champion",
-          "rmul_2026_top4_cn": "冠军",
-          "strength_score": 44.7937,
-          "strength_components": {
-            "rmul_bonus": 16.0,
-            "full_form_score": 25.9137,
-            "history_bonus": 0.0,
-            "points_score": 2.88
-          },
-          "strength_rank_global": 17,
-          "strength_rank_region": 7,
-          "qualification_status": "national",
-          "qualification_label": "国赛",
-          "volunteer_source": "nearest_estimate",
-          "volunteer_source_label": "就近估算",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
           "school": "山东理工大学",
           "team": "齐奇",
           "city": "淄博市",
@@ -3513,41 +3548,6 @@
           },
           "strength_rank_global": 56,
           "strength_rank_region": 23,
-          "qualification_status": "none",
-          "qualification_label": "未晋级",
-          "volunteer_source": "nearest_estimate",
-          "volunteer_source_label": "就近估算",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
-        {
-          "school": "东北大学秦皇岛分校",
-          "team": "征龙凌沧",
-          "city": "秦皇岛市",
-          "status": "volunteer",
-          "status_cn": "志愿",
-          "original_volunteer": "北部",
-          "assigned": "北部",
-          "dist_km": 383,
-          "rank": 63,
-          "points": 8.515,
-          "team_type": "甲级",
-          "is_host": false,
-          "full_form_ranking": 45,
-          "detail_2025": "division",
-          "detail_2025_cn": "分区赛",
-          "rmul_2026_top4": "",
-          "rmul_2026_top4_cn": "—",
-          "strength_score": 12.204,
-          "strength_components": {
-            "rmul_bonus": 0.0,
-            "full_form_score": 9.1386,
-            "history_bonus": 0.0,
-            "points_score": 3.0654
-          },
-          "strength_rank_global": 57,
-          "strength_rank_region": 24,
           "qualification_status": "none",
           "qualification_label": "未晋级",
           "volunteer_source": "nearest_estimate",
@@ -3597,7 +3597,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -3638,7 +3638,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中国石油大学（华东）",
@@ -3677,7 +3677,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -3717,8 +3717,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华南农业大学",
@@ -3758,7 +3758,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华南理工大学",
@@ -3798,7 +3798,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "西安交通大学",
@@ -3837,16 +3837,16 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "太原工业学院",
       "team": "火线",
       "city": "太原市",
       "team_type": "甲级",
-      "volunteer": "北部",
-      "assigned": "北部",
+      "volunteer": "东部",
+      "assigned": "东部",
       "status": "volunteer",
       "status_cn": "志愿",
       "rank": 17,
@@ -3860,7 +3860,7 @@
       "dist_south": 1076,
       "dist_east": 426,
       "dist_north": 1026,
-      "dist_to_assigned": 1026,
+      "dist_to_assigned": 426,
       "strength_score": 62.5782,
       "strength_components": {
         "rmul_bonus": 14.5,
@@ -3877,8 +3877,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
-      "revival_spots_region": 6
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "浙江大学",
@@ -3909,7 +3909,7 @@
         "points_score": 7.596
       },
       "strength_rank_global": 9,
-      "strength_rank_region": 3,
+      "strength_rank_region": 4,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -3917,8 +3917,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "武汉工程大学",
@@ -3949,7 +3949,7 @@
         "points_score": 5.148
       },
       "strength_rank_global": 10,
-      "strength_rank_region": 4,
+      "strength_rank_region": 5,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -3957,8 +3957,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "西北工业大学",
@@ -3989,7 +3989,7 @@
         "points_score": 4.5
       },
       "strength_rank_global": 11,
-      "strength_rank_region": 4,
+      "strength_rank_region": 3,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -3997,7 +3997,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4038,17 +4038,17 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "哈尔滨工业大学（威海）",
       "team": "HERO",
       "city": "威海市",
       "team_type": "甲级",
-      "volunteer": "东部",
+      "volunteer": "北部",
       "assigned": "北部",
-      "status": "transfer",
-      "status_cn": "调剂",
+      "status": "volunteer",
+      "status_cn": "志愿",
       "rank": 15,
       "points": 17.2,
       "full_form_ranking": 28,
@@ -4069,7 +4069,7 @@
         "points_score": 6.192
       },
       "strength_rank_global": 13,
-      "strength_rank_region": 5,
+      "strength_rank_region": 4,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4077,7 +4077,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4109,7 +4109,7 @@
         "points_score": 5.184
       },
       "strength_rank_global": 14,
-      "strength_rank_region": 6,
+      "strength_rank_region": 5,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4117,7 +4117,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4158,7 +4158,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "东莞理工学院",
@@ -4198,7 +4198,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "太原科技大学",
@@ -4229,15 +4229,15 @@
         "points_score": 2.88
       },
       "strength_rank_global": 17,
-      "strength_rank_region": 7,
+      "strength_rank_region": 6,
       "qualification_status": "national",
       "qualification_label": "国赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4269,7 +4269,7 @@
         "points_score": 6.948
       },
       "strength_rank_global": 18,
-      "strength_rank_region": 8,
+      "strength_rank_region": 7,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4277,7 +4277,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4309,7 +4309,7 @@
         "points_score": 4.0608
       },
       "strength_rank_global": 19,
-      "strength_rank_region": 9,
+      "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4317,7 +4317,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4358,7 +4358,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "大连理工大学",
@@ -4389,7 +4389,7 @@
         "points_score": 6.1848
       },
       "strength_rank_global": 21,
-      "strength_rank_region": 10,
+      "strength_rank_region": 9,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4401,7 +4401,7 @@
       "boundary_labels": [
         "国赛线"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4433,7 +4433,7 @@
         "points_score": 4.068
       },
       "strength_rank_global": 22,
-      "strength_rank_region": 11,
+      "strength_rank_region": 10,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -4445,7 +4445,7 @@
       "boundary_labels": [
         "复活起点"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4477,7 +4477,7 @@
         "points_score": 6.4944
       },
       "strength_rank_global": 23,
-      "strength_rank_region": 5,
+      "strength_rank_region": 6,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4485,8 +4485,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "广东工业大学",
@@ -4526,7 +4526,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南京航空航天大学金城学院",
@@ -4557,7 +4557,7 @@
         "points_score": 5.256
       },
       "strength_rank_global": 25,
-      "strength_rank_region": 6,
+      "strength_rank_region": 7,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4565,8 +4565,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "东南大学",
@@ -4597,7 +4597,7 @@
         "points_score": 6.4584
       },
       "strength_rank_global": 26,
-      "strength_rank_region": 7,
+      "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4605,8 +4605,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "合肥工业大学（宣城校区）",
@@ -4637,7 +4637,7 @@
         "points_score": 6.3699
       },
       "strength_rank_global": 27,
-      "strength_rank_region": 8,
+      "strength_rank_region": 9,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -4649,8 +4649,8 @@
       "boundary_labels": [
         "国赛线"
       ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华东理工大学",
@@ -4681,7 +4681,7 @@
         "points_score": 2.9574
       },
       "strength_rank_global": 28,
-      "strength_rank_region": 9,
+      "strength_rank_region": 10,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -4693,8 +4693,8 @@
       "boundary_labels": [
         "复活起点"
       ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北方工业大学",
@@ -4725,7 +4725,7 @@
         "points_score": 3.96
       },
       "strength_rank_global": 29,
-      "strength_rank_region": 12,
+      "strength_rank_region": 11,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -4733,7 +4733,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4774,7 +4774,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "广州城市理工学院",
@@ -4818,15 +4818,15 @@
         "国赛线"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "江南大学霞客湾校区",
       "team": "SHARK",
       "city": "无锡市",
       "team_type": "非甲级",
-      "volunteer": "东部",
-      "assigned": "东部",
+      "volunteer": "北部",
+      "assigned": "北部",
       "status": "volunteer",
       "status_cn": "志愿",
       "rank": 220,
@@ -4840,7 +4840,7 @@
       "dist_south": 800,
       "dist_east": 636,
       "dist_north": 1171,
-      "dist_to_assigned": 636,
+      "dist_to_assigned": 1171,
       "strength_score": 33.4846,
       "strength_components": {
         "rmul_bonus": 14.5,
@@ -4849,7 +4849,7 @@
         "points_score": 1.125
       },
       "strength_rank_global": 32,
-      "strength_rank_region": 10,
+      "strength_rank_region": 12,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -4857,8 +4857,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 6
     },
     {
       "school": "沈阳理工大学",
@@ -4897,7 +4897,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -4942,7 +4942,7 @@
         "复活起点"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "哈尔滨工程大学",
@@ -4981,7 +4981,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5019,9 +5019,13 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 10,
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5054,18 +5058,18 @@
       },
       "strength_rank_global": 37,
       "strength_rank_region": 16,
-      "qualification_status": "revival",
-      "qualification_label": "复活赛",
+      "qualification_status": "none",
+      "qualification_label": "未晋级",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
       "boundary_markers": [
-        "last_revival"
+        "first_out"
       ],
       "boundary_labels": [
-        "复活线"
+        "落选线"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5103,13 +5107,9 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
-      "national_spots_region": 10,
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5150,7 +5150,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南京理工大学",
@@ -5189,8 +5189,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "仲恺农业工程学院",
@@ -5230,7 +5230,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "长安大学",
@@ -5269,7 +5269,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5310,7 +5310,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南方科技大学",
@@ -5347,10 +5347,14 @@
       "volunteer_source": "nearest_estimate",
       "volunteer_source_label": "就近估算",
       "is_submitted": false,
-      "boundary_markers": [],
-      "boundary_labels": [],
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中国石油大学（北京）",
@@ -5389,7 +5393,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5429,7 +5433,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5462,19 +5466,19 @@
       },
       "strength_rank_global": 47,
       "strength_rank_region": 16,
-      "qualification_status": "revival",
-      "qualification_label": "复活赛",
+      "qualification_status": "none",
+      "qualification_label": "未晋级",
       "volunteer_source": "nearest_estimate",
       "volunteer_source_label": "就近估算",
       "is_submitted": false,
       "boundary_markers": [
-        "last_revival"
+        "first_out"
       ],
       "boundary_labels": [
-        "复活线"
+        "落选线"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "桂林电子科技大学",
@@ -5511,14 +5515,10 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
+      "boundary_markers": [],
+      "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "广州航海学院",
@@ -5558,7 +5558,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华北理工大学",
@@ -5597,7 +5597,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5635,14 +5635,10 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "last_revival"
-      ],
-      "boundary_labels": [
-        "复活线"
-      ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "安徽信息工程学院",
@@ -5674,19 +5670,15 @@
       },
       "strength_rank_global": 52,
       "strength_rank_region": 13,
-      "qualification_status": "none",
-      "qualification_label": "未晋级",
+      "qualification_status": "revival",
+      "qualification_label": "复活赛",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "首都师范大学",
@@ -5725,7 +5717,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5758,15 +5750,19 @@
       },
       "strength_rank_global": 54,
       "strength_rank_region": 14,
-      "qualification_status": "none",
-      "qualification_label": "未晋级",
+      "qualification_status": "revival",
+      "qualification_label": "复活赛",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "武汉科技大学",
@@ -5803,10 +5799,14 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [
+        "first_out"
+      ],
+      "boundary_labels": [
+        "落选线"
+      ],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "山东理工大学",
@@ -5845,7 +5845,7 @@
       "is_submitted": false,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5880,12 +5880,12 @@
       "strength_rank_region": 24,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -5926,7 +5926,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南华大学",
@@ -5966,7 +5966,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "江苏大学",
@@ -6005,8 +6005,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "成都信息工程大学",
@@ -6045,7 +6045,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -6086,7 +6086,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南昌大学",
@@ -6125,8 +6125,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "长沙理工大学",
@@ -6160,13 +6160,13 @@
       "strength_rank_region": 22,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "host_default",
-      "volunteer_source_label": "承办默认",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "复旦大学",
@@ -6205,8 +6205,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "天津大学",
@@ -6245,7 +6245,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -6286,7 +6286,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "上海工程技术大学",
@@ -6325,8 +6325,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "杭州电子科技大学",
@@ -6365,8 +6365,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "桂林信息科技学院",
@@ -6406,7 +6406,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中北大学",
@@ -6445,8 +6445,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "广西大学",
@@ -6485,8 +6485,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北京理工大学（珠海）",
@@ -6525,8 +6525,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "齐鲁工业大学",
@@ -6560,13 +6560,13 @@
       "strength_rank_region": 24,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "host_default",
-      "volunteer_source_label": "承办默认",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "成都大学",
@@ -6606,7 +6606,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "四川大学",
@@ -6646,7 +6646,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "香港科技大学",
@@ -6685,7 +6685,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -6725,8 +6725,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "厦门大学嘉庚学院",
@@ -6766,7 +6766,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "湘潭大学",
@@ -6806,7 +6806,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "青岛大学",
@@ -6845,7 +6845,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -6886,7 +6886,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "西南交通大学",
@@ -6925,8 +6925,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "西交利物浦大学",
@@ -6965,8 +6965,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "内蒙古科技大学",
@@ -7005,7 +7005,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7045,7 +7045,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7085,8 +7085,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华南师范大学",
@@ -7125,8 +7125,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北京信息科技大学",
@@ -7165,7 +7165,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7205,7 +7205,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7245,8 +7245,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "常州大学",
@@ -7285,8 +7285,8 @@
       "is_submitted": false,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "重庆理工大学",
@@ -7326,7 +7326,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "厦门理工学院",
@@ -7366,7 +7366,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华南师范大学（佛山校区）",
@@ -7406,7 +7406,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "武汉大学",
@@ -7445,8 +7445,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     }
   ],
   "strength_ranking": [
@@ -7487,7 +7487,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7528,7 +7528,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中国石油大学（华东）",
@@ -7567,7 +7567,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7607,8 +7607,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华南农业大学",
@@ -7648,7 +7648,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华南理工大学",
@@ -7688,7 +7688,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "西安交通大学",
@@ -7727,16 +7727,16 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "太原工业学院",
       "team": "火线",
       "city": "太原市",
       "team_type": "甲级",
-      "volunteer": "北部",
-      "assigned": "北部",
+      "volunteer": "东部",
+      "assigned": "东部",
       "status": "volunteer",
       "status_cn": "志愿",
       "rank": 17,
@@ -7750,7 +7750,7 @@
       "dist_south": 1076,
       "dist_east": 426,
       "dist_north": 1026,
-      "dist_to_assigned": 1026,
+      "dist_to_assigned": 426,
       "strength_score": 62.5782,
       "strength_components": {
         "rmul_bonus": 14.5,
@@ -7767,8 +7767,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
-      "revival_spots_region": 6
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "浙江大学",
@@ -7799,7 +7799,7 @@
         "points_score": 7.596
       },
       "strength_rank_global": 9,
-      "strength_rank_region": 3,
+      "strength_rank_region": 4,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -7807,8 +7807,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "武汉工程大学",
@@ -7839,7 +7839,7 @@
         "points_score": 5.148
       },
       "strength_rank_global": 10,
-      "strength_rank_region": 4,
+      "strength_rank_region": 5,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -7847,8 +7847,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "西北工业大学",
@@ -7879,7 +7879,7 @@
         "points_score": 4.5
       },
       "strength_rank_global": 11,
-      "strength_rank_region": 4,
+      "strength_rank_region": 3,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -7887,7 +7887,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7928,17 +7928,17 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "哈尔滨工业大学（威海）",
       "team": "HERO",
       "city": "威海市",
       "team_type": "甲级",
-      "volunteer": "东部",
+      "volunteer": "北部",
       "assigned": "北部",
-      "status": "transfer",
-      "status_cn": "调剂",
+      "status": "volunteer",
+      "status_cn": "志愿",
       "rank": 15,
       "points": 17.2,
       "full_form_ranking": 28,
@@ -7959,7 +7959,7 @@
         "points_score": 6.192
       },
       "strength_rank_global": 13,
-      "strength_rank_region": 5,
+      "strength_rank_region": 4,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -7967,7 +7967,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -7999,7 +7999,7 @@
         "points_score": 5.184
       },
       "strength_rank_global": 14,
-      "strength_rank_region": 6,
+      "strength_rank_region": 5,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8007,7 +8007,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8048,7 +8048,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "东莞理工学院",
@@ -8088,7 +8088,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "太原科技大学",
@@ -8119,15 +8119,15 @@
         "points_score": 2.88
       },
       "strength_rank_global": 17,
-      "strength_rank_region": 7,
+      "strength_rank_region": 6,
       "qualification_status": "national",
       "qualification_label": "国赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8159,7 +8159,7 @@
         "points_score": 6.948
       },
       "strength_rank_global": 18,
-      "strength_rank_region": 8,
+      "strength_rank_region": 7,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8167,7 +8167,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8199,7 +8199,7 @@
         "points_score": 4.0608
       },
       "strength_rank_global": 19,
-      "strength_rank_region": 9,
+      "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8207,7 +8207,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8248,7 +8248,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "大连理工大学",
@@ -8279,7 +8279,7 @@
         "points_score": 6.1848
       },
       "strength_rank_global": 21,
-      "strength_rank_region": 10,
+      "strength_rank_region": 9,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8291,7 +8291,7 @@
       "boundary_labels": [
         "国赛线"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8323,7 +8323,7 @@
         "points_score": 4.068
       },
       "strength_rank_global": 22,
-      "strength_rank_region": 11,
+      "strength_rank_region": 10,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -8335,7 +8335,7 @@
       "boundary_labels": [
         "复活起点"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8367,7 +8367,7 @@
         "points_score": 6.4944
       },
       "strength_rank_global": 23,
-      "strength_rank_region": 5,
+      "strength_rank_region": 6,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8375,8 +8375,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "广东工业大学",
@@ -8416,7 +8416,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南京航空航天大学金城学院",
@@ -8447,7 +8447,7 @@
         "points_score": 5.256
       },
       "strength_rank_global": 25,
-      "strength_rank_region": 6,
+      "strength_rank_region": 7,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8455,8 +8455,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "东南大学",
@@ -8487,7 +8487,7 @@
         "points_score": 6.4584
       },
       "strength_rank_global": 26,
-      "strength_rank_region": 7,
+      "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8495,8 +8495,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "合肥工业大学（宣城校区）",
@@ -8527,7 +8527,7 @@
         "points_score": 6.3699
       },
       "strength_rank_global": 27,
-      "strength_rank_region": 8,
+      "strength_rank_region": 9,
       "qualification_status": "national",
       "qualification_label": "国赛",
       "volunteer_source": "submitted",
@@ -8539,8 +8539,8 @@
       "boundary_labels": [
         "国赛线"
       ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华东理工大学",
@@ -8571,7 +8571,7 @@
         "points_score": 2.9574
       },
       "strength_rank_global": 28,
-      "strength_rank_region": 9,
+      "strength_rank_region": 10,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -8583,8 +8583,8 @@
       "boundary_labels": [
         "复活起点"
       ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北方工业大学",
@@ -8615,7 +8615,7 @@
         "points_score": 3.96
       },
       "strength_rank_global": 29,
-      "strength_rank_region": 12,
+      "strength_rank_region": 11,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -8623,7 +8623,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8664,7 +8664,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "广州城市理工学院",
@@ -8708,15 +8708,15 @@
         "国赛线"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "江南大学霞客湾校区",
       "team": "SHARK",
       "city": "无锡市",
       "team_type": "非甲级",
-      "volunteer": "东部",
-      "assigned": "东部",
+      "volunteer": "北部",
+      "assigned": "北部",
       "status": "volunteer",
       "status_cn": "志愿",
       "rank": 220,
@@ -8730,7 +8730,7 @@
       "dist_south": 800,
       "dist_east": 636,
       "dist_north": 1171,
-      "dist_to_assigned": 636,
+      "dist_to_assigned": 1171,
       "strength_score": 33.4846,
       "strength_components": {
         "rmul_bonus": 14.5,
@@ -8739,7 +8739,7 @@
         "points_score": 1.125
       },
       "strength_rank_global": 32,
-      "strength_rank_region": 10,
+      "strength_rank_region": 12,
       "qualification_status": "revival",
       "qualification_label": "复活赛",
       "volunteer_source": "submitted",
@@ -8747,8 +8747,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 6
     },
     {
       "school": "沈阳理工大学",
@@ -8787,7 +8787,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8832,7 +8832,7 @@
         "复活起点"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "哈尔滨工程大学",
@@ -8871,7 +8871,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8909,9 +8909,13 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 10,
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8944,18 +8948,18 @@
       },
       "strength_rank_global": 37,
       "strength_rank_region": 16,
-      "qualification_status": "revival",
-      "qualification_label": "复活赛",
+      "qualification_status": "none",
+      "qualification_label": "未晋级",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
       "boundary_markers": [
-        "last_revival"
+        "first_out"
       ],
       "boundary_labels": [
-        "复活线"
+        "落选线"
       ],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -8993,13 +8997,9 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
-      "national_spots_region": 10,
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9040,7 +9040,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南京理工大学",
@@ -9079,8 +9079,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "仲恺农业工程学院",
@@ -9120,7 +9120,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "长安大学",
@@ -9159,7 +9159,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9200,7 +9200,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南方科技大学",
@@ -9237,10 +9237,14 @@
       "volunteer_source": "nearest_estimate",
       "volunteer_source_label": "就近估算",
       "is_submitted": false,
-      "boundary_markers": [],
-      "boundary_labels": [],
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中国石油大学（北京）",
@@ -9279,7 +9283,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9319,7 +9323,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9352,19 +9356,19 @@
       },
       "strength_rank_global": 47,
       "strength_rank_region": 16,
-      "qualification_status": "revival",
-      "qualification_label": "复活赛",
+      "qualification_status": "none",
+      "qualification_label": "未晋级",
       "volunteer_source": "nearest_estimate",
       "volunteer_source_label": "就近估算",
       "is_submitted": false,
       "boundary_markers": [
-        "last_revival"
+        "first_out"
       ],
       "boundary_labels": [
-        "复活线"
+        "落选线"
       ],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "桂林电子科技大学",
@@ -9401,14 +9405,10 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
+      "boundary_markers": [],
+      "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "广州航海学院",
@@ -9448,7 +9448,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华北理工大学",
@@ -9487,7 +9487,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9525,14 +9525,10 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "last_revival"
-      ],
-      "boundary_labels": [
-        "复活线"
-      ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "安徽信息工程学院",
@@ -9564,19 +9560,15 @@
       },
       "strength_rank_global": 52,
       "strength_rank_region": 13,
-      "qualification_status": "none",
-      "qualification_label": "未晋级",
+      "qualification_status": "revival",
+      "qualification_label": "复活赛",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [
-        "first_out"
-      ],
-      "boundary_labels": [
-        "落选线"
-      ],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [],
+      "boundary_labels": [],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "首都师范大学",
@@ -9615,7 +9607,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9648,15 +9640,19 @@
       },
       "strength_rank_global": 54,
       "strength_rank_region": 14,
-      "qualification_status": "none",
-      "qualification_label": "未晋级",
+      "qualification_status": "revival",
+      "qualification_label": "复活赛",
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [
+        "last_revival"
+      ],
+      "boundary_labels": [
+        "复活线"
+      ],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "武汉科技大学",
@@ -9693,10 +9689,14 @@
       "volunteer_source": "submitted",
       "volunteer_source_label": "实时提交",
       "is_submitted": true,
-      "boundary_markers": [],
-      "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "boundary_markers": [
+        "first_out"
+      ],
+      "boundary_labels": [
+        "落选线"
+      ],
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "山东理工大学",
@@ -9735,7 +9735,7 @@
       "is_submitted": false,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9770,12 +9770,12 @@
       "strength_rank_region": 24,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9816,7 +9816,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南华大学",
@@ -9856,7 +9856,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "江苏大学",
@@ -9895,8 +9895,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "成都信息工程大学",
@@ -9935,7 +9935,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -9976,7 +9976,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "南昌大学",
@@ -10015,8 +10015,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "长沙理工大学",
@@ -10050,13 +10050,13 @@
       "strength_rank_region": 22,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "host_default",
-      "volunteer_source_label": "承办默认",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "复旦大学",
@@ -10095,8 +10095,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "天津大学",
@@ -10135,7 +10135,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -10176,7 +10176,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "上海工程技术大学",
@@ -10215,8 +10215,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "杭州电子科技大学",
@@ -10255,8 +10255,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "桂林信息科技学院",
@@ -10296,7 +10296,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "中北大学",
@@ -10335,8 +10335,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "广西大学",
@@ -10375,8 +10375,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北京理工大学（珠海）",
@@ -10415,8 +10415,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "齐鲁工业大学",
@@ -10450,13 +10450,13 @@
       "strength_rank_region": 24,
       "qualification_status": "none",
       "qualification_label": "未晋级",
-      "volunteer_source": "host_default",
-      "volunteer_source_label": "承办默认",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "成都大学",
@@ -10496,7 +10496,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "四川大学",
@@ -10536,7 +10536,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "香港科技大学",
@@ -10575,7 +10575,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -10615,8 +10615,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "厦门大学嘉庚学院",
@@ -10656,7 +10656,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "湘潭大学",
@@ -10696,7 +10696,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "青岛大学",
@@ -10735,7 +10735,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -10776,7 +10776,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "西南交通大学",
@@ -10815,8 +10815,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "西交利物浦大学",
@@ -10855,8 +10855,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "内蒙古科技大学",
@@ -10895,7 +10895,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -10935,7 +10935,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -10975,8 +10975,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "华南师范大学",
@@ -11015,8 +11015,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "北京信息科技大学",
@@ -11055,7 +11055,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -11095,7 +11095,7 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 10,
+      "national_spots_region": 9,
       "revival_spots_region": 6
     },
     {
@@ -11135,8 +11135,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "常州大学",
@@ -11175,8 +11175,8 @@
       "is_submitted": false,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     },
     {
       "school": "重庆理工大学",
@@ -11216,7 +11216,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "厦门理工学院",
@@ -11256,7 +11256,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "华南师范大学（佛山校区）",
@@ -11296,7 +11296,7 @@
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
-      "revival_spots_region": 6
+      "revival_spots_region": 5
     },
     {
       "school": "武汉大学",
@@ -11335,8 +11335,8 @@
       "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
-      "national_spots_region": 8,
-      "revival_spots_region": 4
+      "national_spots_region": 9,
+      "revival_spots_region": 5
     }
   ],
   "advancement_panel": {
@@ -11348,13 +11348,13 @@
         "top16_count": 5,
         "floating_spots": 2,
         "national_spots": 10,
-        "revival_spots": 6,
-        "advancing_total": 16,
+        "revival_spots": 5,
+        "advancing_total": 15,
         "boundary_teams": {
           "last_national": "广州城市理工学院",
           "first_revival": "哈尔滨工业大学（深圳）",
-          "last_revival": "华中科技大学",
-          "first_out": "桂林电子科技大学"
+          "last_revival": "南方科技大学",
+          "first_out": "华中科技大学"
         },
         "strength_stats": {
           "team_count": 32,
@@ -11373,56 +11373,56 @@
         "key": "东部",
         "name": "东部赛区",
         "city": "济南市",
-        "top16_count": 4,
-        "floating_spots": 0,
-        "national_spots": 8,
-        "revival_spots": 4,
-        "advancing_total": 12,
+        "top16_count": 5,
+        "floating_spots": 1,
+        "national_spots": 9,
+        "revival_spots": 5,
+        "advancing_total": 14,
         "boundary_teams": {
           "last_national": "合肥工业大学（宣城校区）",
           "first_revival": "华东理工大学",
-          "last_revival": "合肥工业大学",
-          "first_out": "安徽信息工程学院"
+          "last_revival": "福建师范大学",
+          "first_out": "武汉科技大学"
         },
         "strength_stats": {
           "team_count": 32,
-          "avg_strength_score": 20.5714,
+          "avg_strength_score": 21.4806,
           "median_strength_score": 10.2882,
-          "stdev_strength_score": 19.9389,
-          "top8_avg_strength_score": 50.3847,
+          "stdev_strength_score": 21.1344,
+          "top8_avg_strength_score": 53.5782,
           "min_strength_score": 1.4945,
           "max_strength_score": 69.3186,
           "q1_strength_score": 6.8483,
-          "q3_strength_score": 36.6381,
-          "iqr_strength_score": 29.7899
+          "q3_strength_score": 37.0903,
+          "iqr_strength_score": 30.242
         }
       },
       {
         "key": "北部",
         "name": "北部赛区",
         "city": "沈阳市",
-        "top16_count": 6,
-        "floating_spots": 2,
-        "national_spots": 10,
+        "top16_count": 5,
+        "floating_spots": 1,
+        "national_spots": 9,
         "revival_spots": 6,
-        "advancing_total": 16,
+        "advancing_total": 15,
         "boundary_teams": {
           "last_national": "大连理工大学",
           "first_revival": "北京理工大学",
-          "last_revival": "吉林大学",
-          "first_out": "河北科技大学"
+          "last_revival": "山东科技大学",
+          "first_out": "吉林大学"
         },
         "strength_stats": {
           "team_count": 32,
-          "avg_strength_score": 28.9206,
+          "avg_strength_score": 28.0115,
           "median_strength_score": 26.3779,
-          "stdev_strength_score": 20.6828,
-          "top8_avg_strength_score": 57.2139,
+          "stdev_strength_score": 19.8041,
+          "top8_avg_strength_score": 54.8871,
           "min_strength_score": 2.7008,
           "max_strength_score": 78.5683,
           "q1_strength_score": 11.7502,
-          "q3_strength_score": 44.067,
-          "iqr_strength_score": 32.3169
+          "q3_strength_score": 42.2315,
+          "iqr_strength_score": 30.4813
         }
       }
     ],
@@ -11441,70 +11441,297 @@
       },
       "东部": {
         "team_count": 32,
-        "avg_strength_score": 20.5714,
+        "avg_strength_score": 21.4806,
         "median_strength_score": 10.2882,
-        "stdev_strength_score": 19.9389,
-        "top8_avg_strength_score": 50.3847,
+        "stdev_strength_score": 21.1344,
+        "top8_avg_strength_score": 53.5782,
         "min_strength_score": 1.4945,
         "max_strength_score": 69.3186,
         "q1_strength_score": 6.8483,
-        "q3_strength_score": 36.6381,
-        "iqr_strength_score": 29.7899
+        "q3_strength_score": 37.0903,
+        "iqr_strength_score": 30.242
       },
       "北部": {
         "team_count": 32,
-        "avg_strength_score": 28.9206,
+        "avg_strength_score": 28.0115,
         "median_strength_score": 26.3779,
-        "stdev_strength_score": 20.6828,
-        "top8_avg_strength_score": 57.2139,
+        "stdev_strength_score": 19.8041,
+        "top8_avg_strength_score": 54.8871,
         "min_strength_score": 2.7008,
         "max_strength_score": 78.5683,
         "q1_strength_score": 11.7502,
-        "q3_strength_score": 44.067,
-        "iqr_strength_score": 32.3169
+        "q3_strength_score": 42.2315,
+        "iqr_strength_score": 30.4813
       }
     },
     "national_by_region": {
       "南部": 10,
-      "东部": 8,
-      "北部": 10
+      "东部": 9,
+      "北部": 9
     },
     "revival_by_region": {
-      "南部": 6,
-      "东部": 4,
+      "南部": 5,
+      "东部": 5,
       "北部": 6
     },
     "floating_by_region": {
       "南部": 2,
-      "东部": 0,
-      "北部": 2
+      "东部": 1,
+      "北部": 1
     },
     "top16_by_region": {
       "南部": 5,
-      "东部": 4,
-      "北部": 6
+      "东部": 5,
+      "北部": 5
     },
     "boundary_teams_by_region": {
       "南部": {
         "last_national": "广州城市理工学院",
         "first_revival": "哈尔滨工业大学（深圳）",
-        "last_revival": "华中科技大学",
-        "first_out": "桂林电子科技大学"
+        "last_revival": "南方科技大学",
+        "first_out": "华中科技大学"
       },
       "东部": {
         "last_national": "合肥工业大学（宣城校区）",
         "first_revival": "华东理工大学",
-        "last_revival": "合肥工业大学",
-        "first_out": "安徽信息工程学院"
+        "last_revival": "福建师范大学",
+        "first_out": "武汉科技大学"
       },
       "北部": {
         "last_national": "大连理工大学",
         "first_revival": "北京理工大学",
-        "last_revival": "吉林大学",
-        "first_out": "河北科技大学"
+        "last_revival": "山东科技大学",
+        "first_out": "吉林大学"
       }
     },
-    "model_note": "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、上赛季成绩、RMU 积分榜和当前综合实力模型的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
+    "model_note": "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、当前综合实力、赛区整体强度与轻度均衡约束的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
+  },
+  "shark_decision": {
+    "model_note": "当前不做多情景压力测试，只基于当前实时填报快照推演。机会分 = 当前资格档位 + 距国赛/总晋级线余裕 + 与边界队伍的实力分差 + 赛区内排名修正 + 志愿直录修正。",
+    "model_weights": {
+      "advance_margin": 12.0,
+      "national_margin": 4.0,
+      "advance_gap": 2.2,
+      "national_gap": 1.1,
+      "rank_bonus": 0.7,
+      "rank_anchor": 18,
+      "volunteer_bonus": 6.0,
+      "transfer_bonus": 0.0,
+      "gap_clip": 5.0
+    },
+    "target": {
+      "school": "江南大学霞客湾校区",
+      "team": "SHARK",
+      "city": "无锡市",
+      "team_type": "非甲级",
+      "rank": 220,
+      "ff": 22,
+      "points": 3.125,
+      "detail_2025": "",
+      "detail_2025_cn": "—",
+      "rmul_2026_top4": "runner_up",
+      "rmul_2026_top4_cn": "亚军",
+      "strength_score": 33.4846,
+      "strength_rank_global": 32,
+      "dist": {
+        "南部": 800,
+        "东部": 636,
+        "北部": 1171
+      }
+    },
+    "same_city_rival": {
+      "school": "南京理工大学江阴校区",
+      "team": "Combat",
+      "city": "无锡市",
+      "rank": 128,
+      "ff": 83,
+      "team_type": "非甲级",
+      "live_volunteer": "东部",
+      "submitted": true,
+      "projected_region": "东部",
+      "projected_status": "volunteer",
+      "projected_status_cn": "志愿",
+      "projected_qualification": "none",
+      "projected_qualification_label": "未晋级",
+      "strength_rank_region": 30
+    },
+    "observed_state": {
+      "submitted_count": 81,
+      "roster_total": 96,
+      "submitted_by_region": {
+        "南部": 24,
+        "东部": 35,
+        "北部": 22
+      },
+      "projected_by_region": {
+        "南部": 32,
+        "东部": 32,
+        "北部": 32
+      },
+      "shark_submitted": true,
+      "shark_live_volunteer": "北部",
+      "shark_projected_region": "北部",
+      "shark_projected_status": "volunteer",
+      "shark_projected_status_cn": "志愿",
+      "shark_projected_qualification": "revival",
+      "shark_projected_qualification_label": "复活赛"
+    },
+    "options": [
+      {
+        "shark_volunteer": "南部",
+        "volunteer_source": "submitted",
+        "final_region": "东部",
+        "status": "transfer",
+        "status_cn": "调剂",
+        "qualification_status": "revival",
+        "qualification_label": "复活赛",
+        "strength_score": 33.4846,
+        "strength_rank_global": 32,
+        "strength_rank_region": 11,
+        "ff_position": 6,
+        "national_spots": 9,
+        "revival_spots": 5,
+        "national_margin": -2,
+        "advance_margin": 3,
+        "national_line_school": "合肥工业大学（宣城校区）",
+        "advance_line_school": "安徽信息工程学院",
+        "first_out_school": "福建师范大学",
+        "national_gap_score": -3.5449,
+        "advance_gap_score": 17.4667,
+        "region_strength_stats": {
+          "team_count": 32,
+          "avg_strength_score": 22.2845,
+          "median_strength_score": 12.4038,
+          "stdev_strength_score": 21.0864,
+          "top8_avg_strength_score": 53.5782,
+          "min_strength_score": 1.4945,
+          "max_strength_score": 69.3186,
+          "q1_strength_score": 6.8483,
+          "q3_strength_score": 37.0903,
+          "iqr_strength_score": 30.242
+        },
+        "decision_components": {
+          "qualification_base": 72.0,
+          "advance_margin": 36.0,
+          "national_margin": -8.0,
+          "advance_gap": 11.0,
+          "national_gap": -3.8994,
+          "rank_bonus": 4.9,
+          "status_bonus": 0.0,
+          "total": 112.0006
+        },
+        "decision_score": 112.0006,
+        "summary": "报志愿 南部 后，当前快照下最终落在 东部，以调剂身份进入该赛区，综合实力排赛区第 11。当前落后国赛线 2 位，但仍在复活赛线内 3 位，机会分 112.0。"
+      },
+      {
+        "shark_volunteer": "东部",
+        "volunteer_source": "submitted",
+        "final_region": "东部",
+        "status": "volunteer",
+        "status_cn": "志愿",
+        "qualification_status": "revival",
+        "qualification_label": "复活赛",
+        "strength_score": 33.4846,
+        "strength_rank_global": 32,
+        "strength_rank_region": 11,
+        "ff_position": 6,
+        "national_spots": 9,
+        "revival_spots": 5,
+        "national_margin": -2,
+        "advance_margin": 3,
+        "national_line_school": "合肥工业大学（宣城校区）",
+        "advance_line_school": "安徽信息工程学院",
+        "first_out_school": "福建师范大学",
+        "national_gap_score": -3.5449,
+        "advance_gap_score": 17.4667,
+        "region_strength_stats": {
+          "team_count": 32,
+          "avg_strength_score": 22.2845,
+          "median_strength_score": 12.4038,
+          "stdev_strength_score": 21.0864,
+          "top8_avg_strength_score": 53.5782,
+          "min_strength_score": 1.4945,
+          "max_strength_score": 69.3186,
+          "q1_strength_score": 6.8483,
+          "q3_strength_score": 37.0903,
+          "iqr_strength_score": 30.242
+        },
+        "decision_components": {
+          "qualification_base": 72.0,
+          "advance_margin": 36.0,
+          "national_margin": -8.0,
+          "advance_gap": 11.0,
+          "national_gap": -3.8994,
+          "rank_bonus": 4.9,
+          "status_bonus": 6.0,
+          "total": 118.0006
+        },
+        "decision_score": 118.0006,
+        "summary": "报志愿 东部 后，当前快照下最终落在 东部，以志愿身份进入该赛区，综合实力排赛区第 11。当前落后国赛线 2 位，但仍在复活赛线内 3 位，机会分 118.0。"
+      },
+      {
+        "shark_volunteer": "北部",
+        "volunteer_source": "submitted",
+        "final_region": "北部",
+        "status": "volunteer",
+        "status_cn": "志愿",
+        "qualification_status": "revival",
+        "qualification_label": "复活赛",
+        "strength_score": 33.4846,
+        "strength_rank_global": 32,
+        "strength_rank_region": 12,
+        "ff_position": 9,
+        "national_spots": 9,
+        "revival_spots": 6,
+        "national_margin": -3,
+        "advance_margin": 3,
+        "national_line_school": "大连理工大学",
+        "advance_line_school": "山东科技大学",
+        "first_out_school": "吉林大学",
+        "national_gap_score": -8.1693,
+        "advance_gap_score": 5.4346,
+        "region_strength_stats": {
+          "team_count": 32,
+          "avg_strength_score": 28.0115,
+          "median_strength_score": 26.3779,
+          "stdev_strength_score": 19.8041,
+          "top8_avg_strength_score": 54.8871,
+          "min_strength_score": 2.7008,
+          "max_strength_score": 78.5683,
+          "q1_strength_score": 11.7502,
+          "q3_strength_score": 42.2315,
+          "iqr_strength_score": 30.4813
+        },
+        "decision_components": {
+          "qualification_base": 72.0,
+          "advance_margin": 36.0,
+          "national_margin": -12.0,
+          "advance_gap": 11.0,
+          "national_gap": -5.5,
+          "rank_bonus": 4.2,
+          "status_bonus": 6.0,
+          "total": 111.7
+        },
+        "decision_score": 111.7,
+        "summary": "报志愿 北部 后，当前快照下最终落在 北部，以志愿身份进入该赛区，综合实力排赛区第 12。当前落后国赛线 3 位，但仍在复活赛线内 3 位，机会分 111.7。"
+      }
+    ],
+    "recommendation": {
+      "priority_mode": "current_snapshot_score",
+      "volunteer": "东部",
+      "final_region": "东部",
+      "status": "volunteer",
+      "status_cn": "志愿",
+      "qualification_status": "revival",
+      "qualification_label": "复活赛",
+      "strength_rank_region": 11,
+      "decision_score": 118.0006,
+      "national_margin": -2,
+      "advance_margin": 3,
+      "national_gap_score": -3.5449,
+      "advance_gap_score": 17.4667,
+      "summary": "推荐报志愿 东部。在当前实时填报快照下，SHARK 最终会落在 东部，当前预估结果为复活赛，赛区排名第 11，机会分 118.0。"
+    }
   },
   "fetch_error": null
 }

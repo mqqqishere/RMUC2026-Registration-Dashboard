@@ -217,7 +217,8 @@ h1 {
 }
 #panel-advancement.active,
 #panel-strength.active,
-#panel-region-strength.active {
+#panel-region-strength.active,
+#panel-shark-decision.active {
   display: grid;
   gap: 10px;
   overflow: hidden;
@@ -228,6 +229,9 @@ h1 {
 #panel-strength.active,
 #panel-region-strength.active {
   grid-template-rows: auto 1fr;
+}
+#panel-shark-decision.active {
+  grid-template-rows: auto;
 }
 .banner,
 .formula-card,
@@ -750,6 +754,228 @@ td.score-cell {
 tr.qual-national td { background: rgba(255, 246, 222, 0.68); }
 tr.qual-revival td { background: rgba(238, 251, 253, 0.7); }
 tr.unsubmitted td { color: var(--muted); }
+.shark-stage {
+  display: grid;
+  gap: 10px;
+}
+.shark-overview,
+.shark-route-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+}
+.shark-overview { padding: 14px 16px; }
+.shark-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.shark-head h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.shark-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  max-width: 920px;
+}
+.shark-overview-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.shark-mini-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, #ffffff, #f7f9fc);
+}
+.shark-mini-card h3 {
+  margin: 8px 0 4px;
+  font-size: 18px;
+}
+.shark-mini-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.shark-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.shark-mini-grid.single {
+  grid-template-columns: 1fr;
+}
+.shark-mini-stat {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.82);
+}
+.shark-mini-stat .k {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shark-mini-stat .v {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.shark-mini-stat .hint {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.shark-distances {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.shark-route-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.shark-route-card {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+}
+.shark-route-card[data-region="南部"] {
+  border-color: rgba(213, 98, 67, 0.28);
+  background: linear-gradient(180deg, rgba(213, 98, 67, 0.08), #ffffff 55%);
+}
+.shark-route-card[data-region="东部"] {
+  border-color: rgba(79, 143, 58, 0.28);
+  background: linear-gradient(180deg, rgba(79, 143, 58, 0.08), #ffffff 55%);
+}
+.shark-route-card[data-region="北部"] {
+  border-color: rgba(27, 132, 166, 0.28);
+  background: linear-gradient(180deg, rgba(27, 132, 166, 0.08), #ffffff 55%);
+}
+.shark-route-card.recommended {
+  box-shadow: 0 0 0 2px rgba(34, 86, 200, 0.09), var(--shadow);
+  border-color: rgba(34, 86, 200, 0.34);
+}
+.shark-route-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+.shark-route-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.shark-route-top h3 {
+  margin: 6px 0 0;
+  font-size: 28px;
+  line-height: 1;
+}
+.shark-route-card[data-region="南部"] h3 { color: var(--south); }
+.shark-route-card[data-region="东部"] h3 { color: var(--east); }
+.shark-route-card[data-region="北部"] h3 { color: var(--north); }
+.route-pill-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.route-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 10px;
+  font-weight: 800;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.route-pill.recommended {
+  color: var(--accent);
+  border-color: rgba(34, 86, 200, 0.24);
+  background: rgba(34, 86, 200, 0.08);
+}
+.route-pill.qual-national {
+  color: #8a5f00;
+  border-color: rgba(201, 141, 22, 0.22);
+  background: rgba(255, 246, 222, 0.92);
+}
+.route-pill.qual-revival {
+  color: #0d6f87;
+  border-color: rgba(17, 132, 166, 0.22);
+  background: rgba(238, 251, 253, 0.92);
+}
+.route-pill.qual-none {
+  color: #9b3f34;
+  border-color: rgba(193, 91, 78, 0.22);
+  background: rgba(250, 243, 243, 0.92);
+}
+.shark-route-summary {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.shark-route-kpis,
+.shark-rate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.shark-kpi,
+.shark-rate {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 11px;
+  background: rgba(255, 255, 255, 0.82);
+}
+.shark-kpi span,
+.shark-rate span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shark-kpi strong,
+.shark-rate strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 21px;
+  line-height: 1;
+}
+.shark-kpi small,
+.shark-rate small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.shark-route-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 11px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
 .muted { color: var(--muted); }
 footer {
   color: var(--muted);
@@ -761,11 +987,14 @@ footer {
   .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .region-grid { grid-template-columns: 1fr; }
   .strength-grid { grid-template-columns: 1fr; }
+  .shark-overview-grid,
+  .shark-route-grid { grid-template-columns: 1fr; }
   .strength-mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .formula-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #panel-advancement.active,
   #panel-strength.active,
-  #panel-region-strength.active { overflow: visible; }
+  #panel-region-strength.active,
+  #panel-shark-decision.active { overflow: visible; }
   .region-card,
   .ranking-card { min-height: auto; }
   .member-list,
@@ -774,8 +1003,11 @@ footer {
 @media (max-width: 720px) {
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .spot-strip,
-  .formula-grid { grid-template-columns: 1fr; }
+  .formula-grid,
+  .shark-route-kpis,
+  .shark-rate-grid { grid-template-columns: 1fr; }
   .strength-mini-grid { grid-template-columns: 1fr; }
+  .shark-mini-grid { grid-template-columns: 1fr; }
   .strength-metric { grid-template-columns: 64px 1fr auto; }
   .member { grid-template-columns: 1fr; }
   .member-side { text-align: left; }
@@ -816,11 +1048,13 @@ footer {
     <button class="tab-btn active" data-tab="advancement" type="button">晋级推演台</button>
     <button class="tab-btn" data-tab="region-strength" type="button">赛区强度</button>
     <button class="tab-btn" data-tab="strength" type="button">综合实力榜</button>
+    <button class="tab-btn" data-tab="shark-decision" type="button">SHARK 决策</button>
   </div>
 
   <section id="panel-advancement" class="panel active"></section>
   <section id="panel-region-strength" class="panel"></section>
   <section id="panel-strength" class="panel"></section>
+  <section id="panel-shark-decision" class="panel"></section>
 
   <footer>
     全国赛名额按公告精确计算；复活赛名额为模型推演值。点击刷新会重新抓取轻流并更新本地页面。
@@ -894,6 +1128,13 @@ function numOr(value, fallback = 0) {
 function fixedOr(value, digits = 1, fallback = "—") {
   const num = Number(value);
   return Number.isFinite(num) ? num.toFixed(digits) : fallback;
+}
+
+function signedOr(value, zeroLabel = "压线", fallback = "—") {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  if (num === 0) return zeroLabel;
+  return `${num > 0 ? "+" : ""}${num}`;
 }
 
 function inferSubmitted(member) {
@@ -1051,6 +1292,53 @@ function metricPercent(value, minValue, maxValue, higherBetter = true) {
     ? (value - minValue) / (maxValue - minValue)
     : (maxValue - value) / (maxValue - minValue);
   return Math.max(12, Math.min(100, 12 + raw * 88));
+}
+
+function normalizeDecisionResult(result = {}) {
+  return {
+    ...result,
+    shark_volunteer: result.shark_volunteer || "",
+    final_region: result.final_region || "—",
+    status: result.status || "",
+    status_cn: result.status_cn || result.status || "—",
+    qualification_status: result.qualification_status || "none",
+    qualification_label: result.qualification_label || "未晋级",
+    strength_score: numOr(result.strength_score),
+    strength_rank_global: result.strength_rank_global ?? null,
+    strength_rank_region: result.strength_rank_region ?? null,
+    ff_position: result.ff_position ?? null,
+    national_spots: numOr(result.national_spots),
+    revival_spots: numOr(result.revival_spots),
+    national_margin: result.national_margin,
+    advance_margin: result.advance_margin,
+    national_line_school: result.national_line_school || null,
+    advance_line_school: result.advance_line_school || null,
+    first_out_school: result.first_out_school || null,
+    national_gap_score: result.national_gap_score,
+    advance_gap_score: result.advance_gap_score,
+    decision_score: numOr(result.decision_score),
+    decision_components: result.decision_components || {},
+    summary: result.summary || "",
+    region_strength_stats: result.region_strength_stats || {},
+  };
+}
+
+function normalizeSharkDecision(decision) {
+  if (!decision) return null;
+  return {
+    model_note: decision.model_note || "",
+    model_weights: decision.model_weights || {},
+    target: decision.target || {},
+    same_city_rival: decision.same_city_rival || null,
+    observed_state: decision.observed_state || {},
+    options: [...(decision.options || [])]
+      .map((option) => normalizeDecisionResult(option))
+      .sort((a, b) => compareNumber(
+        numOr(REGION_ORDER[a.shark_volunteer], 9),
+        numOr(REGION_ORDER[b.shark_volunteer], 9),
+      )),
+    recommendation: decision.recommendation || {},
+  };
 }
 
 function renderStats(data) {
@@ -1301,6 +1589,224 @@ function renderAdvancement(data) {
   `;
 }
 
+function renderSharkDecision(data) {
+  const panel = document.getElementById("panel-shark-decision");
+  const decision = normalizeSharkDecision(data.shark_decision);
+  if (!decision) {
+    panel.innerHTML = `<div class="empty">当前数据还没有生成 SHARK 决策面板，请先刷新并生成 data.json。</div>`;
+    return;
+  }
+
+  const target = decision.target || {};
+  const observed = decision.observed_state || {};
+  const recommendation = decision.recommendation || {};
+  const rival = decision.same_city_rival;
+  const submittedByRegion = observed.submitted_by_region || {};
+  const projectedByRegion = observed.projected_by_region || {};
+  const currentVolunteer = observed.shark_submitted
+    ? (observed.shark_live_volunteer || "已提交")
+    : "尚未提交";
+  const currentVsRecommendation = observed.shark_live_volunteer
+    && recommendation.volunteer
+    && observed.shark_live_volunteer !== recommendation.volunteer
+      ? `当前已填 ${observed.shark_live_volunteer}，与推荐 ${recommendation.volunteer} 不同`
+      : recommendation.volunteer
+        ? `当前建议优先考虑 ${recommendation.volunteer}`
+        : "当前暂无推荐";
+
+  const routeCards = decision.options.map((option) => {
+    const recommended = option.shark_volunteer === recommendation.volunteer;
+    const currentSelected = option.shark_volunteer === observed.shark_live_volunteer;
+    return `
+      <article class="shark-route-card ${recommended ? "recommended" : ""}" data-region="${esc(option.shark_volunteer)}">
+        <div class="shark-route-top">
+          <div>
+            <div class="shark-route-label">报志愿</div>
+            <h3>${esc(option.shark_volunteer)}</h3>
+          </div>
+          <div class="route-pill-row">
+            ${recommended ? `<span class="route-pill recommended">最终推荐</span>` : ""}
+            ${currentSelected ? `<span class="route-pill">当前已填</span>` : ""}
+            <span class="route-pill ${qualificationClass(option.qualification_status)}">${esc(option.qualification_label)}</span>
+          </div>
+        </div>
+        <div class="shark-route-summary">
+          ${esc(option.summary || `当前快照下最终落在 ${option.final_region}，${option.status_cn}录取。`)}
+        </div>
+        <div class="shark-route-kpis">
+          <div class="shark-kpi">
+            <span>机会分</span>
+            <strong>${fixedOr(option.decision_score)}</strong>
+            <small>当前资格 + 线余裕 + 分差综合估计</small>
+          </div>
+          <div class="shark-kpi">
+            <span>赛区排名</span>
+            <strong>#${option.strength_rank_region ?? "—"}</strong>
+            <small>全局 #${option.strength_rank_global ?? "—"} · FF #${option.ff_position ?? "—"}</small>
+          </div>
+          <div class="shark-kpi">
+            <span>综合分</span>
+            <strong>${fixedOr(option.strength_score)}</strong>
+            <small>直接取当前综合实力榜</small>
+          </div>
+        </div>
+        <div class="shark-rate-grid">
+          <div class="shark-rate">
+            <span>国赛线</span>
+            <strong>${signedOr(option.national_margin)}</strong>
+            <small>${option.national_line_school ? `边界队 ${esc(option.national_line_school)}` : "当前无国赛边界队"}</small>
+          </div>
+          <div class="shark-rate">
+            <span>总晋级线</span>
+            <strong>${signedOr(option.advance_margin)}</strong>
+            <small>${option.advance_line_school ? `边界队 ${esc(option.advance_line_school)}` : "当前无总晋级边界队"}</small>
+          </div>
+          <div class="shark-rate">
+            <span>录取去向</span>
+            <strong>${esc(option.final_region)}</strong>
+            <small>${esc(option.status_cn)}录取 · 国赛 ${option.national_spots} / 复活 ${option.revival_spots}</small>
+          </div>
+        </div>
+        <div class="shark-route-footer">
+          <span>与国赛线分差 ${fixedOr(option.national_gap_score, 2, "—")}</span>
+          <span>与总晋级线分差 ${fixedOr(option.advance_gap_score, 2, "—")}</span>
+          <span>${option.first_out_school ? `线外首队 ${esc(option.first_out_school)}` : "当前没有线外队伍"}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  panel.innerHTML = `
+    <section class="shark-stage">
+      <section class="shark-overview">
+        <div class="shark-head">
+          <div>
+            <h2>SHARK 志愿决策</h2>
+            <p>${esc(decision.model_note || "固定针对江南大学霞客湾校区，仅基于当前实时填报快照做三志愿预估。")}</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>当前志愿</strong>${esc(currentVolunteer)}</span>
+            <span class="pill"><strong>最终推荐</strong>${esc(recommendation.volunteer || "—")}</span>
+            <span class="pill"><strong>推荐逻辑</strong>当前快照机会分</span>
+          </div>
+        </div>
+        <div class="shark-overview-grid">
+          <article class="shark-mini-card">
+            <div class="eyebrow">Target Profile</div>
+            <h3>${esc(target.school || "江南大学霞客湾校区")}</h3>
+            <p>${esc(target.team || "SHARK")} · ${esc(target.city || "—")} · ${esc(target.team_type || "—")}</p>
+            <div class="shark-mini-grid">
+              <div class="shark-mini-stat">
+                <div class="k">综合实力</div>
+                <div class="v">${fixedOr(target.strength_score)}</div>
+                <div class="hint">全局 #${target.strength_rank_global ?? "—"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">积分榜</div>
+                <div class="v">${target.rank != null ? `#${esc(target.rank)}` : "—"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">完整形态</div>
+                <div class="v">${target.ff != null ? `#${esc(target.ff)}` : "—"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">积分</div>
+                <div class="v">${target.points != null ? esc(target.points) : "—"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">2026 RMUL</div>
+                <div class="v">${esc(target.rmul_2026_top4_cn || "—")}</div>
+              </div>
+            </div>
+            <div class="shark-distances">
+              <span class="pill"><strong>南部</strong>${esc(target.dist?.["南部"] ?? "—")} km</span>
+              <span class="pill"><strong>东部</strong>${esc(target.dist?.["东部"] ?? "—")} km</span>
+              <span class="pill"><strong>北部</strong>${esc(target.dist?.["北部"] ?? "—")} km</span>
+            </div>
+          </article>
+
+          <article class="shark-mini-card">
+            <div class="eyebrow">Observed State</div>
+            <h3>实时填报态势</h3>
+            <p>${esc(currentVsRecommendation)}</p>
+            <div class="shark-mini-grid">
+              <div class="shark-mini-stat">
+                <div class="k">已提交</div>
+                <div class="v">${numOr(observed.submitted_count)}</div>
+                <div class="hint">总名单 ${numOr(observed.roster_total)}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">南部</div>
+                <div class="v">${numOr(submittedByRegion["南部"])}</div>
+                <div class="hint">提交 ${numOr(submittedByRegion["南部"])} / 盘面 ${numOr(projectedByRegion["南部"])}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">东部</div>
+                <div class="v">${numOr(submittedByRegion["东部"])}</div>
+                <div class="hint">提交 ${numOr(submittedByRegion["东部"])} / 盘面 ${numOr(projectedByRegion["东部"])}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">北部</div>
+                <div class="v">${numOr(submittedByRegion["北部"])}</div>
+                <div class="hint">提交 ${numOr(submittedByRegion["北部"])} / 盘面 ${numOr(projectedByRegion["北部"])}</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="shark-mini-card">
+            <div class="eyebrow">Recommendation</div>
+            <h3>${esc(recommendation.volunteer || "—")}</h3>
+            <p>${esc(recommendation.summary || "当前暂无推荐摘要。")}</p>
+            <div class="shark-mini-grid">
+              <div class="shark-mini-stat">
+                <div class="k">机会分</div>
+                <div class="v">${fixedOr(recommendation.decision_score)}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">国赛线</div>
+                <div class="v">${signedOr(recommendation.national_margin)}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">总晋级线</div>
+                <div class="v">${signedOr(recommendation.advance_margin)}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">当前结论</div>
+                <div class="v">${esc(recommendation.qualification_label || "—")}</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="shark-mini-card">
+            <div class="eyebrow">Same-City Rival</div>
+            <h3>${esc(rival?.school || "暂无同城对手数据")}</h3>
+            <p>${rival
+              ? `${esc(rival.team || "—")} · ${esc(rival.city || "—")} · ${esc(rival.team_type || "—")}`
+              : "当前没有可展示的同城耦合对手数据。"}</p>
+            <div class="shark-mini-grid single">
+              <div class="shark-mini-stat">
+                <div class="k">当前志愿</div>
+                <div class="v">${esc(rival?.live_volunteer || (rival?.submitted ? "已提交" : "未提交"))}</div>
+                <div class="hint">${rival?.submitted ? "轻流实时记录" : "当前未观察到实时填报"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">预测去向</div>
+                <div class="v">${rival ? `${esc(rival.projected_region || "—")} / ${esc(rival.projected_qualification_label || "—")}` : "—"}</div>
+              </div>
+              <div class="shark-mini-stat">
+                <div class="k">积分榜 / 完整形态</div>
+                <div class="v">${rival ? `#${esc(rival.rank ?? "—")} / #${esc(rival.ff ?? "—")}` : "—"}</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="shark-route-grid">${routeCards}</div>
+    </section>
+  `;
+}
+
 function renderStrength(data) {
   const ranking = [...(data.strength_ranking || [])]
     .sort((a, b) => compareStrengthTeams(a, b, strengthSortState.key, strengthSortState.direction));
@@ -1398,6 +1904,7 @@ function render(data) {
   renderAdvancement(data);
   renderRegionStrength(data);
   renderStrength(data);
+  renderSharkDecision(data);
   if (data.fetch_error) {
     showError(`抓取失败：${data.fetch_error}`);
   } else {
@@ -1458,6 +1965,7 @@ document.getElementById("refreshBtn").addEventListener("click", refreshData);
     document.getElementById("panel-advancement").innerHTML = `<div class="empty">数据加载失败：${esc(error.message)}</div>`;
     document.getElementById("panel-region-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
     document.getElementById("panel-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
+    document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">请先刷新并生成 SHARK 决策数据。</div>`;
     showError(`初始加载失败：${error.message}`);
   }
 })();

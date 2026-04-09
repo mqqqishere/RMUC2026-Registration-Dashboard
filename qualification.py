@@ -93,6 +93,17 @@ BOUNDARY_LABEL = {
     "first_out": "落选线",
 }
 
+REVIVAL_TOTAL = 16
+REVIVAL_SOFT_MAX_ADVANCING_PER_REGION = 15
+REVIVAL_REGION_WEIGHTS = {
+    "avg": 2.4,
+    "median": 1.6,
+    "top8": 1.2,
+    "stability": 0.8,
+    "balance": 1.3,
+    "saturation": 1.1,
+}
+
 
 def _int_or_none(v: Optional[str]) -> Optional[int]:
     if v in (None, ""):
@@ -108,6 +119,36 @@ def _float_or_none(v: Optional[str]) -> Optional[float]:
 
 def _round(v: float) -> float:
     return round(v, 4)
+
+
+def _strength_sort_key(team: A.Team, strength_info: Dict[str, dict]):
+    entry = strength_info[team.school]
+    return (
+        -entry["strength_score"],
+        entry["full_form_ranking"] if entry["full_form_ranking"] is not None else 10 ** 9,
+        entry["points_rank"] if entry["points_rank"] is not None else 10 ** 9,
+        team.school,
+    )
+
+
+def _centered_metric(
+    values_by_region: Dict[str, float],
+    *,
+    higher_better: bool = True,
+) -> Dict[str, float]:
+    values = list(values_by_region.values())
+    low = min(values) if values else 0.0
+    high = max(values) if values else 0.0
+    if high <= low:
+        return {region: 0.0 for region in values_by_region}
+
+    out = {}
+    for region, value in values_by_region.items():
+        scaled = (value - low) / (high - low)
+        if not higher_better:
+            scaled = 1.0 - scaled
+        out[region] = _round((scaled - 0.5) * 2.0)
+    return out
 
 
 def load_roster(path: str = ROSTER_PATH) -> Dict[str, dict]:
@@ -358,6 +399,152 @@ def compute_region_strength_stats(
     return stats_by_region
 
 
+def _revival_region_context(
+    region_rankings: Dict[str, List[A.Team]],
+    strength_info: Dict[str, dict],
+    national_by_region: Dict[str, int],
+) -> Tuple[Dict[str, dict], Dict[str, float], Dict[str, int], float]:
+    stats_by_region = compute_region_strength_stats(region_rankings, strength_info)
+    avg_signal = _centered_metric(
+        {region: stats["avg_strength_score"] for region, stats in stats_by_region.items()}
+    )
+    median_signal = _centered_metric(
+        {region: stats["median_strength_score"] for region, stats in stats_by_region.items()}
+    )
+    top8_signal = _centered_metric(
+        {region: stats["top8_avg_strength_score"] for region, stats in stats_by_region.items()}
+    )
+    stability_signal = _centered_metric(
+        {region: stats["stdev_strength_score"] for region, stats in stats_by_region.items()},
+        higher_better=False,
+    )
+
+    region_bonus = {}
+    for region in REGIONS:
+        region_bonus[region] = _round(
+            avg_signal[region] * REVIVAL_REGION_WEIGHTS["avg"]
+            + median_signal[region] * REVIVAL_REGION_WEIGHTS["median"]
+            + top8_signal[region] * REVIVAL_REGION_WEIGHTS["top8"]
+            + stability_signal[region] * REVIVAL_REGION_WEIGHTS["stability"]
+        )
+
+    soft_cap = {
+        region: max(
+            0,
+            min(
+                REVIVAL_TOTAL,
+                REVIVAL_SOFT_MAX_ADVANCING_PER_REGION - national_by_region[region],
+            ),
+        )
+        for region in REGIONS
+    }
+    target_total = (sum(national_by_region.values()) + REVIVAL_TOTAL) / len(REGIONS)
+    return stats_by_region, region_bonus, soft_cap, target_total
+
+
+def _revival_candidate_score(
+    team: A.Team,
+    strength_info: Dict[str, dict],
+    region_bonus: Dict[str, float],
+    target_total: float,
+    advanced_count: Dict[str, int],
+    revival_by_region: Dict[str, int],
+) -> float:
+    region = team.assigned
+    balance_bonus = (
+        target_total - advanced_count[region]
+    ) * REVIVAL_REGION_WEIGHTS["balance"]
+    saturation_penalty = (
+        revival_by_region[region] * REVIVAL_REGION_WEIGHTS["saturation"]
+    )
+    return _round(
+        strength_info[team.school]["strength_score"]
+        + region_bonus[region]
+        + balance_bonus
+        - saturation_penalty
+    )
+
+
+def _select_revival_teams(
+    region_rankings: Dict[str, List[A.Team]],
+    strength_info: Dict[str, dict],
+    national_by_region: Dict[str, int],
+) -> Tuple[Dict[str, int], List[str], Dict[str, dict], Dict[str, float], Dict[str, int]]:
+    stats_by_region, region_bonus, soft_cap, target_total = _revival_region_context(
+        region_rankings, strength_info, national_by_region
+    )
+
+    remaining_pool = [
+        team
+        for region in REGIONS
+        for team in region_rankings[region][national_by_region[region]:]
+    ]
+    revival_by_region = {region: 0 for region in REGIONS}
+    advanced_count = dict(national_by_region)
+    selected_schools: List[str] = []
+    selected_school_set = set()
+
+    while len(selected_schools) < REVIVAL_TOTAL:
+        candidates = []
+        for team in remaining_pool:
+            if team.school in selected_school_set:
+                continue
+            region = team.assigned
+            if advanced_count[region] >= 16:
+                continue
+            if revival_by_region[region] >= soft_cap[region]:
+                continue
+            candidates.append({
+                "team": team,
+                "score": _revival_candidate_score(
+                    team,
+                    strength_info,
+                    region_bonus,
+                    target_total,
+                    advanced_count,
+                    revival_by_region,
+                ),
+            })
+
+        # 若软上限挡住了最后 1 个席位，则退回到绝对 16 上限。
+        if not candidates:
+            for team in remaining_pool:
+                if team.school in selected_school_set:
+                    continue
+                region = team.assigned
+                if advanced_count[region] >= 16:
+                    continue
+                candidates.append({
+                    "team": team,
+                    "score": _revival_candidate_score(
+                        team,
+                        strength_info,
+                        region_bonus,
+                        target_total,
+                        advanced_count,
+                        revival_by_region,
+                    ),
+                })
+
+        if not candidates:
+            break
+
+        candidates.sort(
+            key=lambda item: (
+                -item["score"],
+                *_strength_sort_key(item["team"], strength_info),
+            )
+        )
+        best = candidates[0]["team"]
+        region = best.assigned
+        selected_school_set.add(best.school)
+        selected_schools.append(best.school)
+        revival_by_region[region] += 1
+        advanced_count[region] += 1
+
+    return revival_by_region, selected_schools, stats_by_region, region_bonus, soft_cap
+
+
 def assign_qualifications(
     result: A.AllocationResult,
     strength_info: Dict[str, dict],
@@ -378,55 +565,25 @@ def assign_qualifications(
     for region in REGIONS:
         members = sorted(
             result.regions.get(region, []),
-            key=lambda team: (
-                -strength_info[team.school]["strength_score"],
-                strength_info[team.school]["full_form_ranking"]
-                if strength_info[team.school]["full_form_ranking"] is not None else 10 ** 9,
-                strength_info[team.school]["points_rank"]
-                if strength_info[team.school]["points_rank"] is not None else 10 ** 9,
-                team.school,
-            ),
+            key=lambda team: _strength_sort_key(team, strength_info),
         )
         region_rankings[region] = members
         for idx, team in enumerate(members, start=1):
             strength_rank_region[team.school] = idx
             qualification_status[team.school] = "none"
 
-    advanced_count = {region: 0 for region in REGIONS}
     for region, members in region_rankings.items():
         national_cut = national_by_region[region]
         for team in members[:national_cut]:
             qualification_status[team.school] = "national"
-            advanced_count[region] += 1
-
-    global_revival_pool = sorted(
-        [
-            team
-            for region in REGIONS
-            for team in region_rankings[region][national_by_region[region]:]
-        ],
-        key=lambda team: (
-            -strength_info[team.school]["strength_score"],
-            strength_info[team.school]["full_form_ranking"]
-            if strength_info[team.school]["full_form_ranking"] is not None else 10 ** 9,
-            strength_info[team.school]["points_rank"]
-            if strength_info[team.school]["points_rank"] is not None else 10 ** 9,
-            team.school,
-        ),
+    revival_by_region, selected_revival_schools, region_strength_stats, _, _ = _select_revival_teams(
+        region_rankings,
+        strength_info,
+        national_by_region,
     )
 
-    revival_by_region = {region: 0 for region in REGIONS}
-    selected_revival = 0
-    for team in global_revival_pool:
-        if selected_revival >= 16:
-            break
-        region = team.assigned
-        if advanced_count[region] >= 16:
-            continue
-        qualification_status[team.school] = "revival"
-        revival_by_region[region] += 1
-        advanced_count[region] += 1
-        selected_revival += 1
+    for school in selected_revival_schools:
+        qualification_status[school] = "revival"
 
     boundary_teams_by_region = {}
     for region, members in region_rankings.items():
@@ -453,8 +610,6 @@ def assign_qualifications(
             boundary["first_out"] = team.school
 
         boundary_teams_by_region[region] = boundary
-
-    region_strength_stats = compute_region_strength_stats(region_rankings, strength_info)
 
     region_summaries = []
     for region in REGIONS:

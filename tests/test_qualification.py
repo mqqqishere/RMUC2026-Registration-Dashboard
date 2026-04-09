@@ -317,7 +317,7 @@ class ProjectionAndQualificationTest(unittest.TestCase):
         self.assertEqual(by_school["长沙理工大学"].volunteer, "南部")
         self.assertEqual(by_school["华南理工大学"].volunteer, "南部")
 
-    def test_revival_selection_is_global_and_capped(self):
+    def test_revival_selection_is_balanced_and_capped(self):
         roster = qualification.load_roster()
         distances = allocator.load_distances()
         teams, _ = qualification.build_projected_teams(roster, distances, {})
@@ -327,35 +327,63 @@ class ProjectionAndQualificationTest(unittest.TestCase):
 
         self.assertEqual(sum(panel["national_by_region"].values()), 28)
         self.assertEqual(sum(panel["revival_by_region"].values()), 16)
+        totals = {
+            region: panel["national_by_region"][region] + panel["revival_by_region"][region]
+            for region in allocator.REGIONS
+        }
         for region in allocator.REGIONS:
             self.assertLessEqual(
-                panel["national_by_region"][region] + panel["revival_by_region"][region],
-                16,
+                totals[region],
+                qualification.REVIVAL_SOFT_MAX_ADVANCING_PER_REGION,
             )
+        self.assertLessEqual(max(totals.values()) - min(totals.values()), 1)
 
-        expected = []
-        advanced_count = dict(panel["national_by_region"])
-        pool = sorted(
-            [
-                team
-                for region in allocator.REGIONS
-                for team in panel["region_rankings"][region][panel["national_by_region"][region]:]
+    def test_revival_selector_uses_soft_cap_even_if_one_region_is_stronger(self):
+        region_rankings = {
+            "南部": [
+                SimpleNamespace(school=f"s{i}", assigned="南部") for i in range(1, 19)
             ],
-            key=lambda team: _team_sort_key(team, strength_info),
-        )
-        for team in pool:
-            if len(expected) >= 16:
-                break
-            if advanced_count[team.assigned] >= 16:
-                continue
-            expected.append(team.school)
-            advanced_count[team.assigned] += 1
+            "东部": [
+                SimpleNamespace(school=f"e{i}", assigned="东部") for i in range(1, 19)
+            ],
+            "北部": [
+                SimpleNamespace(school=f"n{i}", assigned="北部") for i in range(1, 19)
+            ],
+        }
+        strength_info = {}
+        for idx, team in enumerate(region_rankings["南部"], start=1):
+            strength_info[team.school] = {
+                "strength_score": 20.0 - idx,
+                "full_form_ranking": idx,
+                "points_rank": idx,
+            }
+        for idx, team in enumerate(region_rankings["东部"], start=1):
+            strength_info[team.school] = {
+                "strength_score": 40.0 - idx,
+                "full_form_ranking": idx,
+                "points_rank": idx,
+            }
+        for idx, team in enumerate(region_rankings["北部"], start=1):
+            strength_info[team.school] = {
+                "strength_score": 80.0 - idx,
+                "full_form_ranking": idx,
+                "points_rank": idx,
+            }
 
-        actual = sorted(
-            school for school, status in panel["qualification_status"].items()
-            if status == "revival"
+        national_by_region = {"南部": 8, "东部": 10, "北部": 10}
+        revival_by_region, selected, _, _, soft_cap = qualification._select_revival_teams(
+            region_rankings, strength_info, national_by_region
         )
-        self.assertEqual(sorted(expected), actual)
+
+        self.assertEqual(len(selected), qualification.REVIVAL_TOTAL)
+        self.assertEqual(soft_cap["东部"], 5)
+        self.assertEqual(soft_cap["北部"], 5)
+        self.assertLessEqual(revival_by_region["东部"], 5)
+        self.assertLessEqual(revival_by_region["北部"], 5)
+        self.assertLessEqual(
+            national_by_region["北部"] + revival_by_region["北部"],
+            qualification.REVIVAL_SOFT_MAX_ADVANCING_PER_REGION,
+        )
 
 
 if __name__ == "__main__":

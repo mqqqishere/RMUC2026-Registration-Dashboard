@@ -28,6 +28,7 @@ sys.path.insert(0, ROOT)
 
 import allocator         # noqa: E402
 import qualification     # noqa: E402
+import shark_decision    # noqa: E402
 
 BOARD_URL = "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02"
 ANNOUNCEMENT_URL = (
@@ -87,9 +88,10 @@ def _base_payload(fetch_error: str | None = None) -> dict:
             "top16_by_region": {region: 0 for region in allocator.REGIONS},
             "boundary_teams_by_region": {region: {} for region in allocator.REGIONS},
             "model_note": (
-                "全国赛名额按公告精确计算；复活赛名额为基于公告公开因素和当前综合实力模型的推演结果。"
+                "全国赛名额按公告精确计算；复活赛名额为基于当前综合实力、赛区整体强度与轻度均衡约束的推演结果。"
             ),
         },
+        "shark_decision": None,
         "fetch_error": fetch_error,
     }
 
@@ -367,9 +369,15 @@ def build_payload() -> dict:
         "top16_by_region": panel["top16_by_region"],
         "boundary_teams_by_region": panel["boundary_teams_by_region"],
         "model_note": (
-            "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、上赛季成绩、RMU 积分榜和当前综合实力模型的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
+            "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、当前综合实力、赛区整体强度与轻度均衡约束的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
         ),
     }
+    payload["shark_decision"] = shark_decision.build_decision_panel(
+        live_teams,
+        distances,
+        roster=roster,
+        strength_info=strength_info,
+    )
     return payload
 
 

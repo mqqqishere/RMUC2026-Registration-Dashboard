@@ -81,7 +81,13 @@ class DashboardHandler(SimpleHTTPRequestHandler):
 
 def load_build_dashboard_module():
     """Reload dashboard-related modules so refresh picks up local code edits."""
-    module_names = ["qingflow", "allocator", "qualification", "build_dashboard"]
+    module_names = [
+        "qingflow",
+        "allocator",
+        "qualification",
+        "shark_decision",
+        "build_dashboard",
+    ]
     for name in module_names:
         module = sys.modules.get(name)
         if module is not None:
