@@ -1,6 +1,6 @@
 {
-  "updated_at_utc": "2026-04-09T16:10:53Z",
-  "updated_at_cst": "2026-04-10 00:10:53",
+  "updated_at_utc": "2026-04-09T16:43:43Z",
+  "updated_at_cst": "2026-04-10 00:43:43",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
@@ -8,7 +8,7 @@
   "title": "RMUC 2026 晋级推演台",
   "capacity": 32,
   "total_teams": 96,
-  "submitted_teams": 89,
+  "submitted_teams": 90,
   "ranks_covered": 96,
   "hosts_seen": 10,
   "transferred_count": 8,
@@ -18,16 +18,16 @@
     "南部"
   ],
   "submission": {
-    "submitted_count": 89,
+    "submitted_count": 90,
     "roster_total": 96,
-    "estimated_count": 7
+    "estimated_count": 6
   },
   "refresh_meta": {
     "status": "success",
     "status_label": "实时抓取成功",
-    "message": "本页展示的是 2026-04-10 00:10:53 的最新轻流刷新结果，当前抓到 89 支已填报学校。",
+    "message": "本页展示的是 2026-04-10 00:43:43 的最新轻流刷新结果，当前抓到 90 支已填报学校。",
     "source": "qingflow_live",
-    "live_submitted_count": 89
+    "live_submitted_count": 90
   },
   "regions": [
     {
@@ -35,8 +35,8 @@
       "name": "南部赛区",
       "city": "长沙市",
       "count": 32,
-      "visible_count": 26,
-      "hidden_count": 6,
+      "visible_count": 27,
+      "hidden_count": 5,
       "counts": {
         "host": 2,
         "volunteer": 30,
@@ -303,6 +303,41 @@
           },
           "strength_rank_global": 21,
           "strength_rank_region": 7,
+          "qualification_status": "national",
+          "qualification_label": "国赛",
+          "volunteer_source": "submitted",
+          "volunteer_source_label": "实时提交",
+          "is_submitted": true,
+          "boundary_markers": [],
+          "boundary_labels": []
+        },
+        {
+          "school": "广东工业大学",
+          "team": "DynamicX",
+          "city": "广州市",
+          "status": "volunteer",
+          "status_cn": "志愿",
+          "original_volunteer": "南部",
+          "assigned": "南部",
+          "dist_km": 564,
+          "rank": 6,
+          "points": 20.0,
+          "team_type": "甲级",
+          "is_host": false,
+          "full_form_ranking": 36,
+          "detail_2025": "top_16",
+          "detail_2025_cn": "十六强",
+          "rmul_2026_top4": "",
+          "rmul_2026_top4_cn": "—",
+          "strength_score": 39.4441,
+          "strength_components": {
+            "rmul_bonus": 0.0,
+            "full_form_score": 12.2441,
+            "history_bonus": 20.0,
+            "points_score": 7.2
+          },
+          "strength_rank_global": 25,
+          "strength_rank_region": 8,
           "qualification_status": "national",
           "qualification_label": "国赛",
           "volunteer_source": "submitted",
@@ -994,41 +1029,6 @@
         }
       ],
       "hidden_members": [
-        {
-          "school": "广东工业大学",
-          "team": "DynamicX",
-          "city": "广州市",
-          "status": "volunteer",
-          "status_cn": "志愿",
-          "original_volunteer": "南部",
-          "assigned": "南部",
-          "dist_km": 564,
-          "rank": 6,
-          "points": 20.0,
-          "team_type": "甲级",
-          "is_host": false,
-          "full_form_ranking": 36,
-          "detail_2025": "top_16",
-          "detail_2025_cn": "十六强",
-          "rmul_2026_top4": "",
-          "rmul_2026_top4_cn": "—",
-          "strength_score": 39.4441,
-          "strength_components": {
-            "rmul_bonus": 0.0,
-            "full_form_score": 12.2441,
-            "history_bonus": 20.0,
-            "points_score": 7.2
-          },
-          "strength_rank_global": 25,
-          "strength_rank_region": 8,
-          "qualification_status": "national",
-          "qualification_label": "国赛",
-          "volunteer_source": "nearest_estimate",
-          "volunteer_source_label": "就近估算",
-          "is_submitted": false,
-          "boundary_markers": [],
-          "boundary_labels": []
-        },
         {
           "school": "香港科技大学（广州）",
           "team": "PnX",
@@ -4555,9 +4555,9 @@
       "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
@@ -8445,9 +8445,9 @@
       "strength_rank_region": 8,
       "qualification_status": "national",
       "qualification_label": "国赛",
-      "volunteer_source": "nearest_estimate",
-      "volunteer_source_label": "就近估算",
-      "is_submitted": false,
+      "volunteer_source": "submitted",
+      "volunteer_source_label": "实时提交",
+      "is_submitted": true,
       "boundary_markers": [],
       "boundary_labels": [],
       "national_spots_region": 10,
@@ -11555,10 +11555,10 @@
       "strength_rank_region": 31
     },
     "observed_state": {
-      "submitted_count": 89,
+      "submitted_count": 90,
       "roster_total": 96,
       "submitted_by_region": {
-        "南部": 27,
+        "南部": 28,
         "东部": 37,
         "北部": 25
       },
@@ -11737,8 +11737,8 @@
     "model_note": "输入为最新调剂后的 32 支赛区名单，抽签与 2025 场序对齐；基础分取当前综合实力分，弱者仅在面对更强对手时获得轻微 boost。",
     "meta": {
       "model_version": "swiss-sim-v1.0",
-      "updated_at_utc": "2026-04-09T16:10:53Z",
-      "updated_at_cst": "2026-04-10 00:10:53",
+      "updated_at_utc": "2026-04-09T16:43:43Z",
+      "updated_at_cst": "2026-04-10 00:43:43",
       "iterations": 1400,
       "quota_mode": "rmuc_2026_current_region_quota",
       "seed_rule": "points desc -> points_rank asc -> full_form_ranking asc -> strength_score desc -> school",
