@@ -16,6 +16,7 @@ import os
 import random
 from collections import defaultdict
 from dataclasses import dataclass, field
+from functools import lru_cache
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 
@@ -254,15 +255,98 @@ def _team_damage(profile: TeamProfile, gap_abs: float, won_game: bool, rng: rand
     return max(1200.0, value)
 
 
+@dataclass(frozen=True)
+class SeriesParams:
+    game_probability: float
+    gap_abs: float
+    base_margin_center: float
+    outpost_margin_center: float
+    left_damage_win_mean: float
+    left_damage_loss_mean: float
+    right_damage_win_mean: float
+    right_damage_loss_mean: float
+    bo3_left_2_0_cut: float
+    bo3_left_2_1_cut: float
+    bo3_right_2_0_cut: float
+
+
+@lru_cache(maxsize=65536)
+def _series_params(left: TeamProfile, right: TeamProfile) -> SeriesParams:
+    gap = _effective_gap(left, right)
+    game_probability = 1.0 / (1.0 + math.exp(-gap / LOGISTIC_SCALE))
+    gap_abs = abs(gap)
+    base_margin_center = BASE_MARGIN_CENTER + gap_abs * BASE_MARGIN_SCALE
+    outpost_margin_center = OUTPOST_MARGIN_CENTER + gap_abs * OUTPOST_MARGIN_SCALE
+    damage_offset = gap_abs * TEAM_DAMAGE_GAP_SCALE
+    left_damage_base = TEAM_DAMAGE_BASE + left.strength_score * TEAM_DAMAGE_SCORE_SCALE + damage_offset
+    right_damage_base = TEAM_DAMAGE_BASE + right.strength_score * TEAM_DAMAGE_SCORE_SCALE + damage_offset
+    q = 1.0 - game_probability
+    left_2_0 = game_probability * game_probability
+    left_2_1 = left_2_0 + 2.0 * left_2_0 * q
+    right_2_0 = left_2_1 + q * q
+    return SeriesParams(
+        game_probability=game_probability,
+        gap_abs=gap_abs,
+        base_margin_center=base_margin_center,
+        outpost_margin_center=outpost_margin_center,
+        left_damage_win_mean=left_damage_base + 180.0,
+        left_damage_loss_mean=left_damage_base - 90.0,
+        right_damage_win_mean=right_damage_base + 180.0,
+        right_damage_loss_mean=right_damage_base - 90.0,
+        bo3_left_2_0_cut=left_2_0,
+        bo3_left_2_1_cut=left_2_1,
+        bo3_right_2_0_cut=right_2_0,
+    )
+
+
+def _sample_best_of_three_score(params: SeriesParams, rng: random.Random) -> Tuple[int, int]:
+    draw = rng.random()
+    if draw < params.bo3_left_2_0_cut:
+        return 2, 0
+    if draw < params.bo3_left_2_1_cut:
+        return 2, 1
+    if draw < params.bo3_right_2_0_cut:
+        return 0, 2
+    return 1, 2
+
+
+def _sample_signed_margin_sum(
+    center: float,
+    noise: float,
+    positive_games: int,
+    negative_games: int,
+    rng: random.Random,
+) -> float:
+    total = 0.0
+    for _ in range(positive_games):
+        total += max(40.0, center + rng.gauss(0.0, noise))
+    for _ in range(negative_games):
+        total -= max(40.0, center + rng.gauss(0.0, noise))
+    return total
+
+
+def _sample_damage_sum(
+    win_mean: float,
+    loss_mean: float,
+    total_games: int,
+    won_games: int,
+    rng: random.Random,
+) -> float:
+    if total_games <= 0:
+        return 0.0
+    mean = won_games * win_mean + (total_games - won_games) * loss_mean
+    return rng.gauss(mean, TEAM_DAMAGE_NOISE * math.sqrt(total_games))
+
+
 def _apply_series_metrics(
     state: TeamState,
     opponent: TeamState,
     match_won: bool,
     game_wins: int,
     game_losses: int,
-    base_margins: Iterable[float],
-    outpost_margins: Iterable[float],
-    damages: Iterable[float],
+    base_margin_sum: float,
+    outpost_margin_sum: float,
+    damage_sum: float,
 ):
     state.opponents.append(opponent.school)
     state.wins += 1 if match_won else 0
@@ -270,21 +354,21 @@ def _apply_series_metrics(
     state.game_wins += game_wins
     state.game_losses += game_losses
     state.total_games += game_wins + game_losses
-    state.base_margin_sum += sum(base_margins)
-    state.outpost_margin_sum += sum(outpost_margins)
-    state.damage_sum += sum(damages)
+    state.base_margin_sum += base_margin_sum
+    state.outpost_margin_sum += outpost_margin_sum
+    state.damage_sum += damage_sum
 
 
-def _run_series(left: TeamState, right: TeamState, best_of: int, rng: random.Random) -> dict:
+def _run_series_slow(left: TeamState, right: TeamState, best_of: int, rng: random.Random) -> dict:
     wins_needed = best_of // 2 + 1
     left_wins = 0
     right_wins = 0
-    left_base_margins: List[float] = []
-    right_base_margins: List[float] = []
-    left_outpost_margins: List[float] = []
-    right_outpost_margins: List[float] = []
-    left_damages: List[float] = []
-    right_damages: List[float] = []
+    left_base_margin_sum = 0.0
+    right_base_margin_sum = 0.0
+    left_outpost_margin_sum = 0.0
+    right_outpost_margin_sum = 0.0
+    left_damage_sum = 0.0
+    right_damage_sum = 0.0
     game_prob = single_game_probability(left.profile, right.profile)
     gap_abs = abs(_effective_gap(left.profile, right.profile))
 
@@ -306,18 +390,18 @@ def _run_series(left: TeamState, right: TeamState, best_of: int, rng: random.Ran
         )
         if left_won:
             left_wins += 1
-            left_base_margins.append(base_margin)
-            right_base_margins.append(-base_margin)
-            left_outpost_margins.append(outpost_margin)
-            right_outpost_margins.append(-outpost_margin)
+            left_base_margin_sum += base_margin
+            right_base_margin_sum -= base_margin
+            left_outpost_margin_sum += outpost_margin
+            right_outpost_margin_sum -= outpost_margin
         else:
             right_wins += 1
-            left_base_margins.append(-base_margin)
-            right_base_margins.append(base_margin)
-            left_outpost_margins.append(-outpost_margin)
-            right_outpost_margins.append(outpost_margin)
-        left_damages.append(_team_damage(left.profile, gap_abs, left_won, rng))
-        right_damages.append(_team_damage(right.profile, gap_abs, not left_won, rng))
+            left_base_margin_sum -= base_margin
+            right_base_margin_sum += base_margin
+            left_outpost_margin_sum -= outpost_margin
+            right_outpost_margin_sum += outpost_margin
+        left_damage_sum += _team_damage(left.profile, gap_abs, left_won, rng)
+        right_damage_sum += _team_damage(right.profile, gap_abs, not left_won, rng)
 
     _apply_series_metrics(
         left,
@@ -325,9 +409,9 @@ def _run_series(left: TeamState, right: TeamState, best_of: int, rng: random.Ran
         left_wins > right_wins,
         left_wins,
         right_wins,
-        left_base_margins,
-        left_outpost_margins,
-        left_damages,
+        left_base_margin_sum,
+        left_outpost_margin_sum,
+        left_damage_sum,
     )
     _apply_series_metrics(
         right,
@@ -335,9 +419,75 @@ def _run_series(left: TeamState, right: TeamState, best_of: int, rng: random.Ran
         right_wins > left_wins,
         right_wins,
         left_wins,
-        right_base_margins,
-        right_outpost_margins,
-        right_damages,
+        right_base_margin_sum,
+        right_outpost_margin_sum,
+        right_damage_sum,
+    )
+    winner = left if left_wins > right_wins else right
+    loser = right if winner.school == left.school else left
+    return {
+        "winner": winner,
+        "loser": loser,
+        "left_wins": left_wins,
+        "right_wins": right_wins,
+    }
+
+
+def _run_series(left: TeamState, right: TeamState, best_of: int, rng: random.Random) -> dict:
+    if best_of != 3:
+        return _run_series_slow(left, right, best_of, rng)
+
+    params = _series_params(left.profile, right.profile)
+    left_wins, right_wins = _sample_best_of_three_score(params, rng)
+    total_games = left_wins + right_wins
+    left_base_margin_sum = _sample_signed_margin_sum(
+        params.base_margin_center,
+        BASE_MARGIN_NOISE,
+        left_wins,
+        right_wins,
+        rng,
+    )
+    left_outpost_margin_sum = _sample_signed_margin_sum(
+        params.outpost_margin_center,
+        OUTPOST_MARGIN_NOISE,
+        left_wins,
+        right_wins,
+        rng,
+    )
+    left_damage_sum = _sample_damage_sum(
+        params.left_damage_win_mean,
+        params.left_damage_loss_mean,
+        total_games,
+        left_wins,
+        rng,
+    )
+    right_damage_sum = _sample_damage_sum(
+        params.right_damage_win_mean,
+        params.right_damage_loss_mean,
+        total_games,
+        right_wins,
+        rng,
+    )
+
+    _apply_series_metrics(
+        left,
+        right,
+        left_wins > right_wins,
+        left_wins,
+        right_wins,
+        left_base_margin_sum,
+        left_outpost_margin_sum,
+        left_damage_sum,
+    )
+    _apply_series_metrics(
+        right,
+        left,
+        right_wins > left_wins,
+        right_wins,
+        left_wins,
+        -left_base_margin_sum,
+        -left_outpost_margin_sum,
+        right_damage_sum,
     )
     winner = left if left_wins > right_wins else right
     loser = right if winner.school == left.school else left
