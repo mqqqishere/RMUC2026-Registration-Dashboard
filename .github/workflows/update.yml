@@ -1,0 +1,55 @@
+name: Update dashboard
+
+on:
+  # 定时更新已迁移至 Ubuntu (100.86.45.11) 本地 crontab，不再依赖 GitHub schedule。
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "allocator.py"
+      - "qingflow.py"
+      - "distances.csv"
+      - "ranks.csv"
+      - "robomaster_2026_teams.csv"
+      - "scripts/build_dashboard.py"
+      - "scripts/shark_decision.py"
+      - "docs/index.html"
+      - ".github/workflows/update.yml"
+
+concurrency:
+  group: dashboard
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build docs/data.json
+        run: python scripts/build_dashboard.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json docs/data.csv
+          if git diff --cached --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+          # 重试一次以避免与并发 push 冲突
+          for i in 1 2 3; do
+            if git push; then exit 0; fi
+            git pull --rebase --autostash
+          done
+          exit 1

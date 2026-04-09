@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RM2026 区域赛实时录取看板</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='56'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg:         #0b0f1a;
+  --panel:      #141a2a;
+  --panel2:     #1a2033;
+  --border:     #242c42;
+  --fg:         #e6e9f0;
+  --muted:      #8a93ab;
+  --accent:     #5ba7ff;
+  --south:      #f08862;
+  --east:       #8bd14a;
+  --north:      #54bbd1;
+  --host:       #ffcf3d;
+  --volunteer:  #8bd14a;
+  --transfer:   #ff9650;
+  /* margin colors, used across opt-card metric / sensitivity matrix */
+  --mg-safe:    #8bd14a;
+  --mg-ok:      #e8d34a;
+  --mg-tight:   #ff9650;
+  --mg-bad:     #ff6b6b;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:       #f6f7fa;
+    --panel:    #ffffff;
+    --panel2:   #f2f4f9;
+    --border:   #e3e7ef;
+    --fg:       #1a2032;
+    --muted:    #6a7389;
+    /* darker, higher-contrast margin colors for white background */
+    --mg-safe:  #3d9a28;
+    --mg-ok:    #c88900;
+    --mg-tight: #d56314;
+    --mg-bad:   #d23a3a;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+               "Helvetica Neue", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg); color: var(--fg);
+  line-height: 1.45;
+  padding: 20px 16px 48px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header { max-width: 1440px; margin: 0 auto 20px; }
+h1 {
+  margin: 0 0 6px; font-size: 22px; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+h1 .badge {
+  font-size: 10px; letter-spacing: 1px; font-weight: 600;
+  background: var(--accent); color: #001a3a;
+  padding: 2px 6px; border-radius: 3px;
+}
+.meta { color: var(--muted); font-size: 13px; }
+.meta span.sep { margin: 0 8px; opacity: 0.5; }
+.stats {
+  max-width: 1440px; margin: 0 auto 16px;
+  display: flex; flex-wrap: wrap; gap: 8px;
+  font-size: 12px;
+}
+.stat {
+  background: var(--panel2); border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 6px; color: var(--muted);
+}
+.stat b { color: var(--fg); font-weight: 600; margin-right: 4px; }
+.grid {
+  max-width: 1440px; margin: 0 auto;
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+.region {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 18px 8px;
+  display: flex; flex-direction: column;
+}
+.region header {
+  margin: 0 0 12px; padding: 0;
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.region h2 {
+  margin: 0; font-size: 18px; font-weight: 600;
+  display: flex; align-items: baseline; gap: 6px;
+}
+.region h2 .city { font-size: 12px; color: var(--muted); font-weight: 400; }
+.region[data-key="南部"] h2 { color: var(--south); }
+.region[data-key="东部"] h2 { color: var(--east); }
+.region[data-key="北部"] h2 { color: var(--north); }
+.count { font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 700; }
+.count.over { color: var(--transfer); }
+.count .cap { color: var(--muted); font-size: 14px; font-weight: 400; margin-left: 2px; }
+.breakdown {
+  display: flex; gap: 10px; font-size: 11px; color: var(--muted);
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.breakdown span b { color: var(--fg); }
+ul { list-style: none; margin: 0; padding: 0; }
+li {
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 2px 10px; font-size: 13px;
+}
+li:last-child { border-bottom: none; }
+.row-main { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.school { font-weight: 500; }
+.city-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+.tag {
+  display: inline-block; padding: 1px 5px; border-radius: 3px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  font-family: -apple-system, sans-serif;
+}
+.tag.host      { background: var(--host);      color: #3a2700; }
+.tag.volunteer { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.tag.transfer  { background: var(--transfer);  color: #3a1a00; }
+.from-tag { color: var(--muted); font-size: 10px; }
+.dist {
+  color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums;
+  align-self: center;
+}
+.empty {
+  text-align: center; color: var(--muted); padding: 40px 20px;
+  font-size: 13px;
+}
+footer {
+  max-width: 1440px; margin: 28px auto 0;
+  color: var(--muted); font-size: 11px; text-align: center;
+}
+#err {
+  max-width: 1440px; margin: 8px auto;
+  padding: 10px 14px; border-radius: 8px;
+  background: #401c1c; color: #ffb8b8;
+  border: 1px solid #6a2e2e; font-size: 12px;
+  display: none;
+}
+
+/* ─── SHARK 决策面板 ─── */
+#decision {
+  max-width: 1440px; margin: 48px auto 0;
+  display: none;            /* JS 渲染成功后才显示 */
+}
+#decision .d-title {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  margin: 0 0 4px;
+}
+#decision .d-title h2 {
+  margin: 0; font-size: 20px; font-weight: 700;
+  letter-spacing: 0.3px;
+}
+#decision .d-title .d-tag {
+  font-size: 10px; letter-spacing: 1.5px; font-weight: 700;
+  background: #6b52ff; color: #fff;
+  padding: 2px 8px; border-radius: 3px;
+}
+#decision .d-subtitle {
+  color: var(--muted); font-size: 12px; margin: 0 0 20px;
+}
+
+#decision .d-row {
+  display: grid; gap: 12px; margin-bottom: 16px;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+}
+@media (max-width: 980px) { #decision .d-row { grid-template-columns: 1fr; } }
+
+.d-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.d-card h4 {
+  margin: 0 0 10px; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); font-weight: 600;
+}
+.d-card .kv { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+.d-card .kv span:first-child { color: var(--muted); }
+.d-card .kv span:last-child { color: var(--fg); font-variant-numeric: tabular-nums; }
+.d-card .kv b { font-weight: 600; }
+.d-card .big {
+  font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.d-card .pill {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; padding: 2px 6px; border-radius: 3px;
+  background: var(--panel2); color: var(--fg);
+  border: 1px solid var(--border);
+}
+.d-card .pill.runner_up { background: var(--transfer); color: #3a1a00; border-color: transparent; }
+.d-card .pill.champion { background: var(--host); color: #3a2700; border-color: transparent; }
+
+/* Recommendation banner (自带颜色变量,在两种 color-scheme 下都可读) */
+.rec-banner {
+  --rb-bg-from:  #1a2c52;
+  --rb-bg-to:    #152742;
+  --rb-border:   #3d5a9e;
+  --rb-label:    #8bbbff;
+  --rb-choice:   #ffffff;
+  --rb-summary:  #c4d6ef;
+  background: linear-gradient(135deg, var(--rb-bg-from) 0%, var(--rb-bg-to) 100%);
+  border: 1px solid var(--rb-border);
+  border-radius: 12px; padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.rec-banner .rec-label {
+  font-size: 10px; letter-spacing: 2px; font-weight: 700;
+  color: var(--rb-label); text-transform: uppercase;
+}
+.rec-banner .rec-choice {
+  font-size: 28px; font-weight: 800; letter-spacing: 1px;
+  color: var(--rb-choice);
+}
+.rec-banner .rec-choice .rec-icon { margin-right: 6px; color: var(--rb-label); }
+.rec-banner .rec-summary {
+  flex: 1 1 auto; font-size: 13px; color: var(--rb-summary);
+  line-height: 1.6; min-width: 200px;
+}
+@media (prefers-color-scheme: light) {
+  .rec-banner {
+    --rb-bg-from:  #eaf1ff;
+    --rb-bg-to:    #dde7fa;
+    --rb-border:   #5ba7ff;
+    --rb-label:    #2a68c2;
+    --rb-choice:   #0b1a3a;
+    --rb-summary:  #2d3a55;
+  }
+}
+
+/* 3 option cards */
+#decision .opt-grid {
+  display: grid; gap: 12px; margin-bottom: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 800px) { #decision .opt-grid { grid-template-columns: 1fr; } }
+
+.opt-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+  position: relative;
+}
+.opt-card[data-best="true"] {
+  /* 用 accent 的半透明叠加在 panel 上,既能高亮又不会在 light/dark 模式间失衡 */
+  border-color: #5ba7ff;
+  background:
+    linear-gradient(180deg, rgba(91,167,255,0.15) 0%, rgba(91,167,255,0.04) 100%),
+    var(--panel);
+  box-shadow: 0 0 0 1px rgba(91,167,255,0.35);
+}
+.opt-card .opt-badge {
+  position: absolute; top: -8px; right: 12px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  background: var(--accent); color: #001a3a;
+  padding: 2px 8px; border-radius: 3px;
+}
+.opt-card h3 {
+  margin: 0 0 10px; font-size: 14px; font-weight: 600;
+}
+.opt-card h3 .opt-choice {
+  font-size: 22px; font-weight: 800; margin-left: 4px;
+}
+.opt-card .flow {
+  font-size: 12px; color: var(--muted); margin-bottom: 12px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.opt-card .flow b { color: var(--fg); font-weight: 600; }
+.opt-card .flow .arr { margin: 0 6px; opacity: 0.5; }
+.opt-card .flow .st { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 4px; letter-spacing: 0.3px; }
+.opt-card .flow .st.volunteer {
+  background: rgba(91,167,255,0.16);
+  color: var(--accent);
+  border: 1px solid rgba(91,167,255,0.45);
+}
+.opt-card .flow .st.transfer { background: var(--transfer); color: #3a1a00; }
+.opt-card .flow .st.host { background: var(--host); color: #3a2700; }
+
+.opt-card .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.opt-card .metric { font-size: 11px; color: var(--muted); }
+.opt-card .metric b {
+  display: block; color: var(--fg);
+  font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
+.opt-card .metric b.margin-good  { color: var(--mg-safe); }
+.opt-card .metric b.margin-ok    { color: var(--mg-ok); }
+.opt-card .metric b.margin-tight { color: var(--mg-tight); }
+.opt-card .metric b.margin-bad   { color: var(--mg-bad); }
+.opt-card .worst {
+  margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--muted);
+}
+.opt-card .worst b { font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 800; }
+.opt-card .worst b.margin-good  { color: var(--mg-safe); }
+.opt-card .worst b.margin-ok    { color: var(--mg-ok); }
+.opt-card .worst b.margin-tight { color: var(--mg-tight); }
+.opt-card .worst b.margin-bad   { color: var(--mg-bad); }
+
+/* Evidence section */
+.ev-section {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.ev-section > h3 {
+  margin: 0 0 16px; font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.ev-section h3 { display: flex; align-items: center; gap: 8px; }
+.ev-section .ev-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); color: #001a3a;
+  font-size: 11px; font-weight: 800;
+}
+.ev-section .ev-body { font-size: 13px; line-height: 1.7; color: var(--fg); }
+.ev-section .ev-body ul { margin: 0; padding-left: 18px; }
+.ev-section .ev-body li { margin-bottom: 4px; }
+.ev-section .ev-body .muted { color: var(--muted); }
+.ev-section .ev-body b { font-weight: 600; }
+.ev-section .ev-body code {
+  background: var(--panel2); padding: 1px 6px; border-radius: 3px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px;
+}
+.ev-note {
+  margin-top: 10px; padding: 10px 12px;
+  background: var(--panel2); border-left: 3px solid var(--accent);
+  border-radius: 0 4px 4px 0; font-size: 12px; color: var(--muted);
+}
+.ev-note b { color: var(--fg); }
+
+/* Evidence tables */
+.ev-section table {
+  width: 100%; border-collapse: collapse;
+  font-size: 12px; margin-top: 8px;
+}
+.ev-section th, .ev-section td {
+  padding: 6px 8px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+.ev-section th {
+  color: var(--muted); font-weight: 600; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ev-section td.num { text-align: right; }
+.ev-section tr.highlight td { background: rgba(91,167,255,0.08); }
+.ev-section tr.shark-row td {
+  background: rgba(139,209,74,0.12); font-weight: 600;
+}
+
+/* Sensitivity matrix */
+.sens-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 12px;
+}
+.sens-table th {
+  padding: 10px 8px; text-align: left;
+  color: var(--muted); font-weight: 600; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 1px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel2);
+}
+.sens-table th.col { text-align: center; min-width: 110px; }
+.sens-table td {
+  padding: 10px 8px; border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.sens-table td.scenario-name { font-weight: 600; font-size: 12px; color: var(--fg); }
+.sens-table td.scenario-desc { font-size: 11px; color: var(--muted); }
+.sens-table td.cell {
+  text-align: center; font-variant-numeric: tabular-nums;
+  min-width: 110px;
+}
+.sens-table td.cell .m {
+  display: inline-block; font-size: 16px; font-weight: 700;
+  min-width: 28px;
+}
+.sens-table td.cell .detail {
+  display: block; font-size: 10px; color: var(--muted); margin-top: 2px;
+}
+.sens-table td.cell.best { background: rgba(91,167,255,0.12); border-radius: 4px; }
+/* 全局 margin 余裕着色类,在任何容器里用 .margin-X 都能正确上色 */
+.margin-good,  b.margin-good  { color: var(--mg-safe); }
+.margin-ok,    b.margin-ok    { color: var(--mg-ok); }
+.margin-tight, b.margin-tight { color: var(--mg-tight); }
+.margin-bad,   b.margin-bad   { color: var(--mg-bad); }
+
+/* Worst case summary row */
+.sens-table tr.worst-row td { border-top: 2px solid var(--border); }
+.sens-table tr.worst-row td.scenario-name {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); font-weight: 700;
+}
+
+/* stronger-teams list */
+.strong-list {
+  display: grid; grid-template-columns: auto 1fr auto auto auto;
+  gap: 4px 12px; margin-top: 6px; font-size: 12px;
+  align-items: center;
+}
+.strong-list .ff { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+.strong-list .sch { color: var(--fg); }
+.strong-list .city-tag { color: var(--muted); font-size: 11px; }
+.strong-list .det { color: var(--muted); font-size: 11px; }
+.strong-list .tt { font-size: 10px; color: var(--muted); }
+.strong-list .tt.jia { color: var(--host); font-weight: 700; }
+.strong-list .shark-you {
+  border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;
+  color: #8bd14a; font-weight: 700;
+}
+
+/* 2-col layout for wide evidence */
+.ev-twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .ev-twocol { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>
+    RoboMaster 2026 区域赛
+    <span class="badge">LIVE</span>
+    实时录取看板
+  </h1>
+  <div class="meta">
+    更新于 <span id="updated">—</span>
+    <span class="sep">·</span>
+    数据源 <a id="src" href="#" target="_blank" rel="noopener">参赛反馈看板</a>
+    <span class="sep">·</span>
+    <a id="ann" href="#" target="_blank" rel="noopener">官方公告</a>
+    <span class="sep">·</span>
+    导出 <a href="./data.csv" download>CSV</a> ·
+    <a href="./data.json" title="脚本可直接 GET 此 URL 获取完整 JSON（含扁平 teams 数组，跨域开放）">JSON</a>
+  </div>
+</header>
+<div id="err"></div>
+<div class="stats" id="stats"></div>
+<main class="grid" id="grid"></main>
+
+<section id="decision"></section>
+
+<footer>
+  按公告《RoboMaster 2026 区域赛参赛反馈》第 2 条 "志愿优先录取 + 地理就近 +
+  积分榜排名" 规则计算 · 距离取自公告附表 · 每 30 分钟自动刷新
+</footer>
+<script>
+const STATUS_LABEL = { host: "承办", volunteer: "志愿", transfer: "调剂" };
+
+function fmtAgo(iso) {
+  const then = new Date(iso);
+  const ms = Date.now() - then.getTime();
+  const min = Math.floor(ms / 60000);
+  if (min < 1)      return "刚刚";
+  if (min < 60)     return `${min} 分钟前`;
+  const h = Math.floor(min / 60);
+  if (h < 24)       return `${h} 小时前`;
+  return `${Math.floor(h / 24)} 天前`;
+}
+
+function render(d) {
+  const up = document.getElementById("updated");
+  up.textContent = `${d.updated_at_cst} CST · ${fmtAgo(d.updated_at_utc)}`;
+  document.getElementById("src").href = d.source.board;
+  document.getElementById("ann").href = d.source.announcement;
+
+  const stats = document.getElementById("stats");
+  stats.innerHTML = "";
+  const pills = [
+    ["已反馈", d.total_teams],
+    ["承办院校", `${d.hosts_seen ?? 0}（RMUC+RMUL 合计）`],
+    ["被调剂", d.transferred_count],
+    ["积分榜覆盖", `${d.ranks_covered ?? 0}/${d.total_teams}`],
+    ["单区容量", d.capacity],
+  ];
+  if (d.adjustment_order && d.adjustment_order.length) {
+    pills.push(["调剂顺序", d.adjustment_order.join(" → ")]);
+  }
+  for (const [k, v] of pills) {
+    const el = document.createElement("div");
+    el.className = "stat";
+    el.innerHTML = `<b>${v}</b> ${k}`;
+    stats.appendChild(el);
+  }
+
+  if (d.fetch_error) {
+    const err = document.getElementById("err");
+    err.style.display = "block";
+    err.textContent = "抓取失败：" + d.fetch_error + "（显示上次成功数据）";
+  }
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  for (const r of d.regions) {
+    const el = document.createElement("section");
+    el.className = "region";
+    el.dataset.key = r.key;
+    const over = r.count > d.capacity;
+    el.innerHTML = `
+      <header>
+        <h2>${r.name}<span class="city">${r.city}</span></h2>
+        <div class="count ${over ? "over" : ""}">${r.count}<span class="cap">/${d.capacity}</span></div>
+      </header>
+      <div class="breakdown">
+        <span>承办 <b>${r.counts.host}</b></span>
+        <span>志愿 <b>${r.counts.volunteer}</b></span>
+        <span>调入 <b>${r.counts.transfer}</b></span>
+      </div>
+    `;
+    if (!r.members.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "暂无数据";
+      el.appendChild(empty);
+    } else {
+      const ul = document.createElement("ul");
+      for (const m of r.members) {
+        const li = document.createElement("li");
+        const tag = STATUS_LABEL[m.status] || m.status;
+        const fromTag = m.status === "transfer"
+          ? ` <span class="from-tag">← ${m.original_volunteer}</span>` : "";
+        li.innerHTML = `
+          <div>
+            <div class="row-main">
+              <span class="school">${m.school}</span>
+              <span class="tag ${m.status}">${tag}</span>${fromTag}
+            </div>
+            <div class="city-sub">${m.city}${m.rank != null ? " · 积分 #" + m.rank : ""}</div>
+          </div>
+          <div class="dist">${m.dist_km} km</div>
+        `;
+        ul.appendChild(li);
+      }
+      el.appendChild(ul);
+    }
+    grid.appendChild(el);
+  }
+
+  if (d.shark_decision) {
+    renderDecision(d.shark_decision);
+  }
+}
+
+// ─── SHARK 决策面板渲染 ───
+
+const REGIONS = ["南部", "东部", "北部"];
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function marginClass(m) {
+  if (m >= 3)   return "good";
+  if (m >= 1)   return "ok";
+  if (m === 0)  return "tight";
+  return "bad";
+}
+
+function marginSign(m) { return m > 0 ? `+${m}` : String(m); }
+
+function renderDecision(sd) {
+  const root = document.getElementById("decision");
+  root.style.display = "block";
+
+  const t = sd.target;
+  const rival = sd.same_city_rival;
+  const obs = sd.observed_state;
+  const rec = sd.recommendation;
+  const bestIdx = REGIONS.indexOf(rec.volunteer);
+  const bestOpt = sd.options[bestIdx];
+
+  root.innerHTML = `
+    <div class="d-title">
+      <h2>SHARK 决策面板</h2>
+      <span class="d-tag">STRATEGIC</span>
+    </div>
+    <p class="d-subtitle">
+      对 ${esc(t.school)} 的三种志愿选择做反事实模拟，
+      基于真实调剂算法 + 5 种博弈压力测试
+    </p>
+
+    ${renderTopRow(t, rival, obs)}
+    ${renderRecBanner(rec, bestOpt)}
+    ${renderOptions(sd.options, rec)}
+    ${renderEvidence(sd, bestOpt)}
+    ${renderSensitivity(sd.sensitivity, rec)}
+  `;
+}
+
+function renderTopRow(t, rival, obs) {
+  const rmulBadge = t.rmul_2026_top4
+    ? `<span class="pill ${t.rmul_2026_top4}">RMUL ${t.rmul_2026_top4_cn}</span>`
+    : "";
+  const detailBadge = t.detail_2025
+    ? `<span class="pill">${esc(t.detail_2025_cn || t.detail_2025)}</span>`
+    : `<span class="pill">未参赛</span>`;
+
+  return `
+    <div class="d-row">
+      <div class="d-card">
+        <h4>目标队伍</h4>
+        <div class="big">${esc(t.team || "SHARK")}</div>
+        <div class="kv"><span>学校</span><span>${esc(t.school)}</span></div>
+        <div class="kv"><span>城市</span><span>${esc(t.city)}</span></div>
+        <div class="kv"><span>队伍类型</span><span>${esc(t.team_type)}</span></div>
+        <div class="kv"><span>积分榜排名</span><span><b>#${t.rank ?? "—"}</b></span></div>
+        <div class="kv"><span>本年完整形态</span><span><b>#${t.ff ?? "—"}</b></span></div>
+        <div class="kv"><span>2025 战绩</span><span>${detailBadge}</span></div>
+        <div class="kv"><span>2026 RMUL</span><span>${rmulBadge || "—"}</span></div>
+        <div class="kv"><span>距南部 / 东部 / 北部</span>
+          <span>${t.dist["南部"]} / <b>${t.dist["东部"]}</b> / ${t.dist["北部"]} km</span>
+        </div>
+      </div>
+
+      <div class="d-card">
+        <h4>同城耦合对手</h4>
+        ${rival ? `
+          <div class="big">${esc(rival.team || rival.school.slice(0,4))}</div>
+          <div class="kv"><span>学校</span><span>${esc(rival.school)}</span></div>
+          <div class="kv"><span>城市</span><span>${esc(rival.city)}（同 ${esc(t.city)}）</span></div>
+          <div class="kv"><span>积分榜排名</span><span><b>#${rival.rank ?? "—"}</b></span></div>
+          <div class="kv"><span>本年完整形态</span><span>#${rival.ff ?? "—"}</span></div>
+          <div class="kv"><span>当前志愿</span><span>${
+            rival.submitted
+              ? `<b>${esc(rival.live_volunteer)}</b>`
+              : `<span class="muted">未提交</span>`
+          }</span></div>
+          <div class="ev-note" style="margin-top:8px">
+            <b>同城规则：</b>SHARK rank ${t.rank} 比 ${esc(rival.team || rival.school.slice(0,4))} rank ${rival.rank} 差 ${t.rank - rival.rank} 位 →
+            无锡同城调剂时 SHARK <b>被首选抽走</b>。
+          </div>
+        ` : `<div class="muted">roster 中无同城对手数据</div>`}
+      </div>
+
+      <div class="d-card">
+        <h4>当前看板状态</h4>
+        <div class="big">${obs.submitted_count} / ${obs.roster_total}
+          <span style="font-size:12px;color:var(--muted);font-weight:400;">支已提交</span>
+        </div>
+        <div class="kv"><span>南部 初始志愿</span><span style="color:var(--south)"><b>${obs.submitted_by_region["南部"]}</b></span></div>
+        <div class="kv"><span>东部 初始志愿</span><span style="color:var(--east)"><b>${obs.submitted_by_region["东部"]}</b></span></div>
+        <div class="kv"><span>北部 初始志愿</span><span style="color:var(--north)"><b>${obs.submitted_by_region["北部"]}</b></span></div>
+        <div class="kv" style="padding-top:8px;border-top:1px solid var(--border);margin-top:6px">
+          <span>SHARK 当前提交</span>
+          <span>${obs.shark_submitted ? `<b>${esc(obs.shark_live_volunteer)}</b>` : `<span class="muted">未提交</span>`}</span>
+        </div>
+        <div class="ev-note" style="margin-top:8px">
+          未提交队伍在模拟中按<b>就近原则</b>占位；随着真实提交数增加，推荐会自动更新。
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRecBanner(rec, bestOpt) {
+  return `
+    <div class="rec-banner">
+      <div>
+        <div class="rec-label">RECOMMENDED</div>
+        <div class="rec-choice"><span class="rec-icon">▶</span>报志愿 ${esc(rec.volunteer)}</div>
+      </div>
+      <div class="rec-summary">
+        ${esc(rec.summary)}
+      </div>
+    </div>
+  `;
+}
+
+function renderOptions(options, rec) {
+  const cards = options.map(o => {
+    const best = o.shark_volunteer === rec.volunteer;
+    const worstM = rec.all_worst_case[o.shark_volunteer];
+    return `
+      <div class="opt-card" data-best="${best}">
+        ${best ? `<div class="opt-badge">推荐</div>` : ""}
+        <h3>报志愿<span class="opt-choice">${esc(o.shark_volunteer)}</span></h3>
+        <div class="flow">
+          <b>${esc(o.shark_volunteer)}</b><span class="arr">→</span><b>${esc(o.final_region)}</b>
+          <span class="st ${o.status}">${STATUS_LABEL[o.status]}</span>
+        </div>
+        <div class="metrics">
+          <div class="metric">ff 位次<b>#${o.ff_position}</b></div>
+          <div class="metric">全国赛名额<b>${o.spots_national}</b></div>
+          <div class="metric">基线余裕<b class="margin-${marginClass(o.margin)}">${marginSign(o.margin)}</b></div>
+          <div class="metric">规模<b>${o.region_size}</b></div>
+        </div>
+        <div class="worst">
+          博弈最坏余裕 <b class="margin-${marginClass(worstM)}">${marginSign(worstM)}</b>
+          <span style="opacity:0.7">（5 个情景下的最小值）</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+  return `<div class="opt-grid">${cards}</div>`;
+}
+
+function renderEvidence(sd, bestOpt) {
+  const rec = sd.recommendation;
+  const obs = sd.observed_state;
+  const t16 = bestOpt.top16_by_region;
+  const flo = bestOpt.floating_by_region;
+  const nat = bestOpt.national_by_region;
+  const rival = sd.same_city_rival;
+
+  // ① 当前状态推理
+  const smallest = Object.entries(bestOpt.initial_counts)
+    .sort((a, b) => a[1] - b[1])[0][0];
+  const isSmallest = smallest === rec.volunteer;
+
+  // ② 浮动名额证据
+  const eligRegions = Object.entries(t16).filter(([r, c]) => c > 4);
+  const natEntries = REGIONS.map(r =>
+    `<tr${r === bestOpt.final_region ? ` class="shark-row"` : ""}>
+       <td>${r}</td>
+       <td class="num">${t16[r]}</td>
+       <td class="num">${t16[r] > 4 ? "✓" : "—"}</td>
+       <td class="num">${flo[r]}</td>
+       <td class="num"><b>${nat[r]}</b></td>
+     </tr>`
+  ).join("");
+
+  // ③ 强于 SHARK 的队列表
+  const strong = bestOpt.stronger_in_region || [];
+  const strongRows = strong.map(s => `
+    <tr>
+      <td class="num"><b style="color:var(--accent)">#${s.ff}</b></td>
+      <td>${esc(s.school)}</td>
+      <td><span class="city-tag">${esc(s.city || "")}</span></td>
+      <td>${esc({
+          champion: "冠军", runner_up: "亚军", third_place: "季军", fourth_place: "殿军",
+          quarter_finalist: "八强", top_16: "十六强", top_32: "三十二强"
+        }[s.detail_2025] || "—")}</td>
+      <td>${s.team_type === "甲级" ? `<b style="color:var(--host)">甲</b>` : ""}</td>
+    </tr>
+  `).join("");
+  const sharkRowStrong = `
+    <tr class="shark-row">
+      <td class="num"><b>#${sd.target.ff}</b></td>
+      <td>${esc(sd.target.school)}</td>
+      <td><span class="city-tag">${esc(sd.target.city)}</span></td>
+      <td>—</td>
+      <td></td>
+    </tr>
+  `;
+
+  // ④ 同城耦合
+  const wuxi = bestOpt.wuxi_same_city || [];
+  const wuxiList = wuxi.map(w => `
+    <li>
+      <b>${esc(w.school)}</b> (rank #${w.rank ?? "?"}, ff #${w.ff ?? "?"})
+      — 模拟志愿 <code>${esc(w.volunteer)}</code>
+      → 最终 <code>${esc(w.assigned)}</code>
+      <span class="muted">[${STATUS_LABEL[w.status] || w.status}]</span>
+    </li>
+  `).join("");
+
+  return `
+    <div class="ev-section">
+      <h3><span class="ev-num">?</span>为什么推荐报 ${esc(rec.volunteer)}？完整证据链</h3>
+      <div class="ev-body">
+
+        <div class="ev-twocol">
+          <div>
+            <h3 style="font-size:14px;margin:0 0 8px"><span class="ev-num">1</span>当前看板状态推理</h3>
+            <ul>
+              <li>已提交 <b>${obs.submitted_count}</b>/${obs.roster_total} 支，
+                初始分布 南 ${obs.submitted_by_region["南部"]} / 东 ${obs.submitted_by_region["东部"]} / 北 ${obs.submitted_by_region["北部"]}</li>
+              <li>在模拟中加入就近补位后，初始志愿 <b>南 ${bestOpt.initial_counts["南部"]} / 东 ${bestOpt.initial_counts["东部"]} / 北 ${bestOpt.initial_counts["北部"]}</b></li>
+              <li>调剂处理顺序 <code>${bestOpt.adjustment_order.join(" → ")}</code></li>
+              <li>当前最小赛区: <b style="color:var(--accent)">${smallest}</b>${
+                isSmallest
+                  ? ` → 作为报此赛区的志愿者，<b>SHARK 在首轮 target pool 里，不会被抽走</b>（allocator.py 第 337–344 行）`
+                  : " → 调剂路径较长，细节见下"
+              }</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 style="font-size:14px;margin:0 0 8px"><span class="ev-num">2</span>全国赛名额测算（规则 2.2）</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>赛区</th>
+                  <th class="num">上赛季16强数</th>
+                  <th class="num">参与浮动</th>
+                  <th class="num">浮动名额</th>
+                  <th class="num">全国赛名额</th>
+                </tr>
+              </thead>
+              <tbody>${natEntries}</tbody>
+            </table>
+            <div class="ev-note">
+              规则：16 强数 <b>&gt; 4</b> 的赛区参与 4 个浮动名额分配，按比例 × 4，
+              最大余数法向下取整。 目前 <b>${eligRegions.length}</b> 个赛区符合资格
+              (${eligRegions.map(([r]) => r).join("、") || "无"})。
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size:14px;margin:20px 0 8px"><span class="ev-num">3</span>SHARK 在 ${esc(bestOpt.final_region)} 内的 ff 位次</h3>
+        <p class="muted" style="margin:0 0 8px">
+          按本年完整形态排名计算，比 SHARK(ff #${sd.target.ff}) 更强的队伍共 <b>${strong.length}</b> 支：
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th class="num">ff</th>
+              <th>学校</th>
+              <th>城市</th>
+              <th>2025 战绩</th>
+              <th>类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${strongRows}
+            ${sharkRowStrong}
+          </tbody>
+        </table>
+        <div class="ev-note">
+          SHARK 在 ${esc(bestOpt.final_region)} 内按 ff 排 <b>第 ${bestOpt.ff_position} 位</b>，
+          全国赛 <b>${bestOpt.spots_national}</b> 个名额 −
+          <b>${bestOpt.ff_position}</b> =
+          余裕 <b class="margin-${marginClass(bestOpt.margin)}" style="font-size:16px">${marginSign(bestOpt.margin)}</b> 位。
+          ${bestOpt.margin >= 3 ? "（安全区间）" :
+            bestOpt.margin >= 1 ? "（紧但可控）" :
+            bestOpt.margin === 0 ? "（极度紧张）" : "（出圈）"}
+        </div>
+
+        <h3 style="font-size:14px;margin:20px 0 8px"><span class="ev-num">4</span>无锡同城耦合分析</h3>
+        <ul>${wuxiList || "<li class='muted'>无无锡同城队</li>"}</ul>
+        <div class="ev-note">
+          ${rival && rival.rank !== null ? `
+            <b>关键约束：</b>同城调剂规则（公告 2.③）"排名靠后者优先调剂"。
+            SHARK rank #${sd.target.rank} vs ${esc(rival.team || rival.school.slice(0,4))} rank #${rival.rank}
+            → SHARK 差 <b>${sd.target.rank - rival.rank}</b> 位 → 同城被抽时 SHARK 总是先走。
+            <br><br>
+            这意味着 SHARK 的位置 <b>永远在 boundary 上、最脆弱</b>。唯一免疫方式是直接报 SHARK 最想落位的赛区
+            (本推荐: ${esc(rec.volunteer)}) — 这样 SHARK 根本不进 pool，耦合失效。
+          ` : "无耦合对手数据"}
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function renderSensitivity(sens, rec) {
+  const scenarioRows = sens.map(sc => {
+    const cells = sc.results.map(r => {
+      const isBest = r.shark_volunteer === rec.volunteer;
+      return `
+        <td class="cell ${isBest ? "best" : ""}">
+          <div class="m margin-${marginClass(r.margin)}">${marginSign(r.margin)}</div>
+          <div class="detail">→${r.final_region}·#${r.ff_position}/${r.spots_national}</div>
+        </td>
+      `;
+    }).join("");
+    return `
+      <tr>
+        <td class="scenario-name">${esc(sc.name)}</td>
+        <td class="scenario-desc">${esc(sc.description)}</td>
+        ${cells}
+      </tr>
+    `;
+  }).join("");
+
+  // worst-case summary row
+  const worstRow = `
+    <tr class="worst-row">
+      <td class="scenario-name">最坏余裕</td>
+      <td class="scenario-desc">worst-case margin across ${sens.length} scenarios</td>
+      ${REGIONS.map(r => {
+        const wm = rec.all_worst_case[r];
+        const isBest = r === rec.volunteer;
+        return `
+          <td class="cell ${isBest ? "best" : ""}">
+            <div class="m margin-${marginClass(wm)}" style="font-size:22px">${marginSign(wm)}</div>
+          </td>
+        `;
+      }).join("")}
+    </tr>
+  `;
+
+  return `
+    <div class="ev-section">
+      <h3><span class="ev-num">5</span>博弈压力测试矩阵（5 情景 × 3 志愿）</h3>
+      <div class="ev-body">
+        <p class="muted" style="margin:0 0 8px">
+          每格显示该组合下 SHARK 的 <b>余裕位数</b>（= 全国赛名额 − ff 位次），
+          副标注 <code>→最终赛区·ff位/名额</code>。
+          绿色 = 安全 (≥3)、黄色 = 紧 (1–2)、橙色 = 0、红色 = 出圈。
+        </p>
+        <table class="sens-table">
+          <thead>
+            <tr>
+              <th style="width:22%">情景</th>
+              <th style="width:30%">描述</th>
+              <th class="col">报南部</th>
+              <th class="col">报东部</th>
+              <th class="col">报北部</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${scenarioRows}
+            ${worstRow}
+          </tbody>
+        </table>
+        <div class="ev-note">
+          <b>推荐逻辑：</b>取每列的最小值（最坏情况下的余裕），选 worst-case 最高的一列作为最稳健的选择。
+          并列时优先 <b>志愿身份</b> 而非调剂（避免调剂过程中的不可控风险）。
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+(async () => {
+  try {
+    const res = await fetch("./data.json?t=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    render(await res.json());
+  } catch (e) {
+    document.getElementById("grid").innerHTML =
+      `<div class="empty">数据加载失败：${e.message}</div>`;
+  }
+})();
+</script>
+</body>
+</html>

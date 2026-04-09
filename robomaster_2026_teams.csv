@@ -1,0 +1,104 @@
+﻿# RoboMaster 2026分区赛队伍数据
+# full_form_ranking: 本年完整形态排名
+# category_2025: national(全国赛) / revival(复活赛) / division(分区赛) / not_participated(未参加对抗赛)
+# detail_2025: champion(冠军) / runner_up(亚军) / third_place(季军) / fourth_place(殿军) / quarter_finalist(八强) / top_16(十六强) / top_32(三十二强)
+# 队伍类型: 甲级 / 非甲级
+# rmul_2026_top4: champion(联盟赛4强冠军) / runner_up(联盟赛4强亚军) / third_place(联盟赛4强季军) / fourth_place(联盟赛4强殿军)
+
+school,team,team_type,city,distance_to_changsha,distance_to_jinan,distance_to_shenyang,points_rank,points,participated_2025,category_2025,detail_2025,full_form_ranking,rmul_2026_top4
+上海交通大学,交龙,甲级,上海市,887,724,1188,1,25.0,True,national,champion,46,fourth_place
+华南理工大学,华南虎,甲级,广州市,564,1549,2281,2,23.3,True,national,third_place,12,
+东北大学,TDT,甲级,沈阳市,1784,789,0,3,22.7,True,national,fourth_place,8,champion
+浙江大学,Hello World,甲级,杭州市,738,767,1317,4,21.1,True,national,quarter_finalist,42,champion
+华南农业大学,Taurus,甲级,广州市,564,1549,2281,5,20.1,True,national,top_16,3,third_place
+广东工业大学,DynamicX,甲级,广州市,564,1549,2281,6,20.0,True,national,top_16,36,
+深圳大学,RobotPilots,甲级,深圳市,638,1596,2312,6,20.0,True,national,top_16,25,
+哈尔滨工业大学,I Hiter,甲级,哈尔滨市,2291,1286,509,9,19.3,True,national,top_16,23,
+西安交通大学,笃行,甲级,西安市,776,792,1523,10,18.8,True,national,top_32,1,third_place
+中国石油大学（华东）,RPS,甲级,青岛市,1118,299,690,11,18.72,True,national,quarter_finalist,10,champion
+南方科技大学,ARTINX,甲级,深圳市,638,1596,2312,12,18.4,True,national,top_32,94,
+太原理工大学,TRoMaC,甲级,太原市,1076,426,1026,13,18.04,True,national,top_16,30,
+东南大学,3SE,甲级,南京市,703,535,1161,14,17.94,True,national,top_16,40,
+哈尔滨工业大学（威海）,HERO,甲级,威海市,1341,454,490,15,17.2,True,national,top_32,28,third_place
+大连理工大学,凌BUG,甲级,大连市,1434,468,356,16,17.18,True,national,quarter_finalist,41,
+太原工业学院,火线,甲级,太原市,1076,426,1026,17,17.0,True,national,top_16,13,runner_up
+五邑大学,IMCA,甲级,江门市,625,1612,2344,17,17.0,True,national,top_32,4,
+中国科学技术大学,RoboWalker,甲级,合肥市,582,532,1232,19,16.86,True,national,runner_up,20,champion
+电子科技大学中山学院,RoboBraver,甲级,中山市,633,1612,2339,20,16.64,True,national,top_32,37,
+南昌大学,Passion,甲级,南昌市,304,896,1608,21,15.7,True,revival,revival,62,
+中南大学,FYT,甲级,长沙市,0,1017,1784,22,15.5,True,national,top_32,21,fourth_place
+吉林大学,TARS Go,甲级,长春市,2062,1063,278,23,14.9,True,national,top_32,56,
+山东科技大学,SmartRobot,甲级,青岛市,1118,299,690,24,14.8,True,national,top_32,53,
+哈尔滨工程大学,创梦之翼,甲级,哈尔滨市,2291,1286,509,25,14.78,True,national,top_32,52,
+南京航空航天大学金城学院,Born of Fire,甲级,南京市,703,535,1161,26,14.6,True,national,top_32,77,runner_up
+同济大学,SuperPower,甲级,上海市,887,724,1188,27,14.4,True,national,quarter_finalist,18,
+桂林电子科技大学,Evolution,甲级,桂林市,420,1421,2198,28,14.365,True,division,division,32,
+武汉工程大学,Nautilus,甲级,武汉市,294,724,1491,29,14.3,True,national,top_32,14,champion
+中国矿业大学,CUBOT,甲级,徐州市,784,265,1000,30,13.6,True,national,top_32,85,
+上海工程技术大学,木鸢Birdiebot,甲级,上海市,887,724,1188,31,13.565,True,division,division,69,
+哈尔滨工业大学（深圳）,南工骁鹰,甲级,深圳市,638,1596,2312,32,13.535,True,revival,revival,7,
+华中科技大学,狼牙,甲级,武汉市,294,724,1491,33,13.34,True,revival,revival,78,third_place
+桂林信息科技学院,GIRT,甲级,桂林市,420,1421,2198,34,12.975,True,revival,revival,68,
+西安电子科技大学,IRobot,甲级,西安市,776,792,1523,35,12.965,True,division,division,67,champion
+西北工业大学,WMJ,甲级,西安市,776,792,1523,36,12.5,True,national,top_32,9,fourth_place
+首都师范大学,PIE,甲级,北京市,1339,367,628,38,12.235,True,revival,revival,38,
+中国石油大学（北京）,SPR,甲级,北京市,1339,367,628,39,12.17,True,national,top_32,76,
+北京理工大学（珠海）,毅恒,甲级,珠海市,662,1635,2358,40,,True,revival,revival,91,
+南京理工大学,Alliance,甲级,南京市,703,535,1161,42,11.415,False,not_participated,,19,
+北京理工大学,追梦,甲级,北京市,1339,367,628,43,11.3,True,division,division,11,runner_up
+华北科技学院,风暴,甲级,廊坊市,1306,322,622,44,11.28,True,revival,revival,6,runner_up
+北方工业大学,DreamTeam,甲级,北京市,1339,367,628,45,11.0,True,national,top_32,31,
+天津大学,北洋机甲,甲级,天津市,1301,296,579,46,10.86,True,revival,revival,63,
+齐鲁工业大学,Adam,甲级,济南市,1017,0,789,48,10.615,True,division,division,66,
+国防科技大学,军临,甲级,长沙市,0,1017,1784,49,10.56,True,division,division,54,
+四川大学,火锅,甲级,成都市,905,1378,2125,50,9.85,True,revival,revival,73,
+沈阳理工大学,Ambition,甲级,沈阳市,1784,789,0,51,9.505,False,not_participated,,24,fourth_place
+广州城市理工学院,野狼,甲级,广州市,564,1549,2281,52,9.465,True,division,division,27,runner_up
+香港科技大学,ENTERPRIZE,甲级,香港,662,1615,2328,55,9.25,False,not_participated,,72,
+厦门大学嘉庚学院,TCR,甲级,漳州市,627,1381,2030,56,9.235,True,revival,revival,74,
+合肥工业大学,苍穹,甲级,合肥市,582,532,1232,57,8.665,True,division,division,33,
+西南交通大学,Helios,甲级,成都市,905,1378,2125,57,8.665,True,division,division,84,
+中北大学,606,甲级,太原市,1076,426,1026,57,8.665,True,division,division,61,
+东莞理工学院,ACE,甲级,东莞市,581,1550,2274,61,8.61,True,division,division,2,champion
+东北大学秦皇岛分校,征龙凌沧,甲级,秦皇岛市,1440,425,383,63,8.515,True,division,division,45,
+安徽信息工程学院,Artisans,甲级,芜湖市,633,601,1244,65,8.415,True,division,division,34,
+福建理工大学,苍侠,甲级,福州市,668,1194,1789,65,8.415,True,division,division,96,
+合肥工业大学（宣城校区）,WDR,甲级,宣城市,637,653,1278,65,,True,division,division,26,runner_up
+成都大学,Ultra,甲级,成都市,905,1378,2125,68,8.265,True,division,division,65,
+桂林理工大学,群星,甲级,桂林市,420,1421,2198,69,8.25,True,division,division,58,runner_up
+华东理工大学,起源,甲级,上海市,887,724,1188,71,8.215,True,revival,revival,16,third_place
+长安大学,VGD,甲级,西安市,776,792,1523,72,8.17,True,division,division,17,
+北京信息科技大学,星辰,非甲级,北京市,1339,367,628,74,8.07,True,division,division,93,
+太原科技大学,NewMaker,非甲级,太原市,1076,426,1026,75,8.0,False,not_participated,,5,champion
+南华大学,MA,非甲级,衡阳市,150,1166,1930,77,7.9,True,division,division,48,
+山东理工大学,齐奇,非甲级,淄博市,1069,85,722,77,7.9,True,division,division,43,
+河北科技大学,Actor&Thinker,非甲级,石家庄市,1104,277,867,79,7.85,True,division,division,39,fourth_place
+深圳技术大学,悍匠,非甲级,深圳市,638,1596,2312,79,7.85,True,division,division,59,
+成都信息工程大学,风信子,非甲级,成都市,905,1378,2125,82,7.775,True,division,division,50,
+华北理工大学,Horizon,非甲级,唐山市,1358,344,504,84,7.6,True,division,division,29,
+福建师范大学,PKA,非甲级,福州市,668,1194,1789,85,7.375,True,division,division,88,fourth_place
+香港大学,HerKules,非甲级,香港,662,1615,2328,88,7.275,False,not_participated,,86,
+青岛大学,未来,非甲级,青岛市,1118,299,690,90,7.1,True,division,division,75,
+湘潭大学,逐曦,非甲级,湘潭市,67,1083,1851,92,6.85,True,division,division,71,
+西交利物浦大学,GMaster,非甲级,苏州市,815,676,1193,96,6.28,False,not_participated,,79,
+常州大学,Climber,非甲级,常州市,784,599,1152,99,6.225,False,not_participated,,92,
+仲恺农业工程学院,奇点,非甲级,广州市,564,1549,2281,100,6.165,True,division,division,15,
+长沙理工大学,云嵌,非甲级,长沙市,0,1017,1784,105,5.975,True,division,division,51,
+华南师范大学,PIONEER,非甲级,广州市,564,1549,2281,114,5.6,False,not_participated,,81,
+江苏大学,Aurora,非甲级,镇江市,762,539,1126,114,5.6,True,division,division,47,
+内蒙古科技大学,雷霆,非甲级,包头市,1408,763,1134,118,5.575,False,not_participated,,80,
+广西大学,ROBOTZ,非甲级,南宁市,759,1755,2536,120,5.425,True,division,division,57,
+香港科技大学（广州）,PnX,非甲级,广州市,564,1549,2281,120,5.425,True,division,division,44,
+重庆理工大学,士继DREAMER,非甲级,重庆市,536,1128,1909,128,5.25,True,division,division,90,
+南京理工大学江阴校区,Combat,非甲级,无锡市,800,636,1171,128,5.25,False,not_participated,,83,
+辽宁石油化工大学,TCN,非甲级,抚顺市,1815,824,42,134,5.025,False,not_participated,,82,
+广州航海学院,ICBK破冰船,非甲级,广州市,564,1549,2281,152,4.65,False,not_participated,,60,fourth_place
+武汉科技大学,崇实,非甲级,武汉市,294,724,1491,152,4.65,False,not_participated,,35,
+杭州电子科技大学,PHOENIX,非甲级,杭州市,738,767,1317,163,4.48,False,not_participated,,55,
+华南师范大学（佛山校区）,VANGUARD,非甲级,佛山市,576,1563,2297,182,4.175,False,not_participated,,89,
+武汉大学,珞珈狐,非甲级,武汉市,294,724,1491,185,4.13,False,not_participated,,95,
+厦门理工学院,PFA,非甲级,厦门市,656,1357,1988,190,4.0,False,not_participated,,87,
+上海大学,SRM,非甲级,上海市,887,724,1188,191,3.975,False,not_participated,,64,
+厦门大学,RCS,非甲级,厦门市,656,1357,1988,193,3.9,False,not_participated,,70,
+复旦大学,星云EGA,非甲级,上海市,887,724,1188,220,3.125,False,not_participated,,49,
+江南大学霞客湾校区,SHARK,非甲级,无锡市,800,636,1171,220,3.125,False,not_participated,,22,runner_up
