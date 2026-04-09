@@ -1,6 +1,6 @@
 {
-  "updated_at_utc": "2026-04-09T17:38:28Z",
-  "updated_at_cst": "2026-04-10 01:38:28",
+  "updated_at_utc": "2026-04-09T18:02:47Z",
+  "updated_at_cst": "2026-04-10 02:02:47",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
@@ -25,7 +25,7 @@
   "refresh_meta": {
     "status": "success",
     "status_label": "实时抓取成功",
-    "message": "本页展示的是 2026-04-10 01:38:28 的最新轻流刷新结果，当前抓到 90 支已填报学校。",
+    "message": "本页展示的是 2026-04-10 02:02:47 的最新轻流刷新结果，当前抓到 90 支已填报学校。",
     "source": "qingflow_live",
     "live_submitted_count": 90
   },
@@ -11737,8 +11737,8 @@
     "model_note": "输入为最新调剂后的 32 支赛区名单，抽签与 2025 场序对齐；基础分取当前综合实力分，弱者仅在面对更强对手时获得轻微 boost。",
     "meta": {
       "model_version": "swiss-sim-v1.0",
-      "updated_at_utc": "2026-04-09T17:38:28Z",
-      "updated_at_cst": "2026-04-10 01:38:28",
+      "updated_at_utc": "2026-04-09T18:02:47Z",
+      "updated_at_cst": "2026-04-10 02:02:47",
       "iterations": 1400,
       "quota_mode": "rmuc_2026_current_region_quota",
       "seed_rule": "points desc -> points_rank asc -> full_form_ranking asc -> strength_score desc -> school",
