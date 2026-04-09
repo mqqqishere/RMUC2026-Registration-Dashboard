@@ -1,14 +1,14 @@
 {
-  "updated_at_utc": "2026-04-09T08:08:41Z",
-  "updated_at_cst": "2026-04-09 16:08:41",
+  "updated_at_utc": "2026-04-09T08:44:03Z",
+  "updated_at_cst": "2026-04-09 16:44:03",
   "source": {
     "board": "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02",
     "announcement": "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
   },
   "capacity": 32,
-  "total_teams": 41,
-  "ranks_covered": 41,
-  "hosts_seen": 2,
+  "total_teams": 59,
+  "ranks_covered": 58,
+  "hosts_seen": 3,
   "transferred_count": 0,
   "adjustment_order": [],
   "regions": [
@@ -16,13 +16,22 @@
       "key": "南部",
       "name": "南部赛区",
       "city": "长沙市",
-      "count": 13,
+      "count": 21,
       "counts": {
         "host": 0,
-        "volunteer": 13,
+        "volunteer": 21,
         "transfer": 0
       },
       "members": [
+        {
+          "school": "中南大学",
+          "city": "长沙市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 0,
+          "rank": 22,
+          "is_host": false
+        },
         {
           "school": "湘潭大学",
           "city": "湘潭市",
@@ -30,6 +39,15 @@
           "original_volunteer": "南部",
           "dist_km": 67,
           "rank": 92,
+          "is_host": false
+        },
+        {
+          "school": "武汉大学",
+          "city": "武汉市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 294,
+          "rank": 185,
           "is_host": false
         },
         {
@@ -42,12 +60,30 @@
           "is_host": false
         },
         {
+          "school": "华南理工大学",
+          "city": "广州市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 564,
+          "rank": 2,
+          "is_host": false
+        },
+        {
           "school": "广州城市理工学院",
           "city": "广州市",
           "status": "volunteer",
           "original_volunteer": "南部",
           "dist_km": 564,
           "rank": 52,
+          "is_host": false
+        },
+        {
+          "school": "仲恺农业工程学院",
+          "city": "广州市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 564,
+          "rank": 100,
           "is_host": false
         },
         {
@@ -96,12 +132,30 @@
           "is_host": false
         },
         {
+          "school": "深圳大学",
+          "city": "深圳市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 638,
+          "rank": 6,
+          "is_host": false
+        },
+        {
           "school": "深圳技术大学",
           "city": "深圳市",
           "status": "volunteer",
           "original_volunteer": "南部",
           "dist_km": 638,
           "rank": 79,
+          "is_host": false
+        },
+        {
+          "school": "厦门理工学院",
+          "city": "厦门市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 656,
+          "rank": 190,
           "is_host": false
         },
         {
@@ -120,6 +174,24 @@
           "original_volunteer": "南部",
           "dist_km": 815,
           "rank": 96,
+          "is_host": false
+        },
+        {
+          "school": "上海交通大学",
+          "city": "上海市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 887,
+          "rank": 1,
+          "is_host": false
+        },
+        {
+          "school": "华东理工大学",
+          "city": "上海市",
+          "status": "volunteer",
+          "original_volunteer": "南部",
+          "dist_km": 887,
+          "rank": 71,
           "is_host": false
         },
         {
@@ -146,10 +218,10 @@
       "key": "东部",
       "name": "东部赛区",
       "city": "济南市",
-      "count": 16,
+      "count": 22,
       "counts": {
-        "host": 1,
-        "volunteer": 15,
+        "host": 2,
+        "volunteer": 20,
         "transfer": 0
       },
       "members": [
@@ -160,6 +232,15 @@
           "original_volunteer": "东部",
           "dist_km": 532,
           "rank": 19,
+          "is_host": true
+        },
+        {
+          "school": "上海工程技术大学",
+          "city": "上海市",
+          "status": "host",
+          "original_volunteer": "东部",
+          "dist_km": 724,
+          "rank": 31,
           "is_host": true
         },
         {
@@ -244,12 +325,39 @@
           "is_host": false
         },
         {
+          "school": "合肥工业大学（宣城校区）",
+          "city": "宣城市",
+          "status": "volunteer",
+          "original_volunteer": "东部",
+          "dist_km": 653,
+          "rank": null,
+          "is_host": false
+        },
+        {
+          "school": "武汉科技大学",
+          "city": "武汉市",
+          "status": "volunteer",
+          "original_volunteer": "东部",
+          "dist_km": 724,
+          "rank": 152,
+          "is_host": false
+        },
+        {
           "school": "上海大学",
           "city": "上海市",
           "status": "volunteer",
           "original_volunteer": "东部",
           "dist_km": 724,
           "rank": 191,
+          "is_host": false
+        },
+        {
+          "school": "浙江大学",
+          "city": "杭州市",
+          "status": "volunteer",
+          "original_volunteer": "东部",
+          "dist_km": 767,
+          "rank": 4,
           "is_host": false
         },
         {
@@ -268,6 +376,15 @@
           "original_volunteer": "东部",
           "dist_km": 792,
           "rank": 10,
+          "is_host": false
+        },
+        {
+          "school": "南昌大学",
+          "city": "南昌市",
+          "status": "volunteer",
+          "original_volunteer": "东部",
+          "dist_km": 896,
+          "rank": 21,
           "is_host": false
         },
         {
@@ -296,6 +413,15 @@
           "dist_km": 1378,
           "rank": 57,
           "is_host": false
+        },
+        {
+          "school": "广西大学",
+          "city": "南宁市",
+          "status": "volunteer",
+          "original_volunteer": "东部",
+          "dist_km": 1755,
+          "rank": 120,
+          "is_host": false
         }
       ]
     },
@@ -303,10 +429,10 @@
       "key": "北部",
       "name": "北部赛区",
       "city": "沈阳市",
-      "count": 12,
+      "count": 16,
       "counts": {
         "host": 1,
-        "volunteer": 11,
+        "volunteer": 15,
         "transfer": 0
       },
       "members": [
@@ -318,6 +444,15 @@
           "dist_km": 0,
           "rank": 51,
           "is_host": true
+        },
+        {
+          "school": "辽宁石油化工大学",
+          "city": "抚顺市",
+          "status": "volunteer",
+          "original_volunteer": "北部",
+          "dist_km": 42,
+          "rank": 134,
+          "is_host": false
         },
         {
           "school": "吉林大学",
@@ -356,6 +491,15 @@
           "is_host": false
         },
         {
+          "school": "天津大学",
+          "city": "天津市",
+          "status": "volunteer",
+          "original_volunteer": "北部",
+          "dist_km": 579,
+          "rank": 46,
+          "is_host": false
+        },
+        {
           "school": "中国石油大学（北京）",
           "city": "北京市",
           "status": "volunteer",
@@ -383,12 +527,30 @@
           "is_host": false
         },
         {
+          "school": "江南大学霞客湾校区",
+          "city": "无锡市",
+          "status": "volunteer",
+          "original_volunteer": "北部",
+          "dist_km": 1171,
+          "rank": 220,
+          "is_host": false
+        },
+        {
           "school": "同济大学",
           "city": "上海市",
           "status": "volunteer",
           "original_volunteer": "北部",
           "dist_km": 1188,
           "rank": 27,
+          "is_host": false
+        },
+        {
+          "school": "复旦大学",
+          "city": "上海市",
+          "status": "volunteer",
+          "original_volunteer": "北部",
+          "dist_km": 1188,
+          "rank": 220,
           "is_host": false
         },
         {
@@ -422,6 +584,78 @@
     }
   ],
   "teams": [
+    {
+      "school": "广西大学",
+      "city": "南宁市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "volunteer",
+      "rank": 120,
+      "is_host": false,
+      "dist_south": 759,
+      "dist_east": 1755,
+      "dist_north": 2536
+    },
+    {
+      "school": "南昌大学",
+      "city": "南昌市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "volunteer",
+      "rank": 21,
+      "is_host": false,
+      "dist_south": 304,
+      "dist_east": 896,
+      "dist_north": 1608
+    },
+    {
+      "school": "武汉科技大学",
+      "city": "武汉市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "volunteer",
+      "rank": 152,
+      "is_host": false,
+      "dist_south": 294,
+      "dist_east": 724,
+      "dist_north": 1491
+    },
+    {
+      "school": "上海工程技术大学",
+      "city": "上海市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "host",
+      "rank": 31,
+      "is_host": true,
+      "dist_south": 887,
+      "dist_east": 724,
+      "dist_north": 1188
+    },
+    {
+      "school": "浙江大学",
+      "city": "杭州市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "volunteer",
+      "rank": 4,
+      "is_host": false,
+      "dist_south": 738,
+      "dist_east": 767,
+      "dist_north": 1317
+    },
+    {
+      "school": "合肥工业大学（宣城校区）",
+      "city": "宣城市",
+      "volunteer": "东部",
+      "assigned": "东部",
+      "status": "volunteer",
+      "rank": null,
+      "is_host": false,
+      "dist_south": 637,
+      "dist_east": 653,
+      "dist_north": 1278
+    },
     {
       "school": "中国科学技术大学",
       "city": "合肥市",
@@ -615,6 +849,102 @@
       "dist_north": 1161
     },
     {
+      "school": "武汉大学",
+      "city": "武汉市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 185,
+      "is_host": false,
+      "dist_south": 294,
+      "dist_east": 724,
+      "dist_north": 1491
+    },
+    {
+      "school": "厦门理工学院",
+      "city": "厦门市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 190,
+      "is_host": false,
+      "dist_south": 656,
+      "dist_east": 1357,
+      "dist_north": 1988
+    },
+    {
+      "school": "深圳大学",
+      "city": "深圳市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 6,
+      "is_host": false,
+      "dist_south": 638,
+      "dist_east": 1596,
+      "dist_north": 2312
+    },
+    {
+      "school": "华南理工大学",
+      "city": "广州市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 2,
+      "is_host": false,
+      "dist_south": 564,
+      "dist_east": 1549,
+      "dist_north": 2281
+    },
+    {
+      "school": "华东理工大学",
+      "city": "上海市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 71,
+      "is_host": false,
+      "dist_south": 887,
+      "dist_east": 724,
+      "dist_north": 1188
+    },
+    {
+      "school": "上海交通大学",
+      "city": "上海市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 1,
+      "is_host": false,
+      "dist_south": 887,
+      "dist_east": 724,
+      "dist_north": 1188
+    },
+    {
+      "school": "仲恺农业工程学院",
+      "city": "广州市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 100,
+      "is_host": false,
+      "dist_south": 564,
+      "dist_east": 1549,
+      "dist_north": 2281
+    },
+    {
+      "school": "中南大学",
+      "city": "长沙市",
+      "volunteer": "南部",
+      "assigned": "南部",
+      "status": "volunteer",
+      "rank": 22,
+      "is_host": false,
+      "dist_south": 0,
+      "dist_east": 1017,
+      "dist_north": 1784
+    },
+    {
       "school": "华南师范大学（佛山校区）",
       "city": "佛山市",
       "volunteer": "南部",
@@ -769,6 +1099,54 @@
       "dist_south": 564,
       "dist_east": 1549,
       "dist_north": 2281
+    },
+    {
+      "school": "江南大学霞客湾校区",
+      "city": "无锡市",
+      "volunteer": "北部",
+      "assigned": "北部",
+      "status": "volunteer",
+      "rank": 220,
+      "is_host": false,
+      "dist_south": 800,
+      "dist_east": 636,
+      "dist_north": 1171
+    },
+    {
+      "school": "复旦大学",
+      "city": "上海市",
+      "volunteer": "北部",
+      "assigned": "北部",
+      "status": "volunteer",
+      "rank": 220,
+      "is_host": false,
+      "dist_south": 887,
+      "dist_east": 724,
+      "dist_north": 1188
+    },
+    {
+      "school": "辽宁石油化工大学",
+      "city": "抚顺市",
+      "volunteer": "北部",
+      "assigned": "北部",
+      "status": "volunteer",
+      "rank": 134,
+      "is_host": false,
+      "dist_south": 1815,
+      "dist_east": 824,
+      "dist_north": 42
+    },
+    {
+      "school": "天津大学",
+      "city": "天津市",
+      "volunteer": "北部",
+      "assigned": "北部",
+      "status": "volunteer",
+      "rank": 46,
+      "is_host": false,
+      "dist_south": 1301,
+      "dist_east": 296,
+      "dist_north": 579
     },
     {
       "school": "河北科技大学",
@@ -947,30 +1325,30 @@
       "submitted": false
     },
     "observed_state": {
-      "submitted_count": 41,
+      "submitted_count": 59,
       "roster_total": 96,
       "submitted_by_region": {
-        "南部": 13,
-        "东部": 16,
-        "北部": 12
+        "南部": 21,
+        "东部": 22,
+        "北部": 16
       },
-      "shark_submitted": false,
-      "shark_live_volunteer": null
+      "shark_submitted": true,
+      "shark_live_volunteer": "北部"
     },
     "options": [
       {
         "shark_volunteer": "南部",
         "initial_counts": {
-          "南部": 45,
-          "东部": 34,
-          "北部": 17
+          "南部": 42,
+          "东部": 35,
+          "北部": 19
         },
         "final_region": "东部",
         "status": "transfer",
-        "ff_position": 7,
+        "ff_position": 6,
         "spots_national": 8,
         "spots_total_max": 16,
-        "margin": 1,
+        "margin": 2,
         "top16_by_region": {
           "南部": 4,
           "东部": 4,
@@ -1036,15 +1414,6 @@
             "detail_2025": "runner_up",
             "team_type": "甲级",
             "is_protected": true
-          },
-          {
-            "school": "中南大学",
-            "city": "长沙市",
-            "ff": 21,
-            "rank": 22,
-            "detail_2025": "top_32",
-            "team_type": "甲级",
-            "is_protected": false
           }
         ],
         "wuxi_same_city": [
@@ -1070,16 +1439,16 @@
       {
         "shark_volunteer": "东部",
         "initial_counts": {
-          "南部": 44,
-          "东部": 35,
-          "北部": 17
+          "南部": 41,
+          "东部": 36,
+          "北部": 19
         },
         "final_region": "东部",
         "status": "volunteer",
-        "ff_position": 7,
+        "ff_position": 6,
         "spots_national": 8,
         "spots_total_max": 16,
-        "margin": 1,
+        "margin": 2,
         "top16_by_region": {
           "南部": 4,
           "东部": 4,
@@ -1145,15 +1514,6 @@
             "detail_2025": "runner_up",
             "team_type": "甲级",
             "is_protected": true
-          },
-          {
-            "school": "中南大学",
-            "city": "长沙市",
-            "ff": 21,
-            "rank": 22,
-            "detail_2025": "top_32",
-            "team_type": "甲级",
-            "is_protected": false
           }
         ],
         "wuxi_same_city": [
@@ -1179,30 +1539,30 @@
       {
         "shark_volunteer": "北部",
         "initial_counts": {
-          "南部": 44,
-          "东部": 34,
-          "北部": 18
+          "南部": 41,
+          "东部": 35,
+          "北部": 20
         },
         "final_region": "北部",
         "status": "volunteer",
         "ff_position": 10,
-        "spots_national": 12,
+        "spots_national": 10,
         "spots_total_max": 16,
-        "margin": 2,
+        "margin": 0,
         "top16_by_region": {
           "南部": 4,
-          "东部": 4,
-          "北部": 7
+          "东部": 5,
+          "北部": 6
         },
         "floating_by_region": {
           "南部": 0,
-          "东部": 0,
-          "北部": 4
+          "东部": 2,
+          "北部": 2
         },
         "national_by_region": {
           "南部": 8,
-          "东部": 8,
-          "北部": 12
+          "东部": 10,
+          "北部": 10
         },
         "adjustment_order": [
           "北部",
@@ -1323,13 +1683,13 @@
             "shark_volunteer": "南部",
             "final_region": "东部",
             "status": "transfer",
-            "ff_position": 7,
+            "ff_position": 6,
             "spots_national": 8,
-            "margin": 1,
+            "margin": 2,
             "initial_counts": {
-              "南部": 45,
-              "东部": 34,
-              "北部": 17
+              "南部": 42,
+              "东部": 35,
+              "北部": 19
             },
             "national_by_region": {
               "南部": 8,
@@ -1346,13 +1706,13 @@
             "shark_volunteer": "东部",
             "final_region": "东部",
             "status": "volunteer",
-            "ff_position": 7,
+            "ff_position": 6,
             "spots_national": 8,
-            "margin": 1,
+            "margin": 2,
             "initial_counts": {
-              "南部": 44,
-              "东部": 35,
-              "北部": 17
+              "南部": 41,
+              "东部": 36,
+              "北部": 19
             },
             "national_by_region": {
               "南部": 8,
@@ -1370,22 +1730,22 @@
             "final_region": "北部",
             "status": "volunteer",
             "ff_position": 10,
-            "spots_national": 12,
-            "margin": 2,
+            "spots_national": 10,
+            "margin": 0,
             "initial_counts": {
-              "南部": 44,
-              "东部": 34,
-              "北部": 18
+              "南部": 41,
+              "东部": 35,
+              "北部": 20
             },
             "national_by_region": {
               "南部": 8,
-              "东部": 8,
-              "北部": 12
+              "东部": 10,
+              "北部": 10
             },
             "top16_by_region": {
               "南部": 4,
-              "东部": 4,
-              "北部": 7
+              "东部": 5,
+              "北部": 6
             }
           }
         ]
@@ -1403,9 +1763,9 @@
             "spots_national": 12,
             "margin": 2,
             "initial_counts": {
-              "南部": 44,
-              "东部": 23,
-              "北部": 29
+              "南部": 41,
+              "东部": 25,
+              "北部": 30
             },
             "national_by_region": {
               "南部": 8,
@@ -1422,13 +1782,13 @@
             "shark_volunteer": "东部",
             "final_region": "东部",
             "status": "volunteer",
-            "ff_position": 7,
+            "ff_position": 6,
             "spots_national": 8,
-            "margin": 1,
+            "margin": 2,
             "initial_counts": {
-              "南部": 43,
-              "东部": 24,
-              "北部": 29
+              "南部": 40,
+              "东部": 26,
+              "北部": 30
             },
             "national_by_region": {
               "南部": 8,
@@ -1449,9 +1809,9 @@
             "spots_national": 12,
             "margin": 2,
             "initial_counts": {
-              "南部": 43,
-              "东部": 23,
-              "北部": 30
+              "南部": 40,
+              "东部": 25,
+              "北部": 31
             },
             "national_by_region": {
               "南部": 8,
@@ -1475,13 +1835,13 @@
             "shark_volunteer": "南部",
             "final_region": "东部",
             "status": "transfer",
-            "ff_position": 9,
+            "ff_position": 8,
             "spots_national": 12,
-            "margin": 3,
+            "margin": 4,
             "initial_counts": {
-              "南部": 44,
-              "东部": 27,
-              "北部": 25
+              "南部": 40,
+              "东部": 30,
+              "北部": 26
             },
             "national_by_region": {
               "南部": 8,
@@ -1498,13 +1858,13 @@
             "shark_volunteer": "东部",
             "final_region": "东部",
             "status": "volunteer",
-            "ff_position": 9,
+            "ff_position": 8,
             "spots_national": 12,
-            "margin": 3,
+            "margin": 4,
             "initial_counts": {
-              "南部": 43,
-              "东部": 28,
-              "北部": 25
+              "南部": 39,
+              "东部": 31,
+              "北部": 26
             },
             "national_by_region": {
               "南部": 8,
@@ -1525,9 +1885,9 @@
             "spots_national": 8,
             "margin": 0,
             "initial_counts": {
-              "南部": 43,
-              "东部": 27,
-              "北部": 26
+              "南部": 39,
+              "东部": 30,
+              "北部": 27
             },
             "national_by_region": {
               "南部": 8,
@@ -1551,13 +1911,13 @@
             "shark_volunteer": "南部",
             "final_region": "东部",
             "status": "transfer",
-            "ff_position": 8,
+            "ff_position": 7,
             "spots_national": 10,
-            "margin": 2,
+            "margin": 3,
             "initial_counts": {
-              "南部": 37,
+              "南部": 35,
               "东部": 34,
-              "北部": 25
+              "北部": 27
             },
             "national_by_region": {
               "南部": 10,
@@ -1574,13 +1934,13 @@
             "shark_volunteer": "东部",
             "final_region": "东部",
             "status": "volunteer",
-            "ff_position": 8,
+            "ff_position": 7,
             "spots_national": 10,
-            "margin": 2,
+            "margin": 3,
             "initial_counts": {
-              "南部": 36,
+              "南部": 34,
               "东部": 35,
-              "北部": 25
+              "北部": 27
             },
             "national_by_region": {
               "南部": 10,
@@ -1601,9 +1961,9 @@
             "spots_national": 8,
             "margin": 0,
             "initial_counts": {
-              "南部": 36,
+              "南部": 34,
               "东部": 34,
-              "北部": 26
+              "北部": 28
             },
             "national_by_region": {
               "南部": 10,
@@ -1627,12 +1987,12 @@
             "shark_volunteer": "南部",
             "final_region": "南部",
             "status": "volunteer",
-            "ff_position": 8,
+            "ff_position": 9,
             "spots_national": 10,
-            "margin": 2,
+            "margin": 1,
             "initial_counts": {
-              "南部": 30,
-              "东部": 23,
+              "南部": 27,
+              "东部": 26,
               "北部": 43
             },
             "national_by_region": {
@@ -1654,8 +2014,8 @@
             "spots_national": 8,
             "margin": 0,
             "initial_counts": {
-              "南部": 29,
-              "东部": 24,
+              "南部": 26,
+              "东部": 27,
               "北部": 43
             },
             "national_by_region": {
@@ -1677,8 +2037,8 @@
             "spots_national": 10,
             "margin": 2,
             "initial_counts": {
-              "南部": 29,
-              "东部": 23,
+              "南部": 26,
+              "东部": 26,
               "北部": 44
             },
             "national_by_region": {
@@ -1700,16 +2060,16 @@
       "final_region": "东部",
       "status": "transfer",
       "status_cn": "调剂",
-      "ff_position": 7,
+      "ff_position": 6,
       "spots_national": 8,
-      "baseline_margin": 1,
+      "baseline_margin": 2,
       "worst_case_margin": 1,
       "all_worst_case": {
         "南部": 1,
         "东部": 0,
         "北部": 0
       },
-      "summary": "报志愿 南部 → 最终 东部(调剂),ff 第 7 位,全国赛 8 名额,基线余裕 1 位,博弈最坏余裕 1 位。"
+      "summary": "报志愿 南部 → 最终 东部(调剂),ff 第 6 位,全国赛 8 名额,基线余裕 2 位,博弈最坏余裕 1 位。"
     }
   }
 }
