@@ -216,6 +216,7 @@ h1 {
   min-height: 0;
 }
 #panel-advancement.active,
+#panel-global-swiss.active,
 #panel-strength.active,
 #panel-region-strength.active,
 #panel-shark-decision.active,
@@ -227,6 +228,7 @@ h1 {
 #panel-advancement.active {
   grid-template-rows: auto 1fr;
 }
+#panel-global-swiss.active,
 #panel-strength.active,
 #panel-region-strength.active {
   grid-template-rows: auto 1fr;
@@ -1143,6 +1145,532 @@ tr.unsubmitted td { color: var(--muted); }
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
+.soft-btn {
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.soft-btn:hover {
+  border-color: rgba(34, 86, 200, 0.3);
+  color: var(--accent);
+}
+.global-swiss-stage {
+  display: grid;
+  gap: 10px;
+}
+.gs-overview,
+.gs-card,
+.gs-ranking-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 22px;
+  padding: 14px 16px;
+}
+.global-swiss-stage,
+.global-swiss-stage h2,
+.global-swiss-stage h3,
+.global-swiss-stage h4,
+.global-swiss-stage strong {
+  color: var(--ink);
+}
+.global-swiss-stage .pill,
+.global-swiss-stage .soft-btn,
+.global-swiss-stage .gs-select {
+  color: var(--ink);
+}
+.gs-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.gs-head h2,
+.gs-card h3,
+.gs-ranking-card h3 {
+  margin: 0 0 4px;
+}
+.gs-head p,
+.gs-card p,
+.gs-ranking-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.global-swiss-stage .pill {
+  border-color: var(--line);
+  background: var(--panel-soft);
+}
+.gs-control-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.gs-select-wrap {
+  display: grid;
+  gap: 4px;
+  min-width: min(260px, 100%);
+}
+.gs-select-wrap label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.gs-select {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+  box-shadow: none;
+}
+.gs-round-grid,
+.gs-knockout-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.gs-knockout-grid.secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.gs-round-column {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  display: grid;
+  gap: 10px;
+}
+.gs-round-column h4 {
+  margin: 0;
+  font-size: 14px;
+}
+.gs-subgroup {
+  display: grid;
+  gap: 8px;
+}
+.gs-subgroup-head {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.gs-match-list {
+  display: grid;
+  gap: 8px;
+}
+.gs-match-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  gap: 6px;
+}
+.gs-team-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+}
+.gs-team-row.winner {
+  font-weight: 800;
+}
+.gs-team-row .name small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+.gs-team-row .score {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+}
+.gs-match-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 10px;
+}
+.gs-status-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.gs-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.gs-status.advance {
+  color: #225f36;
+  border-color: rgba(48, 164, 108, 0.22);
+  background: rgba(48, 164, 108, 0.08);
+}
+.gs-status.continue {
+  color: #355ea6;
+  border-color: rgba(34, 86, 200, 0.16);
+  background: rgba(34, 86, 200, 0.06);
+}
+.gs-status.eliminated {
+  color: #9b3f34;
+  border-color: rgba(193, 91, 78, 0.22);
+  background: rgba(250, 243, 243, 0.92);
+}
+.gs-ranking-card {
+  display: grid;
+  gap: 10px;
+}
+.gs-ranking-list {
+  display: grid;
+  gap: 6px;
+  max-height: 720px;
+  overflow: auto;
+}
+.gs-ranking-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+}
+.gs-ranking-row .rank {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+.gs-ranking-row .school {
+  font-weight: 800;
+}
+.gs-ranking-row .school-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.gs-ranking-row .meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+.gs-ranking-row .qual {
+  justify-self: end;
+}
+.gs-ranking-row .avg {
+  justify-self: end;
+  color: var(--muted);
+  font-size: 11px;
+}
+.gs-ranking-row.qual-national {
+  background: rgba(255, 246, 222, 0.68);
+}
+.gs-ranking-row.qual-revival {
+  background: rgba(238, 251, 253, 0.7);
+}
+.gs-ranking-row.qual-out {
+  background: rgba(248, 250, 252, 0.9);
+}
+.gs-flow-shell {
+  display: grid;
+  gap: 10px;
+}
+.gs-flow-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.gs-zoom-range {
+  width: 160px;
+}
+.gs-zoom-readout {
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.gs-flow-viewport {
+  position: relative;
+  min-height: 72vh;
+  max-height: 82vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top center, rgba(255, 214, 112, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(34, 86, 200, 0.03), rgba(34, 86, 200, 0.01)),
+    linear-gradient(0deg, rgba(23,32,51,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23,32,51,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, #f8fafc 0%, #eef3f9 100%);
+  background-size: auto, auto, 52px 52px, 52px 52px, auto;
+  cursor: grab;
+  user-select: none;
+}
+.gs-flow-viewport.dragging {
+  cursor: grabbing;
+}
+.gs-flow-scroller {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+}
+.gs-flow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  display: grid;
+  gap: 26px;
+  padding: 18px;
+  transform-origin: top left;
+}
+.gs-flow-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.gs-flow-line {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.96;
+  filter: drop-shadow(0 0 2px rgba(24, 38, 73, 0.1));
+}
+.gs-flow-line.win,
+.gs-flow-line.advance {
+  stroke: rgba(255, 191, 73, 0.94);
+}
+.gs-flow-line.lose,
+.gs-flow-line.eliminated {
+  stroke: rgba(88, 167, 215, 0.88);
+}
+.gs-flow-section {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+}
+.gs-flow-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.gs-flow-section-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+.gs-flow-section-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.gs-swiss-board,
+.gs-ko-board {
+  display: grid;
+  gap: 12px;
+}
+.gs-swiss-columns,
+.gs-ko-columns {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: start;
+  gap: 14px;
+}
+.gs-swiss-columns {
+  grid-auto-columns: 216px;
+}
+.gs-ko-columns {
+  grid-auto-columns: 228px;
+}
+.gs-flow-column {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 8px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,248,252,0.96));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  display: grid;
+  gap: 10px;
+}
+.gs-flow-column-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 12px 12px 8px 8px;
+  padding: 6px 9px;
+  background:
+    linear-gradient(110deg, rgba(24, 157, 176, 0.94), rgba(14, 109, 131, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(243, 251, 255, 0.88);
+}
+.gs-flow-column-title strong {
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.gs-flow-column-title span {
+  color: rgba(240, 248, 255, 0.86);
+  font-size: 10px;
+}
+.gs-flow-column-sub {
+  color: var(--muted);
+  font-size: 11px;
+}
+.gs-terminal-list {
+  display: grid;
+  gap: 8px;
+}
+.gs-terminal-item {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.94);
+  display: grid;
+  gap: 4px;
+}
+.gs-terminal-item .school {
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--ink);
+}
+.gs-terminal-item.advance {
+  border-color: rgba(255, 191, 73, 0.24);
+  background: rgba(255, 246, 222, 0.9);
+}
+.gs-terminal-item.eliminated {
+  border-color: rgba(88, 167, 215, 0.2);
+  background: rgba(238, 244, 252, 0.9);
+}
+.gs-match-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.98));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  overflow: hidden;
+}
+.gs-match-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      -18deg,
+      rgba(255,255,255,0.00),
+      rgba(255,255,255,0.00) 12px,
+      rgba(23,32,51,0.018) 12px,
+      rgba(23,32,51,0.018) 15px
+    );
+  pointer-events: none;
+}
+.gs-match-card.accent-cyan {
+  border-color: rgba(29, 172, 197, 0.34);
+}
+.gs-match-card.accent-blue {
+  border-color: rgba(84, 152, 255, 0.28);
+}
+.gs-match-card.accent-gold {
+  border-color: rgba(255, 191, 73, 0.34);
+}
+.gs-match-card.accent-slate {
+  border-color: rgba(130, 145, 172, 0.22);
+}
+.gs-match-badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+  font-size: 10px;
+  font-weight: 900;
+  color: #291300;
+  background: linear-gradient(180deg, rgba(255, 203, 98, 0.98), rgba(234, 163, 56, 0.95));
+}
+.gs-match-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 4px;
+  padding: 6px 7px 6px 0;
+}
+.gs-team-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 26px;
+  padding: 2px 5px;
+  border-radius: 8px;
+  background: rgba(23,32,51,0.03);
+  font-size: 11px;
+}
+.gs-team-row.winner {
+  background: linear-gradient(90deg, rgba(255, 191, 73, 0.16), rgba(255,255,255,0.12));
+  box-shadow: inset 0 0 0 1px rgba(255,191,73,0.15);
+}
+.gs-team-row .name {
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+.gs-team-row .score {
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(23,32,51,0.08);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+.gs-team-row.winner .score {
+  background: rgba(214, 145, 28, 0.94);
+  color: #1e1300;
+}
 .muted { color: var(--muted); }
 footer {
   color: var(--muted);
@@ -1157,11 +1685,18 @@ footer {
   .shark-overview-grid,
   .shark-route-grid,
   .sim-detail-grid { grid-template-columns: 1fr; }
+  .gs-draw-grid,
+  .gs-round-grid,
+  .gs-knockout-grid,
+  .gs-knockout-grid.secondary,
+  .gs-swiss-columns,
+  .gs-ko-columns { grid-template-columns: 1fr; }
   .sim-profile-grid,
   .sim-prob-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .strength-mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .formula-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #panel-advancement.active,
+  #panel-global-swiss.active,
   #panel-strength.active,
   #panel-region-strength.active,
   #panel-shark-decision.active,
@@ -1183,11 +1718,16 @@ footer {
   .shark-mini-grid { grid-template-columns: 1fr; }
   .strength-metric { grid-template-columns: 64px 1fr auto; }
   .sim-stage-row,
-  .sim-bubble-row { grid-template-columns: 1fr; }
+  .sim-bubble-row,
+  .gs-ranking-row { grid-template-columns: 1fr; }
   .member { grid-template-columns: 1fr; }
   .member-side { text-align: left; }
   .tabs { width: 100%; display: flex; }
   .tab-btn { flex: 1 1 0; }
+  .gs-flow-viewport {
+    min-height: auto;
+    max-height: none;
+  }
 }
 </style>
 </head>
@@ -1221,13 +1761,15 @@ footer {
 
   <div class="tabs" role="tablist" aria-label="Dashboard Tabs">
     <button class="tab-btn active" data-tab="advancement" type="button">晋级推演台</button>
+    <button class="tab-btn" data-tab="global-swiss" type="button">全局瑞士轮</button>
     <button class="tab-btn" data-tab="swiss-simulation" type="button">瑞士轮模拟</button>
     <button class="tab-btn" data-tab="region-strength" type="button">赛区强度</button>
     <button class="tab-btn" data-tab="strength" type="button">综合实力榜</button>
-    <button class="tab-btn" data-tab="shark-decision" type="button">SHARK 决策</button>
+    <button class="tab-btn" data-tab="shark-decision" type="button">志愿决策</button>
   </div>
 
   <section id="panel-advancement" class="panel active"></section>
+  <section id="panel-global-swiss" class="panel"></section>
   <section id="panel-swiss-simulation" class="panel"></section>
   <section id="panel-region-strength" class="panel"></section>
   <section id="panel-strength" class="panel"></section>
@@ -1241,7 +1783,15 @@ footer {
 <script>
 const REGION_ORDER = { "南部": 0, "东部": 1, "北部": 2 };
 let currentData = null;
+let globalSwissSelectedRegion = "";
+let globalSwissZoom = 0;
+const globalSwissSampleIndexByRegion = {};
 let swissSelectedSchool = "";
+let decisionSelectedSchool = "";
+let globalSwissSamplesCache = null;
+let globalSwissSamplesPromise = null;
+let volunteerDecisionCache = null;
+let volunteerDecisionPromise = null;
 const currentHost = window.location.hostname || "";
 const POLL_INTERVAL_MS = 60 * 1000;
 const MAX_SORT = 10 ** 9;
@@ -1519,7 +2069,7 @@ function metricPercent(value, minValue, maxValue, higherBetter = true) {
 function normalizeDecisionResult(result = {}) {
   return {
     ...result,
-    shark_volunteer: result.shark_volunteer || "",
+    volunteer: result.volunteer || result.shark_volunteer || "",
     final_region: result.final_region || "—",
     status: result.status || "",
     status_cn: result.status_cn || result.status || "—",
@@ -1542,24 +2092,46 @@ function normalizeDecisionResult(result = {}) {
     decision_components: result.decision_components || {},
     summary: result.summary || "",
     region_strength_stats: result.region_strength_stats || {},
+    national_probability: numOr(result.national_probability),
+    revival_probability: numOr(result.revival_probability),
+    revival_only_probability: numOr(result.revival_only_probability),
+    out_probability: numOr(result.out_probability),
+    average_rank: numOr(result.average_rank),
+    top8_probability: numOr(result.top8_probability),
+    top4_probability: numOr(result.top4_probability),
+    most_likely_stage: result.most_likely_stage || "out",
+    most_likely_stage_label: result.most_likely_stage_label || "未晋级",
+    most_likely_stage_probability: numOr(result.most_likely_stage_probability),
   };
 }
 
 function normalizeSharkDecision(decision) {
   if (!decision) return null;
+  const schools = Object.fromEntries(
+    Object.entries(decision.schools || {}).map(([school, entry]) => [
+      school,
+      {
+        target: entry.target || {},
+        same_city_rival: entry.same_city_rival || null,
+        observed_state: entry.observed_state || {},
+        options: [...(entry.options || [])]
+          .map((option) => normalizeDecisionResult(option))
+          .sort((a, b) => compareNumber(
+            numOr(REGION_ORDER[a.volunteer], 9),
+            numOr(REGION_ORDER[b.volunteer], 9),
+          )),
+        recommendation: normalizeDecisionResult(entry.recommendation || {}),
+      },
+    ])
+  );
   return {
+    updated_at_utc: decision.updated_at_utc || "",
+    updated_at_cst: decision.updated_at_cst || "",
+    default_school: decision.default_school || Object.keys(schools)[0] || "",
+    school_count: numOr(decision.school_count, Object.keys(schools).length),
     model_note: decision.model_note || "",
     model_weights: decision.model_weights || {},
-    target: decision.target || {},
-    same_city_rival: decision.same_city_rival || null,
-    observed_state: decision.observed_state || {},
-    options: [...(decision.options || [])]
-      .map((option) => normalizeDecisionResult(option))
-      .sort((a, b) => compareNumber(
-        numOr(REGION_ORDER[a.shark_volunteer], 9),
-        numOr(REGION_ORDER[b.shark_volunteer], 9),
-      )),
-    recommendation: decision.recommendation || {},
+    schools,
   };
 }
 
@@ -1589,6 +2161,41 @@ function normalizeSwissSchool(entry = {}) {
   };
 }
 
+function normalizeGlobalSwissSample(sample = {}) {
+  return {
+    ...sample,
+    draw: sample.draw || { A: [], B: [] },
+    swiss: {
+      group_a_rounds: [...(sample.swiss?.group_a_rounds || [])],
+      group_b_rounds: [...(sample.swiss?.group_b_rounds || [])],
+    },
+    group_final: {
+      A: [...(sample.group_final?.A || [])],
+      B: [...(sample.group_final?.B || [])],
+    },
+    knockout: {
+      round_of_16: [...(sample.knockout?.round_of_16 || [])],
+      quarterfinal: [...(sample.knockout?.quarterfinal || [])],
+      semifinal: [...(sample.knockout?.semifinal || [])],
+      third_place: sample.knockout?.third_place || null,
+      championship: sample.knockout?.championship || null,
+      qualification: {
+        format: sample.knockout?.qualification?.format || "",
+        columns: [...(sample.knockout?.qualification?.columns || [])],
+      },
+    },
+    final_ranking: [...(sample.final_ranking || [])],
+  };
+}
+
+function normalizeGlobalSwissSampleRegion(entry = {}) {
+  return {
+    region: entry.region || "",
+    default_school: entry.default_school || "",
+    samples: [...(entry.samples || [])].map((sample) => normalizeGlobalSwissSample(sample)),
+  };
+}
+
 function normalizeSwissSimulation(simulation) {
   if (!simulation) return null;
   const schools = [...(simulation.schools || [])]
@@ -1601,13 +2208,88 @@ function normalizeSwissSimulation(simulation) {
     ));
   const regions = [...(simulation.regions || [])]
     .sort((a, b) => compareNumber(numOr(REGION_ORDER[a.region], 9), numOr(REGION_ORDER[b.region], 9)));
+  const sampleRegions = [...(simulation.sample_regions || [])]
+    .map((entry) => normalizeGlobalSwissSampleRegion(entry))
+    .sort((a, b) => compareNumber(numOr(REGION_ORDER[a.region], 9), numOr(REGION_ORDER[b.region], 9)));
+  const defaultSchool = simulation.default_school || schools[0]?.school || "";
+  const defaultRegion = simulation.default_region
+    || schools.find((entry) => entry.school === defaultSchool)?.assigned
+    || sampleRegions[0]?.region
+    || "";
   return {
-    default_school: simulation.default_school || schools[0]?.school || "",
+    default_school: defaultSchool,
+    default_region: defaultRegion,
     model_note: simulation.model_note || "",
     meta: simulation.meta || {},
+    samples_path: simulation.samples_path || "global_swiss_samples.json",
     schools,
     regions,
+    sample_regions: sampleRegions,
   };
+}
+
+function currentTab() {
+  return document.querySelector(".tab-btn.active")?.dataset.tab || "advancement";
+}
+
+function buildSchoolSelectOptions(schools, regions, selectedSchool) {
+  return regions.map((entry) => {
+    const members = schools.filter((school) => school.assigned === entry.region);
+    return `
+      <optgroup label="${esc(entry.region)}赛区">
+        ${members.map((school) => `
+          <option value="${esc(school.school)}" ${school.school === selectedSchool ? "selected" : ""}>
+            ${esc(school.school)} · ${esc(school.team)} · ${esc(school.seed_tier)}
+          </option>
+        `).join("")}
+      </optgroup>
+    `;
+  }).join("");
+}
+
+function invalidateLazyCaches() {
+  globalSwissSamplesCache = null;
+  globalSwissSamplesPromise = null;
+  volunteerDecisionCache = null;
+  volunteerDecisionPromise = null;
+}
+
+async function loadJsonAsset(path) {
+  const res = await fetch(`./${path}?t=${Date.now()}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+
+async function ensureGlobalSwissSamplesLoaded(data) {
+  if (globalSwissSamplesCache) return globalSwissSamplesCache;
+  if (!globalSwissSamplesPromise) {
+    const path = data?.swiss_simulation?.samples_path || "global_swiss_samples.json";
+    globalSwissSamplesPromise = loadJsonAsset(path)
+      .then((payload) => {
+        globalSwissSamplesCache = payload;
+        return payload;
+      })
+      .finally(() => {
+        globalSwissSamplesPromise = null;
+      });
+  }
+  return await globalSwissSamplesPromise;
+}
+
+async function ensureVolunteerDecisionLoaded(data) {
+  if (volunteerDecisionCache) return volunteerDecisionCache;
+  if (!volunteerDecisionPromise) {
+    const path = data?.shark_decision?.lazy_path || "volunteer_decision.json";
+    volunteerDecisionPromise = loadJsonAsset(path)
+      .then((payload) => {
+        volunteerDecisionCache = normalizeSharkDecision(payload);
+        return volunteerDecisionCache;
+      })
+      .finally(() => {
+        volunteerDecisionPromise = null;
+      });
+  }
+  return await volunteerDecisionPromise;
 }
 
 function renderStats(data) {
@@ -1860,38 +2542,62 @@ function renderAdvancement(data) {
 
 function renderSharkDecision(data) {
   const panel = document.getElementById("panel-shark-decision");
-  const decision = normalizeSharkDecision(data.shark_decision);
+  const meta = data.shark_decision || {};
+  if (!meta?.lazy_path) {
+    panel.innerHTML = `<div class="empty">当前数据还没有生成志愿决策面板，请先构建并发布最新数据。</div>`;
+    return;
+  }
+  const decision = volunteerDecisionCache;
   if (!decision) {
-    panel.innerHTML = `<div class="empty">当前数据还没有生成 SHARK 决策面板，请先构建并发布最新 data.json。</div>`;
+    panel.innerHTML = `<div class="empty">志愿决策数据加载中...</div>`;
+    return;
+  }
+  const simulation = normalizeSwissSimulation(data.swiss_simulation);
+  const schoolByName = decision.schools || {};
+  if (!decisionSelectedSchool || !schoolByName[decisionSelectedSchool]) {
+    decisionSelectedSchool = decision.default_school
+      || meta.default_school
+      || simulation?.default_school
+      || Object.keys(schoolByName)[0]
+      || "";
+  }
+  const selected = schoolByName[decisionSelectedSchool];
+  if (!selected) {
+    panel.innerHTML = `<div class="empty">当前没有可展示的志愿决策数据。</div>`;
     return;
   }
 
-  const target = decision.target || {};
-  const observed = decision.observed_state || {};
-  const recommendation = decision.recommendation || {};
-  const rival = decision.same_city_rival;
+  const target = selected.target || {};
+  const observed = selected.observed_state || {};
+  const recommendation = selected.recommendation || {};
+  const rival = selected.same_city_rival;
   const submittedByRegion = observed.submitted_by_region || {};
   const projectedByRegion = observed.projected_by_region || {};
-  const currentVolunteer = observed.shark_submitted
-    ? (observed.shark_live_volunteer || "已提交")
+  const currentVolunteer = observed.school_submitted
+    ? (observed.live_volunteer || "已提交")
     : "尚未提交";
-  const currentVsRecommendation = observed.shark_live_volunteer
+  const currentVsRecommendation = observed.live_volunteer
     && recommendation.volunteer
-    && observed.shark_live_volunteer !== recommendation.volunteer
-      ? `当前已填 ${observed.shark_live_volunteer}，与推荐 ${recommendation.volunteer} 不同`
+    && observed.live_volunteer !== recommendation.volunteer
+      ? `当前已填 ${observed.live_volunteer}，与推荐 ${recommendation.volunteer} 不同`
       : recommendation.volunteer
         ? `当前建议优先考虑 ${recommendation.volunteer}`
         : "当前暂无推荐";
+  const schoolOptions = buildSchoolSelectOptions(
+    simulation?.schools || [],
+    simulation?.regions || [],
+    decisionSelectedSchool,
+  );
 
-  const routeCards = decision.options.map((option) => {
-    const recommended = option.shark_volunteer === recommendation.volunteer;
-    const currentSelected = option.shark_volunteer === observed.shark_live_volunteer;
+  const routeCards = selected.options.map((option) => {
+    const recommended = option.volunteer === recommendation.volunteer;
+    const currentSelected = option.volunteer === observed.live_volunteer;
     return `
-      <article class="shark-route-card ${recommended ? "recommended" : ""}" data-region="${esc(option.shark_volunteer)}">
+      <article class="shark-route-card ${recommended ? "recommended" : ""}" data-region="${esc(option.volunteer)}">
         <div class="shark-route-top">
           <div>
             <div class="shark-route-label">报志愿</div>
-            <h3>${esc(option.shark_volunteer)}</h3>
+            <h3>${esc(option.volunteer)}</h3>
           </div>
           <div class="route-pill-row">
             ${recommended ? `<span class="route-pill recommended">最终推荐</span>` : ""}
@@ -1904,42 +2610,42 @@ function renderSharkDecision(data) {
         </div>
         <div class="shark-route-kpis">
           <div class="shark-kpi">
-            <span>机会分</span>
-            <strong>${fixedOr(option.decision_score)}</strong>
-            <small>当前资格 + 线余裕 + 分差综合估计</small>
+            <span>复活及以上</span>
+            <strong>${percentOr(option.revival_probability)}</strong>
+            <small>当前总晋级率，推荐逻辑的第一优先级</small>
           </div>
           <div class="shark-kpi">
-            <span>赛区排名</span>
-            <strong>#${option.strength_rank_region ?? "—"}</strong>
-            <small>全局 #${option.strength_rank_global ?? "—"} · FF #${option.ff_position ?? "—"}</small>
+            <span>国赛概率</span>
+            <strong>${percentOr(option.national_probability)}</strong>
+            <small>来自 1400 次瑞士轮模拟，不再只看边界排名</small>
           </div>
           <div class="shark-kpi">
-            <span>综合分</span>
-            <strong>${fixedOr(option.strength_score)}</strong>
-            <small>直接取当前综合实力榜</small>
+            <span>平均名次</span>
+            <strong>${fixedOr(option.average_rank, 2)}</strong>
+            <small>Top 8 ${percentOr(option.top8_probability)} · Top 4 ${percentOr(option.top4_probability)}</small>
           </div>
         </div>
         <div class="shark-rate-grid">
-          <div class="shark-rate">
-            <span>国赛线</span>
-            <strong>${signedOr(option.national_margin)}</strong>
-            <small>${option.national_line_school ? `边界队 ${esc(option.national_line_school)}` : "当前无国赛边界队"}</small>
-          </div>
-          <div class="shark-rate">
-            <span>总晋级线</span>
-            <strong>${signedOr(option.advance_margin)}</strong>
-            <small>${option.advance_line_school ? `边界队 ${esc(option.advance_line_school)}` : "当前无总晋级边界队"}</small>
-          </div>
           <div class="shark-rate">
             <span>录取去向</span>
             <strong>${esc(option.final_region)}</strong>
             <small>${esc(option.status_cn)}录取 · 国赛 ${option.national_spots} / 复活 ${option.revival_spots}</small>
           </div>
+          <div class="shark-rate">
+            <span>仅复活赛</span>
+            <strong>${percentOr(option.revival_only_probability)}</strong>
+            <small>${option.most_likely_stage_label ? `最可能结果 ${esc(option.most_likely_stage_label)}` : "当前没有最可能结果"}</small>
+          </div>
+          <div class="shark-rate">
+            <span>出局概率</span>
+            <strong>${percentOr(option.out_probability)}</strong>
+            <small>当前样本源与主瑞士轮模拟同口径</small>
+          </div>
         </div>
         <div class="shark-route-footer">
-          <span>与国赛线分差 ${fixedOr(option.national_gap_score, 2, "—")}</span>
-          <span>与总晋级线分差 ${fixedOr(option.advance_gap_score, 2, "—")}</span>
-          <span>${option.first_out_school ? `线外首队 ${esc(option.first_out_school)}` : "当前没有线外队伍"}</span>
+          <span>综合分 ${fixedOr(option.strength_score)}</span>
+          <span>赛区 #${option.strength_rank_region ?? "—"} / 全局 #${option.strength_rank_global ?? "—"}</span>
+          <span>FF #${option.ff_position ?? "—"} · 当前兼容分 ${fixedOr(option.decision_score)}</span>
         </div>
       </article>
     `;
@@ -1950,20 +2656,31 @@ function renderSharkDecision(data) {
       <section class="shark-overview">
         <div class="shark-head">
           <div>
-            <h2>SHARK 志愿决策</h2>
-            <p>${esc(decision.model_note || "固定针对江南大学霞客湾校区，仅基于当前实时填报快照做三志愿预估。")}</p>
+            <h2>志愿决策</h2>
+            <p>${esc(decision.model_note || "基于当前实时填报快照，为每所学校评估三志愿去向。")}</p>
           </div>
           <div class="pill-row">
+            <span class="pill"><strong>学校数</strong>${numOr(decision.school_count || Object.keys(schoolByName).length)}</span>
             <span class="pill"><strong>当前志愿</strong>${esc(currentVolunteer)}</span>
             <span class="pill"><strong>最终推荐</strong>${esc(recommendation.volunteer || "—")}</span>
-            <span class="pill"><strong>推荐逻辑</strong>当前快照机会分</span>
+            <span class="pill"><strong>推荐逻辑</strong>总晋级率优先</span>
+          </div>
+        </div>
+        <div class="sim-control-row" style="margin-bottom:10px;">
+          <div class="sim-select-wrap">
+            <label for="decisionSchoolSelect">学校分析</label>
+            <select id="decisionSchoolSelect" class="sim-select">${schoolOptions}</select>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>默认学校</strong>${esc(decision.default_school || "—")}</span>
+            <span class="pill"><strong>当前学校</strong>${esc(target.school || "—")}</span>
           </div>
         </div>
         <div class="shark-overview-grid">
           <article class="shark-mini-card">
             <div class="eyebrow">Target Profile</div>
-            <h3>${esc(target.school || "江南大学霞客湾校区")}</h3>
-            <p>${esc(target.team || "SHARK")} · ${esc(target.city || "—")} · ${esc(target.team_type || "—")}</p>
+            <h3>${esc(target.school || "—")}</h3>
+            <p>${esc(target.team || "—")} · ${esc(target.city || "—")} · ${esc(target.team_type || "—")}</p>
             <div class="shark-mini-grid">
               <div class="shark-mini-stat">
                 <div class="k">综合实力</div>
@@ -2028,16 +2745,16 @@ function renderSharkDecision(data) {
             <p>${esc(recommendation.summary || "当前暂无推荐摘要。")}</p>
             <div class="shark-mini-grid">
               <div class="shark-mini-stat">
-                <div class="k">机会分</div>
-                <div class="v">${fixedOr(recommendation.decision_score)}</div>
+                <div class="k">复活及以上</div>
+                <div class="v">${percentOr(recommendation.revival_probability)}</div>
               </div>
               <div class="shark-mini-stat">
-                <div class="k">国赛线</div>
-                <div class="v">${signedOr(recommendation.national_margin)}</div>
+                <div class="k">国赛概率</div>
+                <div class="v">${percentOr(recommendation.national_probability)}</div>
               </div>
               <div class="shark-mini-stat">
-                <div class="k">总晋级线</div>
-                <div class="v">${signedOr(recommendation.advance_margin)}</div>
+                <div class="k">平均名次</div>
+                <div class="v">${fixedOr(recommendation.average_rank, 2)}</div>
               </div>
               <div class="shark-mini-stat">
                 <div class="k">当前结论</div>
@@ -2074,6 +2791,716 @@ function renderSharkDecision(data) {
       <div class="shark-route-grid">${routeCards}</div>
     </section>
   `;
+
+  const select = panel.querySelector("#decisionSchoolSelect");
+  if (select) {
+    select.addEventListener("change", (event) => {
+      decisionSelectedSchool = event.target.value;
+      if (currentData) renderSharkDecision(currentData);
+    });
+  }
+}
+
+function globalSwissStatusLabel(status) {
+  if (status === "advance") return "晋级";
+  if (status === "eliminated") return "淘汰";
+  return "继续";
+}
+
+function globalSwissRecordText(record) {
+  return `${record?.wins ?? 0}-${record?.losses ?? 0}`;
+}
+
+function globalSwissScheduleNo(match) {
+  const id = String(match?.match_id || "");
+  const swiss = id.match(/^([AB])-R(\d+)-(\d+)$/);
+  if (swiss) {
+    const group = swiss[1];
+    const round = Number(swiss[2]);
+    const order = Number(swiss[3]);
+    const offsets = {
+      A: { 1: 0, 2: 16, 3: 32, 4: 48, 5: 60 },
+      B: { 1: 8, 2: 24, 3: 40, 4: 54, 5: 63 },
+    };
+    const offset = offsets[group]?.[round];
+    if (offset != null) return String(offset + order).padStart(2, "0");
+  }
+  const knockout = id.match(/^(R16|QF|P1|SF|P2|TP|F)-(\d+)?$/);
+  if (!knockout) return id || "—";
+  const stage = knockout[1];
+  const order = Number(knockout[2] || "1");
+  if (stage === "R16") return String(66 + order);
+  if (stage === "QF") return String(74 + order);
+  if (stage === "P1") return String(78 + order);
+  if (stage === "SF") return String(82 + order);
+  if (stage === "P2") return String(84 + order);
+  if (stage === "TP") return "87";
+  if (stage === "F") return "88";
+  return id || "—";
+}
+
+function globalSwissNodeId(...parts) {
+  const raw = parts.map((part) => String(part ?? "")).join("|");
+  let hash = 2166136261;
+  for (const ch of raw) {
+    hash ^= ch.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `gs-${(hash >>> 0).toString(16)}`;
+}
+
+function globalSwissClampZoom(value) {
+  return Math.max(0.55, Math.min(1.85, value));
+}
+
+function globalSwissSwissBucketLabel(match, roundNumber) {
+  if (roundNumber === 1) return "0-0";
+  return globalSwissRecordText(match?.pre_record?.left);
+}
+
+function renderGlobalSwissMatchCard(match, nodeId) {
+  if (!match) return "";
+  const leftWon = match.winner_school === match.left?.school;
+  const rightWon = match.winner_school === match.right?.school;
+  const stageClass = /championship|third_place/.test(match.stage || "")
+    ? "accent-gold"
+    : /quarterfinal|semifinal|round_of_16/.test(match.stage || "")
+      ? "accent-blue"
+      : /placement_round/.test(match.stage || "")
+        ? "accent-slate"
+        : "accent-cyan";
+  return `
+    <article class="gs-match-card ${stageClass}" id="${esc(nodeId)}" data-gs-node="${esc(nodeId)}">
+      <div class="gs-match-badge">${esc(globalSwissScheduleNo(match))}</div>
+      <div class="gs-match-body">
+        <div class="gs-team-row ${leftWon ? "winner" : ""}">
+          <div class="name">${esc(match.left?.school || "—")}</div>
+          <div class="score">${match.score?.left ?? "—"}</div>
+        </div>
+        <div class="gs-team-row ${rightWon ? "winner" : ""}">
+          <div class="name">${esc(match.right?.school || "—")}</div>
+          <div class="score">${match.score?.right ?? "—"}</div>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderGlobalSwissTerminalItem(entry, nodeId, mode) {
+  const meta = entry?.qualification_decided_text
+    || (mode === "advance" ? "3 胜晋级 16 强" : "3 负止步小组");
+  return `
+    <div class="gs-terminal-item ${esc(mode)}" id="${esc(nodeId)}" data-gs-node="${esc(nodeId)}">
+      <div class="school">${esc(entry.school || "—")}</div>
+      <div class="meta">${esc(meta)}</div>
+    </div>
+  `;
+}
+
+function buildGlobalSwissSwissColumns(groupKey, sample, finalRankingBySchool) {
+  const rounds = groupKey === "A"
+    ? (sample.swiss?.group_a_rounds || [])
+    : (sample.swiss?.group_b_rounds || []);
+  const finalRows = sample.group_final?.[groupKey] || [];
+  const withBadge = (entry) => ({ ...entry, ...(finalRankingBySchool[entry.school] || {}) });
+  const advanceRows = finalRows.filter((entry) => entry.record?.wins === 3).map(withBadge);
+  const eliminatedRows = finalRows.filter((entry) => entry.record?.losses === 3).map(withBadge);
+  const layout = [
+    { round: 1, record: "0-0", title: "R1", subtitle: "0-0 开局轮" },
+    { round: 2, record: "1-0", title: "R2", subtitle: "1-0" },
+    { round: 2, record: "0-1", title: "R2", subtitle: "0-1" },
+    { round: 3, record: "2-0", title: "R3", subtitle: "2-0" },
+    { round: 3, record: "1-1", title: "R3", subtitle: "1-1" },
+    { round: 3, record: "0-2", title: "R3", subtitle: "0-2" },
+    { round: 4, record: "2-1", title: "R4", subtitle: "2-1" },
+    { round: 4, record: "1-2", title: "R4", subtitle: "1-2" },
+    { round: 5, record: "2-2", title: "R5", subtitle: "2-2 决胜轮" },
+  ];
+  const columns = layout.map((item) => ({
+    ...item,
+    type: "matches",
+    matches: (rounds[item.round - 1]?.matches || []).filter((match) => globalSwissSwissBucketLabel(match, item.round) === item.record),
+  }));
+  columns.push({
+    type: "terminal",
+    title: "晋级16强",
+    subtitle: "3 胜即出线",
+    mode: "advance",
+    entries: advanceRows,
+  });
+  columns.push({
+    type: "terminal",
+    title: "小组淘汰",
+    subtitle: "3 负即出局",
+    mode: "eliminated",
+    entries: eliminatedRows,
+  });
+  return columns;
+}
+
+function appendGlobalSwissAppearance(paths, school, appearance) {
+  if (!school) return;
+  if (!paths[school]) paths[school] = [];
+  paths[school].push(appearance);
+}
+
+function buildGlobalSwissSchoolPathConnectors(paths) {
+  const connectors = [];
+  Object.values(paths).forEach((appearances) => {
+    appearances.sort((left, right) => (
+      left.step - right.step
+      || left.order - right.order
+      || compareText(left.nodeId, right.nodeId)
+    ));
+    for (let index = 0; index < appearances.length - 1; index += 1) {
+      const current = appearances[index];
+      const next = appearances[index + 1];
+      if (current.nodeId === next.nodeId) continue;
+      connectors.push({
+        from: current.nodeId,
+        to: next.nodeId,
+        kind: current.kind || "advance",
+      });
+    }
+  });
+  return connectors;
+}
+
+function buildGlobalSwissSwissConnectors(groupKey, sample) {
+  const rounds = groupKey === "A"
+    ? (sample.swiss?.group_a_rounds || [])
+    : (sample.swiss?.group_b_rounds || []);
+  const finals = sample.group_final?.[groupKey] || [];
+  const paths = {};
+
+  rounds.forEach((round, roundIndex) => {
+    (round.matches || []).forEach((match, matchIndex) => {
+      const nodeId = globalSwissNodeId("swiss", groupKey, round.round || (roundIndex + 1), match.match_id || matchIndex);
+      appendGlobalSwissAppearance(paths, match.left?.school, {
+        nodeId,
+        step: (round.round || (roundIndex + 1)) * 10,
+        order: matchIndex,
+        kind: match.winner_school === match.left?.school ? "win" : "lose",
+      });
+      appendGlobalSwissAppearance(paths, match.right?.school, {
+        nodeId,
+        step: (round.round || (roundIndex + 1)) * 10,
+        order: matchIndex,
+        kind: match.winner_school === match.right?.school ? "win" : "lose",
+      });
+    });
+  });
+
+  finals.forEach((entry, entryIndex) => {
+    const mode = entry.record?.wins === 3 ? "advance" : "eliminated";
+    appendGlobalSwissAppearance(paths, entry.school, {
+      nodeId: globalSwissNodeId("swiss-terminal", groupKey, mode, entry.school),
+      step: 100,
+      order: entryIndex,
+      kind: mode,
+    });
+  });
+  return buildGlobalSwissSchoolPathConnectors(paths);
+}
+
+function buildGlobalSwissKnockoutConnectors(sample) {
+  const stageOrder = [
+    ["round_of_16", sample.knockout?.round_of_16 || [], 10],
+    ["quarterfinal", sample.knockout?.quarterfinal || [], 20],
+    ["semifinal", sample.knockout?.semifinal || [], 30],
+    ["third_place", sample.knockout?.third_place ? [sample.knockout.third_place] : [], 40],
+    ["championship", sample.knockout?.championship ? [sample.knockout.championship] : [], 50],
+  ];
+  const paths = {};
+  stageOrder.forEach(([stageKey, matches, step]) => {
+    matches.forEach((match, matchIndex) => {
+      const nodeId = globalSwissNodeId("ko", stageKey, match.match_id || matchIndex);
+      appendGlobalSwissAppearance(paths, match.left?.school, {
+        nodeId,
+        step,
+        order: matchIndex,
+        kind: match.winner_school === match.left?.school ? "win" : "lose",
+      });
+      appendGlobalSwissAppearance(paths, match.right?.school, {
+        nodeId,
+        step,
+        order: matchIndex,
+        kind: match.winner_school === match.right?.school ? "win" : "lose",
+      });
+    });
+  });
+  return buildGlobalSwissSchoolPathConnectors(paths);
+}
+
+function buildGlobalSwissQualificationConnectors(sample) {
+  const columns = sample.knockout?.qualification?.columns || [];
+  const paths = {};
+  columns.forEach((column, columnIndex) => {
+    const step = 20 + columnIndex * 5;
+    (column.matches || []).forEach((match, matchIndex) => {
+      const nodeId = globalSwissNodeId("qual", column.record, match.match_id || matchIndex);
+      appendGlobalSwissAppearance(paths, match.left?.school, {
+        nodeId,
+        step,
+        order: matchIndex,
+        kind: match.winner_school === match.left?.school ? "win" : "lose",
+      });
+      appendGlobalSwissAppearance(paths, match.right?.school, {
+        nodeId,
+        step,
+        order: matchIndex,
+        kind: match.winner_school === match.right?.school ? "win" : "lose",
+      });
+    });
+    (column.standings || []).forEach((entry, entryIndex) => {
+      appendGlobalSwissAppearance(paths, entry.school, {
+        nodeId: globalSwissNodeId("qual-terminal", column.record, entry.school),
+        step: step + 1,
+        order: entryIndex,
+        kind: entry.qualification_result === "out" ? "eliminated" : "advance",
+      });
+    });
+  });
+  return buildGlobalSwissSchoolPathConnectors(paths);
+}
+
+function renderGlobalSwissFlowColumn(column, groupKey) {
+  if (column.type === "terminal") {
+    return `
+      <article class="gs-flow-column">
+        <div class="gs-flow-column-title"><strong>${esc(column.title)}</strong></div>
+        <div class="gs-flow-column-sub">${esc(column.subtitle || "")}</div>
+        <div class="gs-terminal-list">
+          ${(column.entries || []).length
+            ? column.entries.map((entry) => renderGlobalSwissTerminalItem(
+              entry,
+              globalSwissNodeId("swiss-terminal", groupKey, column.mode, entry.school),
+              column.mode,
+            )).join("")
+            : `<div class="empty">当前列没有队伍。</div>`}
+        </div>
+      </article>
+    `;
+  }
+  return `
+    <article class="gs-flow-column">
+      <div class="gs-flow-column-title"><strong>${esc(column.title)}</strong><span>${esc(column.subtitle || "")}</span></div>
+      <div class="gs-match-list">
+        ${(column.matches || []).length
+          ? column.matches.map((match) => renderGlobalSwissMatchCard(
+            match,
+            globalSwissNodeId("swiss", groupKey, column.round, match.match_id),
+          )).join("")
+          : `<div class="empty">当前列没有比赛。</div>`}
+      </div>
+    </article>
+  `;
+}
+
+function renderGlobalSwissKnockoutColumn(title, subtitle, stageKey, matches) {
+  return `
+    <article class="gs-flow-column">
+      <div class="gs-flow-column-title"><strong>${esc(title)}</strong><span>${esc(subtitle || "")}</span></div>
+      <div class="gs-match-list">
+        ${(matches || []).length
+          ? matches.map((match) => renderGlobalSwissMatchCard(
+            match,
+            globalSwissNodeId("ko", stageKey, match.match_id),
+          )).join("")
+          : `<div class="empty">当前列没有比赛。</div>`}
+      </div>
+    </article>
+  `;
+}
+
+function renderGlobalSwissQualificationColumn(column) {
+  return `
+    <article class="gs-flow-column">
+      <div class="gs-flow-column-title"><strong>${esc(column.title || "资格赛")}</strong><span>${esc(column.record || "")}</span></div>
+      <div class="gs-match-list">
+        ${(column.matches || []).map((match) => renderGlobalSwissMatchCard(
+          match,
+          globalSwissNodeId("qual", column.record, match.match_id),
+        )).join("")}
+        ${(column.standings || []).map((entry) => renderGlobalSwissTerminalItem(
+          entry,
+          globalSwissNodeId("qual-terminal", column.record, entry.school),
+          entry.qualification_result === "out" ? "eliminated" : "advance",
+        )).join("")}
+        ${(!(column.matches || []).length && !(column.standings || []).length) ? `<div class="empty">当前列没有内容。</div>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+function drawGlobalSwissConnectors(panel) {
+  const canvas = panel.querySelector("#globalSwissFlowCanvas");
+  const svg = panel.querySelector("#globalSwissFlowLines");
+  if (!canvas || !svg) return;
+  const connectors = panel._globalSwissConnectors || [];
+  const width = Math.ceil(canvas.offsetWidth);
+  const height = Math.ceil(canvas.offsetHeight);
+  const canvasRect = canvas.getBoundingClientRect();
+  const zoom = Number(canvas.dataset.zoom || globalSwissZoom || 1) || 1;
+  const shapes = [
+    `<defs>
+      <marker id="gs-arrow-win" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L10,5 L0,10 z" fill="rgba(214, 145, 28, 0.96)"></path>
+      </marker>
+      <marker id="gs-arrow-lose" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L10,5 L0,10 z" fill="rgba(56, 108, 168, 0.9)"></path>
+      </marker>
+    </defs>`,
+  ];
+
+  connectors.forEach((connector) => {
+    const fromEl = document.getElementById(connector.from);
+    const toEl = document.getElementById(connector.to);
+    if (!fromEl || !toEl || !canvas.contains(fromEl) || !canvas.contains(toEl)) return;
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
+    const startX = (fromRect.right - canvasRect.left) / zoom;
+    const startY = (
+      fromRect.top
+      - canvasRect.top
+      + fromRect.height / 2
+      + (connector.kind === "lose" || connector.kind === "eliminated" ? 6 : -6)
+    ) / zoom;
+    const endX = (toRect.left - canvasRect.left) / zoom;
+    const endY = (
+      toRect.top
+      - canvasRect.top
+      + toRect.height / 2
+      + (connector.kind === "lose" || connector.kind === "eliminated" ? -4 : 4)
+    ) / zoom;
+    const midX = startX + Math.max(28, (endX - startX) / 2);
+    const markerId = connector.kind === "lose" || connector.kind === "eliminated" ? "gs-arrow-lose" : "gs-arrow-win";
+    shapes.push(
+      `<path class="gs-flow-line ${esc(connector.kind)}" d="M ${startX} ${startY} H ${midX} V ${endY} H ${endX}" marker-end="url(#${markerId})"></path>`
+    );
+  });
+
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.innerHTML = shapes.join("");
+}
+
+function setGlobalSwissZoom(panel, nextZoom, options = {}) {
+  const viewport = panel.querySelector("#globalSwissFlowViewport");
+  const scroller = panel.querySelector("#globalSwissFlowScroller");
+  const canvas = panel.querySelector("#globalSwissFlowCanvas");
+  const range = panel.querySelector("#globalSwissZoomRange");
+  const readout = panel.querySelector("#globalSwissZoomReadout");
+  if (!viewport || !scroller || !canvas) return;
+
+  const previousZoom = Number(canvas.dataset.zoom || globalSwissZoom || 1);
+  const unscaledWidth = Math.ceil(canvas.offsetWidth);
+  const unscaledHeight = Math.ceil(canvas.offsetHeight);
+  const centerX = options.preserveCenter === false ? 0 : (viewport.scrollLeft + viewport.clientWidth / 2) / previousZoom;
+  const centerY = options.preserveCenter === false ? 0 : (viewport.scrollTop + viewport.clientHeight / 2) / previousZoom;
+
+  globalSwissZoom = globalSwissClampZoom(nextZoom);
+  canvas.dataset.zoom = String(globalSwissZoom);
+  canvas.style.transform = `scale(${globalSwissZoom})`;
+  scroller.style.width = `${Math.max(viewport.clientWidth, Math.ceil(unscaledWidth * globalSwissZoom + 24))}px`;
+  scroller.style.height = `${Math.max(viewport.clientHeight, Math.ceil(unscaledHeight * globalSwissZoom + 24))}px`;
+
+  if (options.mode === "fit") {
+    viewport.scrollLeft = 0;
+    viewport.scrollTop = 0;
+  } else if (options.preserveCenter !== false) {
+    viewport.scrollLeft = Math.max(0, centerX * globalSwissZoom - viewport.clientWidth / 2);
+    viewport.scrollTop = Math.max(0, centerY * globalSwissZoom - viewport.clientHeight / 2);
+  }
+
+  if (range) range.value = String(Math.round(globalSwissZoom * 100));
+  if (readout) readout.textContent = `${Math.round(globalSwissZoom * 100)}%`;
+  drawGlobalSwissConnectors(panel);
+}
+
+function fitGlobalSwissDiagram(panel) {
+  const viewport = panel.querySelector("#globalSwissFlowViewport");
+  const canvas = panel.querySelector("#globalSwissFlowCanvas");
+  if (!viewport || !canvas) return;
+  const targetZoom = globalSwissClampZoom((viewport.clientWidth - 24) / Math.max(canvas.offsetWidth, 1));
+  setGlobalSwissZoom(panel, targetZoom, { preserveCenter: false, mode: "fit" });
+}
+
+function initGlobalSwissFlow(panel) {
+  const viewport = panel.querySelector("#globalSwissFlowViewport");
+  const zoomOut = panel.querySelector("#globalSwissZoomOut");
+  const zoomIn = panel.querySelector("#globalSwissZoomIn");
+  const zoomReset = panel.querySelector("#globalSwissZoomReset");
+  const zoomFit = panel.querySelector("#globalSwissZoomFit");
+  const zoomRange = panel.querySelector("#globalSwissZoomRange");
+  if (!viewport) return;
+
+  let drag = null;
+  viewport.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button,select,input,label,a")) return;
+    drag = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      left: viewport.scrollLeft,
+      top: viewport.scrollTop,
+    };
+    viewport.classList.add("dragging");
+    viewport.setPointerCapture(event.pointerId);
+  });
+  viewport.addEventListener("pointermove", (event) => {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    viewport.scrollLeft = drag.left - (event.clientX - drag.x);
+    viewport.scrollTop = drag.top - (event.clientY - drag.y);
+  });
+  const stopDrag = (event) => {
+    if (drag && drag.pointerId === event.pointerId) {
+      drag = null;
+      viewport.classList.remove("dragging");
+    }
+  };
+  viewport.addEventListener("pointerup", stopDrag);
+  viewport.addEventListener("pointercancel", stopDrag);
+  viewport.addEventListener("wheel", (event) => {
+    if (!(event.ctrlKey || event.metaKey)) return;
+    event.preventDefault();
+    setGlobalSwissZoom(panel, globalSwissZoom + (event.deltaY > 0 ? -0.08 : 0.08));
+  }, { passive: false });
+
+  if (zoomOut) zoomOut.addEventListener("click", () => setGlobalSwissZoom(panel, globalSwissZoom - 0.1));
+  if (zoomIn) zoomIn.addEventListener("click", () => setGlobalSwissZoom(panel, globalSwissZoom + 0.1));
+  if (zoomReset) zoomReset.addEventListener("click", () => setGlobalSwissZoom(panel, 1, { preserveCenter: false }));
+  if (zoomFit) zoomFit.addEventListener("click", () => fitGlobalSwissDiagram(panel));
+  if (zoomRange) {
+    zoomRange.addEventListener("input", (event) => {
+      setGlobalSwissZoom(panel, Number(event.target.value) / 100, { preserveCenter: false });
+    });
+  }
+
+  requestAnimationFrame(() => {
+    if (!globalSwissZoom) {
+      fitGlobalSwissDiagram(panel);
+    } else {
+      setGlobalSwissZoom(panel, globalSwissZoom, { preserveCenter: false });
+    }
+    requestAnimationFrame(() => drawGlobalSwissConnectors(panel));
+    setTimeout(() => drawGlobalSwissConnectors(panel), 120);
+  });
+}
+
+function renderGlobalSwissStage(data) {
+  const panel = document.getElementById("panel-global-swiss");
+  const baseSimulation = normalizeSwissSimulation(data.swiss_simulation);
+  if (!baseSimulation) {
+    panel.innerHTML = `<div class="empty">当前还没有生成全局瑞士轮数据，请先构建并发布最新数据。</div>`;
+    return;
+  }
+  if (!globalSwissSamplesCache) {
+    panel.innerHTML = `<div class="empty">全局瑞士轮样本池加载中...</div>`;
+    return;
+  }
+  const simulation = {
+    ...baseSimulation,
+    default_region: globalSwissSamplesCache.default_region || baseSimulation.default_region,
+    sample_regions: [...(globalSwissSamplesCache.sample_regions || [])]
+      .map((entry) => normalizeGlobalSwissSampleRegion(entry))
+      .sort((a, b) => compareNumber(numOr(REGION_ORDER[a.region], 9), numOr(REGION_ORDER[b.region], 9))),
+  };
+  if (!simulation.sample_regions.length) {
+    panel.innerHTML = `<div class="empty">当前还没有生成全局瑞士轮样本池，请先构建并发布最新数据。</div>`;
+    return;
+  }
+
+  if (!globalSwissSelectedRegion || !simulation.sample_regions.some((entry) => entry.region === globalSwissSelectedRegion)) {
+    globalSwissSelectedRegion = simulation.default_region || simulation.sample_regions[0].region;
+  }
+  const regionEntry = simulation.sample_regions.find((entry) => entry.region === globalSwissSelectedRegion) || simulation.sample_regions[0];
+  const selectedIndex = (
+    Number.isInteger(globalSwissSampleIndexByRegion[regionEntry.region])
+    && globalSwissSampleIndexByRegion[regionEntry.region] >= 0
+    && globalSwissSampleIndexByRegion[regionEntry.region] < regionEntry.samples.length
+  ) ? globalSwissSampleIndexByRegion[regionEntry.region] : 0;
+  globalSwissSampleIndexByRegion[regionEntry.region] = selectedIndex;
+
+  const sample = regionEntry.samples[selectedIndex];
+  const meta = simulation.meta || {};
+  const regionSummary = simulation.regions.find((entry) => entry.region === regionEntry.region) || {};
+  const finalRankingBySchool = Object.fromEntries(
+    (sample.final_ranking || []).map((entry) => [entry.school, entry])
+  );
+  const swissColumnsA = buildGlobalSwissSwissColumns("A", sample, finalRankingBySchool);
+  const swissColumnsB = buildGlobalSwissSwissColumns("B", sample, finalRankingBySchool);
+  const knockoutMainColumns = [
+    ["16强", "A1-A8 / B1-B8 交叉位", "round_of_16", sample.knockout?.round_of_16 || []],
+    ["8强", "16 强胜者", "quarterfinal", sample.knockout?.quarterfinal || []],
+    ["半决赛", "8 强胜者", "semifinal", sample.knockout?.semifinal || []],
+    ["季军赛", "半决赛负者", "third_place", sample.knockout?.third_place ? [sample.knockout.third_place] : []],
+    ["决赛", "半决赛胜者", "championship", sample.knockout?.championship ? [sample.knockout.championship] : []],
+  ];
+  const qualificationColumns = sample.knockout?.qualification?.columns || [];
+  panel._globalSwissConnectors = [
+    ...buildGlobalSwissSwissConnectors("A", sample),
+    ...buildGlobalSwissSwissConnectors("B", sample),
+    ...buildGlobalSwissKnockoutConnectors(sample),
+    ...buildGlobalSwissQualificationConnectors(sample),
+  ];
+
+  panel.innerHTML = `
+    <section class="global-swiss-stage">
+      <section class="gs-overview">
+        <div class="gs-head">
+          <div>
+            <h2>全局瑞士轮</h2>
+            <p>每个赛区预生成 ${numOr(meta.sample_pool_size)} 条完整样本。这里展示的是单次样本的真实流程图，点击随机一局只会在当前赛区样本池中切换，不会现场重新模拟。</p>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>默认赛区</strong>${esc(simulation.default_region || "—")}</span>
+            <span class="pill"><strong>当前样本</strong>${esc(sample.sample_id || "—")}</span>
+            <span class="pill"><strong>名额口径</strong>${numOr(regionSummary.national_spots)} + ${numOr(regionSummary.revival_spots)}</span>
+          </div>
+        </div>
+        <div class="gs-control-row">
+          <div class="gs-select-wrap">
+            <label for="globalSwissRegionSelect">赛区样本</label>
+            <select id="globalSwissRegionSelect" class="gs-select">
+              ${simulation.sample_regions.map((entry) => `<option value="${esc(entry.region)}" ${entry.region === regionEntry.region ? "selected" : ""}>${esc(entry.region)}赛区 · ${entry.samples.length} 条样本</option>`).join("")}
+            </select>
+          </div>
+          <button id="globalSwissRandomBtn" class="soft-btn" type="button">随机一局</button>
+          <div class="pill-row">
+            <span class="pill"><strong>赛区</strong>${esc(regionEntry.region)}</span>
+            <span class="pill"><strong>样本种子</strong>${esc(String(sample.sample_seed || "—").slice(0, 8))}</span>
+            <span class="pill"><strong>拖拽</strong>按住画布拖动浏览</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="gs-card">
+        <div class="gs-head">
+          <div>
+            <h3>赛程流程图</h3>
+            <p>支持按钮、滑杆和 Ctrl/⌘ + 滚轮缩放。橙色连线偏向胜者流向，蓝色连线偏向败者流向。</p>
+          </div>
+          <div class="gs-flow-toolbar">
+            <button id="globalSwissZoomOut" class="soft-btn" type="button">缩小</button>
+            <input id="globalSwissZoomRange" class="gs-zoom-range" type="range" min="55" max="185" step="5" value="100">
+            <button id="globalSwissZoomIn" class="soft-btn" type="button">放大</button>
+            <button id="globalSwissZoomReset" class="soft-btn" type="button">100%</button>
+            <button id="globalSwissZoomFit" class="soft-btn" type="button">适应宽度</button>
+            <span id="globalSwissZoomReadout" class="gs-zoom-readout">100%</span>
+          </div>
+        </div>
+        <div id="globalSwissFlowViewport" class="gs-flow-viewport">
+          <div id="globalSwissFlowScroller" class="gs-flow-scroller">
+            <div id="globalSwissFlowCanvas" class="gs-flow-canvas">
+              <svg id="globalSwissFlowLines" class="gs-flow-lines"></svg>
+
+              <section class="gs-flow-section">
+                <div class="gs-flow-section-head">
+                  <div>
+                    <h3>A 组瑞士轮</h3>
+                    <p>按 0-0 / 1-0 / 0-1 / 2-0 / 1-1 / 0-2 / 2-1 / 1-2 / 2-2 的标准瑞士分桶排布。</p>
+                  </div>
+                </div>
+                <div class="gs-swiss-board">
+                  <div class="gs-swiss-columns">
+                    ${swissColumnsA.map((column) => renderGlobalSwissFlowColumn(column, "A")).join("")}
+                  </div>
+                </div>
+              </section>
+
+              <section class="gs-flow-section">
+                <div class="gs-flow-section-head">
+                  <div>
+                    <h3>B 组瑞士轮</h3>
+                    <p>每条线都表示本样本下对应队伍的真实去向，最右侧两列是 3 胜晋级和 3 负淘汰的终局列。</p>
+                  </div>
+                </div>
+                <div class="gs-swiss-board">
+                  <div class="gs-swiss-columns">
+                    ${swissColumnsB.map((column) => renderGlobalSwissFlowColumn(column, "B")).join("")}
+                  </div>
+                </div>
+              </section>
+
+              <section class="gs-flow-section">
+                <div class="gs-flow-section-head">
+                  <div>
+                    <h3>淘汰赛主线</h3>
+                    <p>16 强到决赛按固定树推进，赢家沿线进入下一轮。</p>
+                  </div>
+                </div>
+                <div class="gs-ko-board">
+                  <div class="gs-ko-columns">
+                    ${knockoutMainColumns.map(([title, subtitle, stageKey, matches]) => renderGlobalSwissKnockoutColumn(title, subtitle, stageKey, matches)).join("")}
+                  </div>
+                </div>
+              </section>
+
+              <section class="gs-flow-section">
+                <div class="gs-flow-section-head">
+                  <div>
+                    <h3>资格赛支线</h3>
+                    <p>16 强落败队伍不再走通用排位赛，而是按去年图式重构成资格瑞士轮，名额数量仍沿用今年赛区配额。</p>
+                  </div>
+                </div>
+                <div class="gs-ko-board">
+                  <div class="gs-ko-columns">
+                    ${qualificationColumns.map((column) => renderGlobalSwissQualificationColumn(column)).join("")}
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gs-ranking-card">
+        <h3>最终排名</h3>
+        <p>该样本下的最终 1-32 名次。资格结果仅按当前赛区的 2026 国赛 / 复活赛配额切线。</p>
+        <div class="gs-ranking-list">
+          ${(sample.final_ranking || []).map((entry) => `
+            <div class="gs-ranking-row qual-${entry.qualification_result || "out"}">
+              <div class="rank">${entry.rank ?? "—"}</div>
+              <div>
+                <div class="school-row">
+                  <div class="school">${esc(entry.school || "—")}</div>
+                </div>
+                <div class="meta">${esc(entry.team || "—")} · ${esc(entry.slot || "—")} · 种子 #${entry.seed_rank_region ?? "—"} · ${globalSwissRecordText(entry.record)}${entry.qualification_decided_title ? ` · 资格确定：${esc(entry.qualification_decided_title)}` : ""}</div>
+              </div>
+              <div class="qual">${esc(entry.qualification_label || "—")}</div>
+              <div class="avg">SOS ${entry.sos ?? "—"}</div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+    </section>
+  `;
+
+  initGlobalSwissFlow(panel);
+
+  const select = panel.querySelector("#globalSwissRegionSelect");
+  if (select) {
+    select.addEventListener("change", (event) => {
+      globalSwissSelectedRegion = event.target.value;
+      globalSwissSampleIndexByRegion[globalSwissSelectedRegion] = 0;
+      if (currentData) renderGlobalSwissStage(currentData);
+    });
+  }
+  const randomBtn = panel.querySelector("#globalSwissRandomBtn");
+  if (randomBtn) {
+    randomBtn.addEventListener("click", () => {
+      const total = regionEntry.samples.length;
+      if (!total) return;
+      let nextIndex = selectedIndex;
+      if (total > 1) {
+        while (nextIndex === selectedIndex) {
+          nextIndex = Math.floor(Math.random() * total);
+        }
+      }
+      globalSwissSampleIndexByRegion[regionEntry.region] = nextIndex;
+      if (currentData) renderGlobalSwissStage(currentData);
+    });
+  }
 }
 
 function renderSwissSimulation(data) {
@@ -2358,6 +3785,36 @@ function renderMeta(data) {
   sync.textContent = meta.message || `当前页面显示的是 ${data.updated_at_cst} 的已生成数据。`;
 }
 
+async function loadGlobalSwissStage() {
+  if (!currentData) return;
+  renderGlobalSwissStage(currentData);
+  try {
+    await ensureGlobalSwissSamplesLoaded(currentData);
+    if (currentData && currentTab() === "global-swiss") {
+      renderGlobalSwissStage(currentData);
+    }
+  } catch (error) {
+    if (currentTab() === "global-swiss") {
+      document.getElementById("panel-global-swiss").innerHTML = `<div class="empty">全局瑞士轮样本池加载失败：${esc(error.message)}</div>`;
+    }
+  }
+}
+
+async function loadVolunteerDecisionStage() {
+  if (!currentData) return;
+  renderSharkDecision(currentData);
+  try {
+    await ensureVolunteerDecisionLoaded(currentData);
+    if (currentData && currentTab() === "shark-decision") {
+      renderSharkDecision(currentData);
+    }
+  } catch (error) {
+    if (currentTab() === "shark-decision") {
+      document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">志愿决策数据加载失败：${esc(error.message)}</div>`;
+    }
+  }
+}
+
 function render(data) {
   currentData = data;
   renderMeta(data);
@@ -2366,7 +3823,12 @@ function render(data) {
   renderSwissSimulation(data);
   renderRegionStrength(data);
   renderStrength(data);
-  renderSharkDecision(data);
+  if (currentTab() === "global-swiss") {
+    void loadGlobalSwissStage();
+  }
+  if (currentTab() === "shark-decision") {
+    void loadVolunteerDecisionStage();
+  }
   if (data.fetch_error) {
     showError(`抓取失败：${data.fetch_error}`);
   } else {
@@ -2381,6 +3843,12 @@ function setTab(tab) {
   document.querySelectorAll(".panel").forEach((panel) => {
     panel.classList.toggle("active", panel.id === `panel-${tab}`);
   });
+  if (tab === "global-swiss" && currentData) {
+    requestAnimationFrame(() => void loadGlobalSwissStage());
+  }
+  if (tab === "shark-decision" && currentData) {
+    requestAnimationFrame(() => void loadVolunteerDecisionStage());
+  }
 }
 
 function updateRuntimeHints() {
@@ -2403,7 +3871,9 @@ async function loadData() {
 
 async function refreshPublishedData(force = false) {
   const payload = await loadData();
-  if (force || !currentData || payload.updated_at_utc !== currentData.updated_at_utc) {
+  const changed = force || !currentData || payload.updated_at_utc !== currentData.updated_at_utc;
+  if (changed) {
+    invalidateLazyCaches();
     render(payload);
   }
 }
@@ -2423,6 +3893,7 @@ async function refreshData() {
     });
     const payload = await res.json();
     if (!res.ok) throw new Error(payload.error || `HTTP ${res.status}`);
+    invalidateLazyCaches();
     render(payload);
   } catch (error) {
     const suffix = currentData
@@ -2448,10 +3919,11 @@ if (LOCAL_REFRESH_ENABLED) {
     await refreshPublishedData(true);
   } catch (error) {
     document.getElementById("panel-advancement").innerHTML = `<div class="empty">数据加载失败：${esc(error.message)}</div>`;
+    document.getElementById("panel-global-swiss").innerHTML = `<div class="empty">当前尚未发布全局瑞士轮样本池。</div>`;
     document.getElementById("panel-swiss-simulation").innerHTML = `<div class="empty">当前尚未发布瑞士轮模拟数据。</div>`;
     document.getElementById("panel-region-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
     document.getElementById("panel-strength").innerHTML = `<div class="empty">当前尚未发布 data.json。</div>`;
-    document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">当前尚未发布 SHARK 决策数据。</div>`;
+    document.getElementById("panel-shark-decision").innerHTML = `<div class="empty">当前尚未发布志愿决策数据。</div>`;
     showError(`初始加载失败：${error.message}`);
   }
 })();

@@ -37,6 +37,8 @@ ANNOUNCEMENT_URL = (
 )
 OUT_PATH = os.path.join(ROOT, "docs", "data.json")
 CSV_PATH = os.path.join(ROOT, "docs", "data.csv")
+VOLUNTEER_DECISION_PATH = os.path.join(ROOT, "docs", "volunteer_decision.json")
+GLOBAL_SWISS_SAMPLES_PATH = os.path.join(ROOT, "docs", "global_swiss_samples.json")
 
 STATUS_CN = {"host": "承办", "volunteer": "志愿", "transfer": "调剂"}
 REGION_ORDER = {"南部": 0, "东部": 1, "北部": 2}
@@ -221,14 +223,27 @@ def _write_csv(flat_teams: List[dict], path: str):
             ])
 
 
-def write_outputs(payload: dict, out_path: str = OUT_PATH, csv_path: str = CSV_PATH):
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+def _write_json(payload: dict, path: str):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+
+
+def write_outputs(
+    bundle: dict,
+    out_path: str = OUT_PATH,
+    csv_path: str = CSV_PATH,
+    volunteer_decision_path: str = VOLUNTEER_DECISION_PATH,
+    global_swiss_samples_path: str = GLOBAL_SWISS_SAMPLES_PATH,
+):
+    payload = bundle["payload"]
+    _write_json(payload, out_path)
+    _write_json(bundle["volunteer_decision"], volunteer_decision_path)
+    _write_json(bundle["global_swiss_samples"], global_swiss_samples_path)
     _write_csv(payload["teams"], csv_path)
 
 
-def build_payload() -> dict:
+def build_dashboard_bundle() -> dict:
     distances = allocator.load_distances()
     roster = qualification.load_roster()
 
@@ -255,7 +270,24 @@ def build_payload() -> dict:
             "source": "qingflow_live",
             "live_submitted_count": 0,
         }
-        return payload
+        return {
+            "payload": payload,
+            "volunteer_decision": {
+                "updated_at_utc": payload["updated_at_utc"],
+                "updated_at_cst": payload["updated_at_cst"],
+                "default_school": shark_decision.SHARK_SCHOOL,
+                "school_count": 0,
+                "model_note": "",
+                "model_weights": {},
+                "schools": {},
+            },
+            "global_swiss_samples": {
+                "updated_at_utc": payload["updated_at_utc"],
+                "updated_at_cst": payload["updated_at_cst"],
+                "default_region": "",
+                "sample_regions": [],
+            },
+        }
 
     live_volunteers = qualification.extract_live_volunteers(live_teams)
     projected_teams, volunteer_source = qualification.build_projected_teams(
@@ -374,13 +406,13 @@ def build_payload() -> dict:
             "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、当前综合实力、赛区整体强度与轻度均衡约束的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
         ),
     }
-    payload["shark_decision"] = shark_decision.build_decision_panel(
+    volunteer_decision = shark_decision.build_decision_panel(
         live_teams,
         distances,
         roster=roster,
         strength_info=strength_info,
     )
-    payload["swiss_simulation"] = swiss_simulation.build_swiss_simulation(
+    swiss_full = swiss_simulation.build_swiss_simulation(
         result.regions,
         strength_info,
         roster,
@@ -390,19 +422,62 @@ def build_payload() -> dict:
         updated_at_cst=payload["updated_at_cst"],
         default_school=shark_decision.SHARK_SCHOOL,
     )
-    return payload
+    payload["shark_decision"] = {
+        "default_school": (
+            volunteer_decision["default_school"]
+            if volunteer_decision is not None
+            else shark_decision.SHARK_SCHOOL
+        ),
+        "school_count": (
+            volunteer_decision["school_count"]
+            if volunteer_decision is not None
+            else 0
+        ),
+        "lazy_path": os.path.basename(VOLUNTEER_DECISION_PATH),
+    }
+    payload["swiss_simulation"] = {
+        **{key: value for key, value in swiss_full.items() if key != "sample_regions"},
+        "samples_path": os.path.basename(GLOBAL_SWISS_SAMPLES_PATH),
+    }
+    return {
+        "payload": payload,
+        "volunteer_decision": {
+            "updated_at_utc": payload["updated_at_utc"],
+            "updated_at_cst": payload["updated_at_cst"],
+            **(volunteer_decision or {
+                "default_school": shark_decision.SHARK_SCHOOL,
+                "school_count": 0,
+                "model_note": "",
+                "model_weights": {},
+                "schools": {},
+            }),
+        },
+        "global_swiss_samples": {
+            "updated_at_utc": payload["updated_at_utc"],
+            "updated_at_cst": payload["updated_at_cst"],
+            "default_region": swiss_full["default_region"],
+            "sample_regions": swiss_full["sample_regions"],
+        },
+    }
+
+
+def build_payload() -> dict:
+    return build_dashboard_bundle()["payload"]
 
 
 def main():
-    payload = build_payload()
+    bundle = build_dashboard_bundle()
+    payload = bundle["payload"]
     if payload.get("fetch_error"):
         print(f"ERROR: fetch_error = {payload['fetch_error']}", file=sys.stderr)
         sys.exit(2)
 
-    write_outputs(payload)
+    write_outputs(bundle)
 
     print(f"wrote {OUT_PATH}")
     print(f"wrote {CSV_PATH}")
+    print(f"wrote {VOLUNTEER_DECISION_PATH}")
+    print(f"wrote {GLOBAL_SWISS_SAMPLES_PATH}")
     print(
         f"  roster={payload['submission']['roster_total']}  "
         f"submitted={payload['submission']['submitted_count']}  "

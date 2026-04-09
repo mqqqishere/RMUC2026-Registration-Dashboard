@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SHARK 决策面板后端：只基于当前实时填报快照的三志愿预估。
+志愿决策面板后端：基于当前实时填报快照，为每所学校评估三志愿去向。
 
 实现原则：
 1. 其他学校沿用主看板当前同一份输入：实时提交 > 承办默认 > 就近估算
-2. SHARK 分别假设报南部 / 东部 / 北部，各跑一次真实调剂
+2. 目标学校分别假设报南部 / 东部 / 北部，各跑一次真实调剂
 3. 资格结果与赛区排名复用主看板已有的综合实力榜与资格模型
 4. 不做多情景压力测试，输出的是“当前快照下”的机会评估
+5. 为控制构建耗时，每个场景只模拟目标学校最终落入的赛区，并缓存相同赛区盘面
 """
 
 from __future__ import annotations
 
 import os
 import sys
+from collections import defaultdict
 from typing import Dict, List, Optional, Tuple
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -22,30 +24,19 @@ sys.path.insert(0, ROOT)
 
 import allocator as A  # noqa: E402
 import qualification as Q  # noqa: E402
+import swiss_simulation as S  # noqa: E402
 
 SHARK_SCHOOL = "江南大学霞客湾校区"
-SAME_CITY_RIVAL = "南京理工大学江阴校区"
 ROSTER_PATH = os.path.join(ROOT, "robomaster_2026_teams.csv")
 
 REGIONS = A.REGIONS
 STATUS_CN = {"host": "承办", "volunteer": "志愿", "transfer": "调剂"}
 
-QUALIFICATION_BASE_SCORE = {
-    "national": 120.0,
-    "revival": 72.0,
-    "none": 0.0,
-}
-
-MODEL_WEIGHTS = {
-    "advance_margin": 12.0,
-    "national_margin": 4.0,
-    "advance_gap": 2.2,
-    "national_gap": 1.1,
-    "rank_bonus": 0.7,
-    "rank_anchor": 18,
-    "volunteer_bonus": 6.0,
-    "transfer_bonus": 0.0,
-    "gap_clip": 5.0,
+MODEL_PRIORITIES = {
+    "primary": "revival_probability",
+    "secondary": "national_probability",
+    "tertiary": "average_rank",
+    "status_bonus": "volunteer",
 }
 
 
@@ -63,177 +54,234 @@ def _build_projected_teams(
     roster: Dict[str, dict],
     distances,
     base_volunteers: Dict[str, str],
-    shark_override: Optional[str] = None,
+    target_school: Optional[str] = None,
+    volunteer_override: Optional[str] = None,
 ) -> Tuple[List[A.Team], Dict[str, str]]:
     live = dict(base_volunteers)
-    if shark_override is not None:
-        live[SHARK_SCHOOL] = shark_override
+    if target_school is not None and volunteer_override is not None:
+        live[target_school] = volunteer_override
     return Q.build_projected_teams(roster, distances, live)
 
 
-def _school_at(members: List[A.Team], index: int) -> Optional[str]:
-    if 0 <= index < len(members):
-        return members[index].school
-    return None
-
-
-def _score_gap(
-    strength_info: Dict[str, dict],
-    school: str,
-    boundary_school: Optional[str],
-) -> Optional[float]:
-    if not boundary_school:
-        return None
-    return round(
-        strength_info[school]["strength_score"]
-        - strength_info[boundary_school]["strength_score"],
-        4,
-    )
-
-
-def _ff_position(members: List[A.Team], roster: Dict[str, dict]) -> Optional[int]:
-    shark_ff = roster[SHARK_SCHOOL]["full_form_ranking"]
-    if shark_ff is None:
+def _ff_position(
+    target_school: str,
+    members: List[A.Team],
+    roster: Dict[str, dict],
+) -> Optional[int]:
+    target_ff = roster[target_school]["full_form_ranking"]
+    if target_ff is None:
         return None
     return 1 + sum(
         1
         for team in members
         if roster[team.school]["full_form_ranking"] is not None
-        and roster[team.school]["full_form_ranking"] < shark_ff
+        and roster[team.school]["full_form_ranking"] < target_ff
     )
 
 
-def _clip(value: float, low: float, high: float) -> float:
-    return max(low, min(high, value))
+def _probability_status(row: dict) -> str:
+    if row.get("national_probability", 0.0) >= max(
+        row.get("revival_only_probability", 0.0),
+        row.get("out_probability", 0.0),
+    ):
+        return "national"
+    if row.get("revival_only_probability", 0.0) >= row.get("out_probability", 0.0):
+        return "revival"
+    return "none"
 
 
-def _decision_components(option: dict) -> Dict[str, float]:
-    advance_gap = _clip(
-        float(option["advance_gap_score"] or 0.0),
-        -MODEL_WEIGHTS["gap_clip"],
-        MODEL_WEIGHTS["gap_clip"],
-    )
-    national_gap = _clip(
-        float(option["national_gap_score"] or 0.0),
-        -MODEL_WEIGHTS["gap_clip"],
-        MODEL_WEIGHTS["gap_clip"],
-    )
-    rank_bonus = max(
-        0.0,
-        (MODEL_WEIGHTS["rank_anchor"] - float(option["strength_rank_region"])) * MODEL_WEIGHTS["rank_bonus"],
-    )
-    status_bonus = (
-        MODEL_WEIGHTS["volunteer_bonus"]
-        if option["status"] == "volunteer"
-        else MODEL_WEIGHTS["transfer_bonus"]
-    )
-
+def _probability_decision_components(option: dict) -> Dict[str, float]:
     components = {
-        "qualification_base": QUALIFICATION_BASE_SCORE[option["qualification_status"]],
-        "advance_margin": float(option["advance_margin"]) * MODEL_WEIGHTS["advance_margin"],
-        "national_margin": float(option["national_margin"]) * MODEL_WEIGHTS["national_margin"],
-        "advance_gap": advance_gap * MODEL_WEIGHTS["advance_gap"],
-        "national_gap": national_gap * MODEL_WEIGHTS["national_gap"],
-        "rank_bonus": rank_bonus,
-        "status_bonus": status_bonus,
+        "revival_probability": round(float(option["revival_probability"]) * 100.0, 4),
+        "national_probability": round(float(option["national_probability"]) * 40.0, 4),
+        "top8_probability": round(float(option["top8_probability"]) * 12.0, 4),
+        "top4_probability": round(float(option["top4_probability"]) * 16.0, 4),
+        "average_rank_penalty": round(-float(option["average_rank"]) * 0.8, 4),
+        "status_bonus": 6.0 if option["status"] == "volunteer" else 0.0,
     }
     components["total"] = round(sum(components.values()), 4)
-    return {key: round(value, 4) for key, value in components.items()}
+    return components
 
 
-def _build_summary(option: dict) -> str:
-    if option["qualification_status"] == "national":
-        line_text = f"当前在国赛线内 {option['national_margin']} 位"
-    elif option["qualification_status"] == "revival":
-        line_text = (
-            f"当前落后国赛线 {abs(option['national_margin'])} 位，"
-            f"但仍在复活赛线内 {option['advance_margin']} 位"
-        )
-    else:
-        line_text = f"当前落后总晋级线 {abs(option['advance_margin'])} 位"
-
+def _build_probability_summary(option: dict) -> str:
     return (
-        f"报志愿 {option['shark_volunteer']} 后，当前快照下最终落在 {option['final_region']}，"
-        f"以{option['status_cn']}身份进入该赛区，综合实力排赛区第 {option['strength_rank_region']}。"
-        f"{line_text}，机会分 {option['decision_score']:.1f}。"
+        f"报志愿 {option['volunteer']} 后，当前快照下最终落在 {option['final_region']}，"
+        f"以{option['status_cn']}身份进入该赛区。"
+        f"复活及以上概率 {option['revival_probability'] * 100:.1f}%，"
+        f"国赛概率 {option['national_probability'] * 100:.1f}%，"
+        f"平均名次 {option['average_rank']:.2f}。"
     )
+
+
+def _build_target_profile(
+    target_school: str,
+    roster: Dict[str, dict],
+    strength_info: Dict[str, dict],
+) -> dict:
+    row = roster[target_school]
+    return {
+        "school": target_school,
+        "team": row.get("team", target_school),
+        "city": row["city"],
+        "team_type": row["team_type"],
+        "rank": row["points_rank"],
+        "ff": row["full_form_ranking"],
+        "points": row.get("points"),
+        "detail_2025": row["detail_2025"],
+        "detail_2025_cn": row["detail_2025_cn"],
+        "rmul_2026_top4": row.get("rmul_2026_top4") or None,
+        "rmul_2026_top4_cn": row.get("rmul_2026_top4_cn") or None,
+        "strength_score": strength_info[target_school]["strength_score"],
+        "strength_rank_global": strength_info[target_school]["strength_rank_global"],
+        "dist": {
+            "南部": row["distance_to_changsha"],
+            "东部": row["distance_to_jinan"],
+            "北部": row["distance_to_shenyang"],
+        },
+    }
+
+
+def _region_cache_key(
+    region: str,
+    members: List[A.Team],
+    national_spots: int,
+    revival_spots: int,
+) -> Tuple[str, int, int, Tuple[str, ...]]:
+    return (
+        region,
+        national_spots,
+        revival_spots,
+        tuple(sorted(team.school for team in members)),
+    )
+
+
+def _region_probability_panel(
+    region: str,
+    members: List[A.Team],
+    roster: Dict[str, dict],
+    strength_info: Dict[str, dict],
+    national_spots: int,
+    revival_spots: int,
+    cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict],
+) -> dict:
+    key = _region_cache_key(region, members, national_spots, revival_spots)
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+
+    panel = S.build_swiss_simulation(
+        {region: members},
+        strength_info,
+        roster,
+        {region: national_spots},
+        {region: revival_spots},
+        default_school=members[0].school,
+        include_samples=False,
+    )
+    cached = {
+        "region": panel["regions"][0],
+        "school_by_name": {row["school"]: row for row in panel["schools"]},
+    }
+    cache[key] = cached
+    return cached
 
 
 def _simulate_choice(
+    target_school: str,
     roster: Dict[str, dict],
     distances,
     strength_info: Dict[str, dict],
     base_volunteers: Dict[str, str],
-    shark_override: str,
+    volunteer_choice: str,
+    region_cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict],
 ) -> dict:
     teams, volunteer_source = _build_projected_teams(
-        roster, distances, base_volunteers, shark_override
+        roster,
+        distances,
+        base_volunteers,
+        target_school=target_school,
+        volunteer_override=volunteer_choice,
     )
     result = A.allocate(teams, verbose=False)
     qualification_panel = Q.assign_qualifications(result, strength_info, roster)
     by_school = {team.school: team for team in result.teams}
-    shark = by_school[SHARK_SCHOOL]
-    assigned_region = shark.assigned
+    target_team = by_school[target_school]
+    assigned_region = target_team.assigned
     members = qualification_panel["region_rankings"][assigned_region]
-
-    strength_rank_region = qualification_panel["strength_rank_region"][SHARK_SCHOOL]
-    qualification_status = qualification_panel["qualification_status"][SHARK_SCHOOL]
     national_spots = qualification_panel["national_by_region"][assigned_region]
     revival_spots = qualification_panel["revival_by_region"][assigned_region]
-    advance_cut = national_spots + revival_spots
-
-    national_line_school = _school_at(members, national_spots - 1) if national_spots else None
-    advance_line_school = _school_at(members, advance_cut - 1) if advance_cut else None
-    first_out_school = _school_at(members, advance_cut) if advance_cut < len(members) else None
+    swiss_panel = _region_probability_panel(
+        assigned_region,
+        members,
+        roster,
+        strength_info,
+        national_spots,
+        revival_spots,
+        region_cache,
+    )
+    swiss_row = swiss_panel["school_by_name"][target_school]
+    swiss_region = swiss_panel["region"]
+    qualification_status = _probability_status(swiss_row)
 
     option = {
-        "shark_volunteer": shark_override,
-        "volunteer_source": volunteer_source.get(SHARK_SCHOOL),
+        "volunteer": volunteer_choice,
+        "volunteer_source": volunteer_source.get(target_school),
         "final_region": assigned_region,
-        "status": shark.status,
-        "status_cn": STATUS_CN.get(shark.status, shark.status),
+        "status": target_team.status,
+        "status_cn": STATUS_CN.get(target_team.status, target_team.status),
         "qualification_status": qualification_status,
         "qualification_label": Q.qualification_label(qualification_status),
-        "strength_score": strength_info[SHARK_SCHOOL]["strength_score"],
-        "strength_rank_global": strength_info[SHARK_SCHOOL]["strength_rank_global"],
-        "strength_rank_region": strength_rank_region,
-        "ff_position": _ff_position(members, roster),
+        "strength_score": strength_info[target_school]["strength_score"],
+        "strength_rank_global": strength_info[target_school]["strength_rank_global"],
+        "strength_rank_region": qualification_panel["strength_rank_region"][target_school],
+        "ff_position": _ff_position(target_school, members, roster),
         "national_spots": national_spots,
         "revival_spots": revival_spots,
-        "national_margin": national_spots - strength_rank_region,
-        "advance_margin": advance_cut - strength_rank_region,
-        "national_line_school": national_line_school,
-        "advance_line_school": advance_line_school,
-        "first_out_school": first_out_school,
-        "national_gap_score": _score_gap(
-            strength_info, SHARK_SCHOOL, national_line_school
-        ),
-        "advance_gap_score": _score_gap(
-            strength_info, SHARK_SCHOOL, advance_line_school
-        ),
+        "national_margin": None,
+        "advance_margin": None,
+        "national_line_school": swiss_region.get("bubble", {}).get("last_national", {}).get("school"),
+        "advance_line_school": swiss_region.get("bubble", {}).get("last_revival", {}).get("school"),
+        "first_out_school": swiss_region.get("bubble", {}).get("first_out", {}).get("school"),
+        "national_gap_score": None,
+        "advance_gap_score": None,
         "region_strength_stats": qualification_panel["region_strength_stats"][assigned_region],
+        "national_probability": swiss_row["national_probability"],
+        "revival_probability": swiss_row["revival_probability"],
+        "revival_only_probability": swiss_row["revival_only_probability"],
+        "out_probability": swiss_row["out_probability"],
+        "average_rank": swiss_row["average_rank"],
+        "top8_probability": swiss_row["top8_probability"],
+        "top4_probability": swiss_row["top4_probability"],
+        "most_likely_stage": swiss_row["most_likely_stage"],
+        "most_likely_stage_label": swiss_row["most_likely_stage_label"],
+        "most_likely_stage_probability": swiss_row["most_likely_stage_probability"],
+        "swiss_priority_mode": "swiss_probability_total_advance_first",
     }
-    option["decision_components"] = _decision_components(option)
+    option["decision_components"] = _probability_decision_components(option)
     option["decision_score"] = option["decision_components"]["total"]
-    option["summary"] = _build_summary(option)
+    option["summary"] = _build_probability_summary(option)
     return option
 
 
-def _current_snapshot_state(
+def _current_snapshot_context(
     roster: Dict[str, dict],
     distances,
     strength_info: Dict[str, dict],
     base_volunteers: Dict[str, str],
-) -> Tuple[dict, Optional[dict]]:
-    teams, _ = _build_projected_teams(roster, distances, base_volunteers)
+) -> dict:
+    teams, volunteer_source = _build_projected_teams(roster, distances, base_volunteers)
     result = A.allocate(teams, verbose=False)
     qualification_panel = Q.assign_qualifications(result, strength_info, roster)
     by_school = {team.school: team for team in result.teams}
-
-    shark = by_school[SHARK_SCHOOL]
-    rival = by_school.get(SAME_CITY_RIVAL)
-
-    observed = {
+    city_to_schools: Dict[str, List[str]] = defaultdict(list)
+    for school, row in roster.items():
+        city_to_schools[row["city"]].append(school)
+    return {
+        "result": result,
+        "qualification_panel": qualification_panel,
+        "by_school": by_school,
+        "volunteer_source": volunteer_source,
+        "city_to_schools": city_to_schools,
         "submitted_count": len(base_volunteers),
         "roster_total": len(roster),
         "submitted_by_region": {
@@ -244,48 +292,81 @@ def _current_snapshot_state(
             region: len(result.regions[region])
             for region in REGIONS
         },
-        "shark_submitted": SHARK_SCHOOL in base_volunteers,
-        "shark_live_volunteer": base_volunteers.get(SHARK_SCHOOL),
-        "shark_projected_region": shark.assigned,
-        "shark_projected_status": shark.status,
-        "shark_projected_status_cn": STATUS_CN.get(shark.status, shark.status),
-        "shark_projected_qualification": qualification_panel["qualification_status"][SHARK_SCHOOL],
-        "shark_projected_qualification_label": Q.qualification_label(
-            qualification_panel["qualification_status"][SHARK_SCHOOL]
+    }
+
+
+def _observed_state(
+    target_school: str,
+    base_volunteers: Dict[str, str],
+    snapshot: dict,
+) -> dict:
+    target_team = snapshot["by_school"][target_school]
+    qualification_panel = snapshot["qualification_panel"]
+    return {
+        "submitted_count": snapshot["submitted_count"],
+        "roster_total": snapshot["roster_total"],
+        "submitted_by_region": snapshot["submitted_by_region"],
+        "projected_by_region": snapshot["projected_by_region"],
+        "school_submitted": target_school in base_volunteers,
+        "live_volunteer": base_volunteers.get(target_school),
+        "projected_region": target_team.assigned,
+        "projected_status": target_team.status,
+        "projected_status_cn": STATUS_CN.get(target_team.status, target_team.status),
+        "projected_qualification": qualification_panel["qualification_status"][target_school],
+        "projected_qualification_label": Q.qualification_label(
+            qualification_panel["qualification_status"][target_school]
         ),
     }
 
-    rival_info = None
-    if rival is not None and SAME_CITY_RIVAL in roster:
-        rival_info = {
-            "school": SAME_CITY_RIVAL,
-            "team": roster[SAME_CITY_RIVAL]["team"],
-            "city": roster[SAME_CITY_RIVAL]["city"],
-            "rank": roster[SAME_CITY_RIVAL]["points_rank"],
-            "ff": roster[SAME_CITY_RIVAL]["full_form_ranking"],
-            "team_type": roster[SAME_CITY_RIVAL]["team_type"],
-            "live_volunteer": base_volunteers.get(SAME_CITY_RIVAL),
-            "submitted": SAME_CITY_RIVAL in base_volunteers,
-            "projected_region": rival.assigned,
-            "projected_status": rival.status,
-            "projected_status_cn": STATUS_CN.get(rival.status, rival.status),
-            "projected_qualification": qualification_panel["qualification_status"][SAME_CITY_RIVAL],
-            "projected_qualification_label": Q.qualification_label(
-                qualification_panel["qualification_status"][SAME_CITY_RIVAL]
-            ),
-            "strength_rank_region": qualification_panel["strength_rank_region"][SAME_CITY_RIVAL],
-        }
 
-    return observed, rival_info
+def _same_city_rival(
+    target_school: str,
+    roster: Dict[str, dict],
+    base_volunteers: Dict[str, str],
+    snapshot: dict,
+) -> Optional[dict]:
+    city = roster[target_school]["city"]
+    candidates = [
+        school
+        for school in snapshot["city_to_schools"].get(city, [])
+        if school != target_school
+    ]
+    if len(candidates) != 1:
+        return None
+
+    rival_school = candidates[0]
+    rival = snapshot["by_school"].get(rival_school)
+    if rival is None:
+        return None
+
+    qualification_panel = snapshot["qualification_panel"]
+    return {
+        "school": rival_school,
+        "team": roster[rival_school]["team"],
+        "city": roster[rival_school]["city"],
+        "rank": roster[rival_school]["points_rank"],
+        "ff": roster[rival_school]["full_form_ranking"],
+        "team_type": roster[rival_school]["team_type"],
+        "live_volunteer": base_volunteers.get(rival_school),
+        "submitted": rival_school in base_volunteers,
+        "projected_region": rival.assigned,
+        "projected_status": rival.status,
+        "projected_status_cn": STATUS_CN.get(rival.status, rival.status),
+        "projected_qualification": qualification_panel["qualification_status"][rival_school],
+        "projected_qualification_label": Q.qualification_label(
+            qualification_panel["qualification_status"][rival_school]
+        ),
+        "strength_rank_region": qualification_panel["strength_rank_region"][rival_school],
+    }
 
 
 def _recommendation_key(option: dict):
     return (
-        option["decision_score"],
-        QUALIFICATION_BASE_SCORE[option["qualification_status"]],
-        option["advance_margin"],
-        option["national_margin"],
+        option["revival_probability"],
+        option["national_probability"],
+        -option["average_rank"],
         1 if option["status"] == "volunteer" else 0,
+        -REGIONS.index(option["volunteer"]),
     )
 
 
@@ -293,10 +374,10 @@ def select_recommendation_option(options: List[dict]) -> dict:
     return max(options, key=_recommendation_key)
 
 
-def _build_recommendation(option: dict) -> dict:
+def _build_recommendation(target_school: str, option: dict) -> dict:
     return {
-        "priority_mode": "current_snapshot_score",
-        "volunteer": option["shark_volunteer"],
+        "priority_mode": "swiss_probability_total_advance_first",
+        "volunteer": option["volunteer"],
         "final_region": option["final_region"],
         "status": option["status"],
         "status_cn": option["status_cn"],
@@ -304,17 +385,38 @@ def _build_recommendation(option: dict) -> dict:
         "qualification_label": option["qualification_label"],
         "strength_rank_region": option["strength_rank_region"],
         "decision_score": option["decision_score"],
-        "national_margin": option["national_margin"],
-        "advance_margin": option["advance_margin"],
-        "national_gap_score": option["national_gap_score"],
-        "advance_gap_score": option["advance_gap_score"],
+        "national_margin": option.get("national_margin"),
+        "advance_margin": option.get("advance_margin"),
+        "national_gap_score": option.get("national_gap_score"),
+        "advance_gap_score": option.get("advance_gap_score"),
+        "national_probability": option["national_probability"],
+        "revival_probability": option["revival_probability"],
+        "revival_only_probability": option["revival_only_probability"],
+        "out_probability": option["out_probability"],
+        "average_rank": option["average_rank"],
+        "top8_probability": option["top8_probability"],
+        "top4_probability": option["top4_probability"],
         "summary": (
-            f"推荐报志愿 {option['shark_volunteer']}。在当前实时填报快照下，"
-            f"SHARK 最终会落在 {option['final_region']}，当前预估结果为"
-            f"{option['qualification_label']}，赛区排名第 {option['strength_rank_region']}，"
-            f"机会分 {option['decision_score']:.1f}。"
+            f"推荐报志愿 {option['volunteer']}。在当前实时填报快照下，"
+            f"{target_school} 最终会落在 {option['final_region']}，当前预估结果为"
+            f"{option['qualification_label']}。复活及以上概率 "
+            f"{option['revival_probability'] * 100:.1f}%，"
+            f"国赛概率 {option['national_probability'] * 100:.1f}%，"
+            f"平均名次 {option['average_rank']:.2f}。"
         ),
     }
+
+
+def _school_order(snapshot: dict, strength_info: Dict[str, dict]) -> List[str]:
+    return sorted(
+        snapshot["by_school"],
+        key=lambda school: (
+            A.REGIONS.index(snapshot["by_school"][school].assigned),
+            snapshot["qualification_panel"]["strength_rank_region"].get(school, 10 ** 9),
+            strength_info[school]["strength_rank_global"],
+            school,
+        ),
+    )
 
 
 def build_decision_panel(
@@ -322,56 +424,61 @@ def build_decision_panel(
     distances,
     roster: Optional[Dict[str, dict]] = None,
     strength_info: Optional[Dict[str, dict]] = None,
+    *,
+    default_school: str = SHARK_SCHOOL,
 ) -> Optional[dict]:
     roster = roster or load_roster()
-    if not roster or SHARK_SCHOOL not in roster:
+    if not roster:
         return None
 
     if strength_info is None:
         strength_info, _ = Q.compute_strength_table(roster)
 
     base_volunteers = _extract_live_volunteers(live_teams)
-    observed_state, same_city_rival = _current_snapshot_state(
-        roster, distances, strength_info, base_volunteers
-    )
-    options = [
-        _simulate_choice(roster, distances, strength_info, base_volunteers, choice)
-        for choice in REGIONS
-    ]
-    recommendation = _build_recommendation(select_recommendation_option(options))
+    snapshot = _current_snapshot_context(roster, distances, strength_info, base_volunteers)
+    ordered_schools = _school_order(snapshot, strength_info)
+    region_cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict] = {}
+    schools: Dict[str, dict] = {}
 
-    shark_row = roster[SHARK_SCHOOL]
-    target = {
-        "school": SHARK_SCHOOL,
-        "team": shark_row.get("team", "SHARK"),
-        "city": shark_row["city"],
-        "team_type": shark_row["team_type"],
-        "rank": shark_row["points_rank"],
-        "ff": shark_row["full_form_ranking"],
-        "points": shark_row.get("points"),
-        "detail_2025": shark_row["detail_2025"],
-        "detail_2025_cn": shark_row["detail_2025_cn"],
-        "rmul_2026_top4": shark_row.get("rmul_2026_top4") or None,
-        "rmul_2026_top4_cn": shark_row.get("rmul_2026_top4_cn") or None,
-        "strength_score": strength_info[SHARK_SCHOOL]["strength_score"],
-        "strength_rank_global": strength_info[SHARK_SCHOOL]["strength_rank_global"],
-        "dist": {
-            "南部": shark_row["distance_to_changsha"],
-            "东部": shark_row["distance_to_jinan"],
-            "北部": shark_row["distance_to_shenyang"],
-        },
-    }
+    for target_school in ordered_schools:
+        options = [
+            _simulate_choice(
+                target_school,
+                roster,
+                distances,
+                strength_info,
+                base_volunteers,
+                choice,
+                region_cache,
+            )
+            for choice in REGIONS
+        ]
+        recommendation = _build_recommendation(
+            target_school,
+            select_recommendation_option(options),
+        )
+        schools[target_school] = {
+            "target": _build_target_profile(target_school, roster, strength_info),
+            "same_city_rival": _same_city_rival(
+                target_school,
+                roster,
+                base_volunteers,
+                snapshot,
+            ),
+            "observed_state": _observed_state(target_school, base_volunteers, snapshot),
+            "options": options,
+            "recommendation": recommendation,
+        }
 
+    actual_default = default_school if default_school in schools else ordered_schools[0]
     return {
+        "default_school": actual_default,
+        "school_count": len(schools),
         "model_note": (
             "当前不做多情景压力测试，只基于当前实时填报快照推演。"
-            "机会分 = 当前资格档位 + 距国赛/总晋级线余裕 + 与边界队伍的实力分差 + "
-            "赛区内排名修正 + 志愿直录修正。"
+            "每个志愿选项都会先按真实调剂落位，再只对目标学校最终所在赛区"
+            f"进行 {S.DEFAULT_ITERATIONS} 次瑞士轮概率模拟；最终推荐按总晋级率优先。"
         ),
-        "model_weights": dict(MODEL_WEIGHTS),
-        "target": target,
-        "same_city_rival": same_city_rival,
-        "observed_state": observed_state,
-        "options": options,
-        "recommendation": recommendation,
+        "model_weights": dict(MODEL_PRIORITIES),
+        "schools": schools,
     }
