@@ -15,7 +15,10 @@ from __future__ import annotations
 
 import os
 import sys
+import json
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +31,9 @@ import swiss_simulation as S  # noqa: E402
 
 SHARK_SCHOOL = "江南大学霞客湾校区"
 ROSTER_PATH = os.path.join(ROOT, "robomaster_2026_teams.csv")
+RUNTIME_DIR = os.path.join(ROOT, ".runtime")
+REGION_CACHE_PATH = os.path.join(RUNTIME_DIR, "decision_region_cache.json")
+REGION_CACHE_VERSION = "decision-region-v2"
 
 REGIONS = A.REGIONS
 STATUS_CN = {"host": "承办", "volunteer": "志愿", "transfer": "调剂"}
@@ -38,6 +44,15 @@ MODEL_PRIORITIES = {
     "tertiary": "average_rank",
     "status_bonus": "volunteer",
 }
+
+_REGION_WORKER_ROSTER: Optional[Dict[str, dict]] = None
+_REGION_WORKER_STRENGTH_INFO: Optional[Dict[str, dict]] = None
+
+
+@dataclass(frozen=True)
+class RegionMemberRef:
+    school: str
+    assigned: str
 
 
 def load_roster() -> Dict[str, dict]:
@@ -155,45 +170,157 @@ def _region_cache_key(
     )
 
 
-def _region_probability_panel(
+def _region_task_from_option(option: dict) -> Tuple[Tuple[str, int, int, Tuple[str, ...]], str, Tuple[str, ...], int, int]:
+    key = option["_region_cache_key"]
+    return (
+        key,
+        option["final_region"],
+        key[3],
+        option["national_spots"],
+        option["revival_spots"],
+    )
+
+
+def _region_cache_token(key: Tuple[str, int, int, Tuple[str, ...]]) -> str:
+    region, national_spots, revival_spots, member_schools = key
+    return json.dumps(
+        [
+            REGION_CACHE_VERSION,
+            S.MODEL_VERSION,
+            S.DEFAULT_ITERATIONS,
+            region,
+            national_spots,
+            revival_spots,
+            list(member_schools),
+        ],
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+
+
+def _load_persistent_region_cache() -> Dict[str, dict]:
+    if not os.path.exists(REGION_CACHE_PATH):
+        return {}
+    try:
+        with open(REGION_CACHE_PATH, encoding="utf-8") as f:
+            payload = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if payload.get("version") != REGION_CACHE_VERSION:
+        return {}
+    entries = payload.get("entries")
+    return entries if isinstance(entries, dict) else {}
+
+
+def _save_persistent_region_cache(entries: Dict[str, dict]):
+    os.makedirs(RUNTIME_DIR, exist_ok=True)
+    payload = {
+        "version": REGION_CACHE_VERSION,
+        "entries": entries,
+    }
+    with open(REGION_CACHE_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+
+
+def _simulate_region_payload(
     region: str,
-    members: List[A.Team],
+    member_schools: Tuple[str, ...],
     roster: Dict[str, dict],
     strength_info: Dict[str, dict],
     national_spots: int,
     revival_spots: int,
-    cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict],
 ) -> dict:
-    key = _region_cache_key(region, members, national_spots, revival_spots)
-    cached = cache.get(key)
-    if cached is not None:
-        return cached
-
+    members = [
+        RegionMemberRef(school=school, assigned=region)
+        for school in member_schools
+    ]
     panel = S.build_swiss_simulation(
         {region: members},
         strength_info,
         roster,
         {region: national_spots},
         {region: revival_spots},
-        default_school=members[0].school,
+        default_school=member_schools[0],
         include_samples=False,
     )
-    cached = {
+    return {
         "region": panel["regions"][0],
         "school_by_name": {row["school"]: row for row in panel["schools"]},
     }
-    cache[key] = cached
-    return cached
 
 
-def _simulate_choice(
+def _init_region_probability_worker(
+    roster: Dict[str, dict],
+    strength_info: Dict[str, dict],
+):
+    global _REGION_WORKER_ROSTER, _REGION_WORKER_STRENGTH_INFO
+    _REGION_WORKER_ROSTER = roster
+    _REGION_WORKER_STRENGTH_INFO = strength_info
+
+
+def _evaluate_region_probability_task(
+    task: Tuple[Tuple[str, int, int, Tuple[str, ...]], str, Tuple[str, ...], int, int],
+) -> Tuple[Tuple[str, int, int, Tuple[str, ...]], dict]:
+    key, region, member_schools, national_spots, revival_spots = task
+    if _REGION_WORKER_ROSTER is None or _REGION_WORKER_STRENGTH_INFO is None:
+        raise RuntimeError("region probability worker was not initialized")
+    return (
+        key,
+        _simulate_region_payload(
+            region,
+            member_schools,
+            _REGION_WORKER_ROSTER,
+            _REGION_WORKER_STRENGTH_INFO,
+            national_spots,
+            revival_spots,
+        ),
+    )
+
+
+def _decision_worker_count(task_count: int) -> int:
+    configured = int(os.environ.get("VOLUNTEER_DECISION_WORKERS", "0") or "0")
+    if configured > 0:
+        return max(1, min(configured, task_count))
+    return max(1, min(task_count, min(8, os.cpu_count() or 1)))
+
+
+def _evaluate_region_probability_tasks(
+    tasks: List[Tuple[Tuple[str, int, int, Tuple[str, ...]], str, Tuple[str, ...], int, int]],
+    roster: Dict[str, dict],
+    strength_info: Dict[str, dict],
+) -> Dict[Tuple[str, int, int, Tuple[str, ...]], dict]:
+    if not tasks:
+        return {}
+
+    worker_count = _decision_worker_count(len(tasks))
+    if worker_count <= 1:
+        return {
+            key: _simulate_region_payload(
+                region,
+                member_schools,
+                roster,
+                strength_info,
+                national_spots,
+                revival_spots,
+            )
+            for key, region, member_schools, national_spots, revival_spots in tasks
+        }
+
+    with ProcessPoolExecutor(
+        max_workers=worker_count,
+        initializer=_init_region_probability_worker,
+        initargs=(roster, strength_info),
+    ) as executor:
+        return dict(executor.map(_evaluate_region_probability_task, tasks))
+
+
+def _prepare_choice(
     target_school: str,
     roster: Dict[str, dict],
     distances,
     strength_info: Dict[str, dict],
     base_volunteers: Dict[str, str],
     volunteer_choice: str,
-    region_cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict],
 ) -> dict:
     teams, volunteer_source = _build_projected_teams(
         roster,
@@ -210,27 +337,12 @@ def _simulate_choice(
     members = qualification_panel["region_rankings"][assigned_region]
     national_spots = qualification_panel["national_by_region"][assigned_region]
     revival_spots = qualification_panel["revival_by_region"][assigned_region]
-    swiss_panel = _region_probability_panel(
-        assigned_region,
-        members,
-        roster,
-        strength_info,
-        national_spots,
-        revival_spots,
-        region_cache,
-    )
-    swiss_row = swiss_panel["school_by_name"][target_school]
-    swiss_region = swiss_panel["region"]
-    qualification_status = _probability_status(swiss_row)
-
-    option = {
+    return {
         "volunteer": volunteer_choice,
         "volunteer_source": volunteer_source.get(target_school),
         "final_region": assigned_region,
         "status": target_team.status,
         "status_cn": STATUS_CN.get(target_team.status, target_team.status),
-        "qualification_status": qualification_status,
-        "qualification_label": Q.qualification_label(qualification_status),
         "strength_score": strength_info[target_school]["strength_score"],
         "strength_rank_global": strength_info[target_school]["strength_rank_global"],
         "strength_rank_region": qualification_panel["strength_rank_region"][target_school],
@@ -239,24 +351,51 @@ def _simulate_choice(
         "revival_spots": revival_spots,
         "national_margin": None,
         "advance_margin": None,
-        "national_line_school": swiss_region.get("bubble", {}).get("last_national", {}).get("school"),
-        "advance_line_school": swiss_region.get("bubble", {}).get("last_revival", {}).get("school"),
-        "first_out_school": swiss_region.get("bubble", {}).get("first_out", {}).get("school"),
         "national_gap_score": None,
         "advance_gap_score": None,
         "region_strength_stats": qualification_panel["region_strength_stats"][assigned_region],
-        "national_probability": swiss_row["national_probability"],
-        "revival_probability": swiss_row["revival_probability"],
-        "revival_only_probability": swiss_row["revival_only_probability"],
-        "out_probability": swiss_row["out_probability"],
-        "average_rank": swiss_row["average_rank"],
-        "top8_probability": swiss_row["top8_probability"],
-        "top4_probability": swiss_row["top4_probability"],
-        "most_likely_stage": swiss_row["most_likely_stage"],
-        "most_likely_stage_label": swiss_row["most_likely_stage_label"],
-        "most_likely_stage_probability": swiss_row["most_likely_stage_probability"],
         "swiss_priority_mode": "swiss_probability_total_advance_first",
+        "_region_cache_key": _region_cache_key(
+            assigned_region,
+            members,
+            national_spots,
+            revival_spots,
+        ),
     }
+
+
+def _finalize_choice(
+    target_school: str,
+    prepared_option: dict,
+    region_result: dict,
+) -> dict:
+    option = {
+        key: value
+        for key, value in prepared_option.items()
+        if not key.startswith("_")
+    }
+    swiss_row = region_result["school_by_name"][target_school]
+    swiss_region = region_result["region"]
+    qualification_status = _probability_status(swiss_row)
+    option.update(
+        {
+            "qualification_status": qualification_status,
+            "qualification_label": Q.qualification_label(qualification_status),
+            "national_line_school": swiss_region.get("bubble", {}).get("last_national", {}).get("school"),
+            "advance_line_school": swiss_region.get("bubble", {}).get("last_revival", {}).get("school"),
+            "first_out_school": swiss_region.get("bubble", {}).get("first_out", {}).get("school"),
+            "national_probability": swiss_row["national_probability"],
+            "revival_probability": swiss_row["revival_probability"],
+            "revival_only_probability": swiss_row["revival_only_probability"],
+            "out_probability": swiss_row["out_probability"],
+            "average_rank": swiss_row["average_rank"],
+            "top8_probability": swiss_row["top8_probability"],
+            "top4_probability": swiss_row["top4_probability"],
+            "most_likely_stage": swiss_row["most_likely_stage"],
+            "most_likely_stage_label": swiss_row["most_likely_stage_label"],
+            "most_likely_stage_probability": swiss_row["most_likely_stage_probability"],
+        }
+    )
     option["decision_components"] = _probability_decision_components(option)
     option["decision_score"] = option["decision_components"]["total"]
     option["summary"] = _build_probability_summary(option)
@@ -437,26 +576,27 @@ def build_decision_panel(
     base_volunteers = _extract_live_volunteers(live_teams)
     snapshot = _current_snapshot_context(roster, distances, strength_info, base_volunteers)
     ordered_schools = _school_order(snapshot, strength_info)
-    region_cache: Dict[Tuple[str, int, int, Tuple[str, ...]], dict] = {}
     schools: Dict[str, dict] = {}
+    region_tasks: Dict[
+        Tuple[str, int, int, Tuple[str, ...]],
+        Tuple[Tuple[str, int, int, Tuple[str, ...]], str, Tuple[str, ...], int, int],
+    ] = {}
 
     for target_school in ordered_schools:
-        options = [
-            _simulate_choice(
+        prepared_options = [
+            _prepare_choice(
                 target_school,
                 roster,
                 distances,
                 strength_info,
                 base_volunteers,
                 choice,
-                region_cache,
             )
             for choice in REGIONS
         ]
-        recommendation = _build_recommendation(
-            target_school,
-            select_recommendation_option(options),
-        )
+        for option in prepared_options:
+            task = _region_task_from_option(option)
+            region_tasks.setdefault(task[0], task)
         schools[target_school] = {
             "target": _build_target_profile(target_school, roster, strength_info),
             "same_city_rival": _same_city_rival(
@@ -466,9 +606,45 @@ def build_decision_panel(
                 snapshot,
             ),
             "observed_state": _observed_state(target_school, base_volunteers, snapshot),
-            "options": options,
-            "recommendation": recommendation,
+            "_prepared_options": prepared_options,
         }
+
+    region_results: Dict[Tuple[str, int, int, Tuple[str, ...]], dict] = {}
+    persistent_cache = _load_persistent_region_cache()
+    missing_tasks = []
+    for task in region_tasks.values():
+        key = task[0]
+        cached = persistent_cache.get(_region_cache_token(key))
+        if cached is not None:
+            region_results[key] = cached
+        else:
+            missing_tasks.append(task)
+    if missing_tasks:
+        new_results = _evaluate_region_probability_tasks(
+            missing_tasks,
+            roster,
+            strength_info,
+        )
+        region_results.update(new_results)
+        for key, value in new_results.items():
+            persistent_cache[_region_cache_token(key)] = value
+        _save_persistent_region_cache(persistent_cache)
+
+    for target_school in ordered_schools:
+        prepared_options = schools[target_school].pop("_prepared_options")
+        options = [
+            _finalize_choice(
+                target_school,
+                option,
+                region_results[option["_region_cache_key"]],
+            )
+            for option in prepared_options
+        ]
+        schools[target_school]["options"] = options
+        schools[target_school]["recommendation"] = _build_recommendation(
+            target_school,
+            select_recommendation_option(options),
+        )
 
     actual_default = default_school if default_school in schools else ordered_schools[0]
     return {
@@ -477,7 +653,9 @@ def build_decision_panel(
         "model_note": (
             "当前不做多情景压力测试，只基于当前实时填报快照推演。"
             "每个志愿选项都会先按真实调剂落位，再只对目标学校最终所在赛区"
-            f"进行 {S.DEFAULT_ITERATIONS} 次瑞士轮概率模拟；最终推荐按总晋级率优先。"
+            f"进行 {S.DEFAULT_ITERATIONS} 次瑞士轮概率模拟；"
+            "主瑞士轮面板保持相同 1400 次聚合口径。"
+            "最终推荐按总晋级率优先。"
         ),
         "model_weights": dict(MODEL_PRIORITIES),
         "schools": schools,
