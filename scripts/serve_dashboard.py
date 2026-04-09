@@ -55,13 +55,14 @@ class DashboardHandler(SimpleHTTPRequestHandler):
 
         try:
             dashboard = load_build_dashboard_module()
-            payload = dashboard.build_payload()
+            bundle = dashboard.build_dashboard_bundle()
+            payload = bundle["payload"]
             if payload.get("fetch_error"):
                 self._send_json(HTTPStatus.BAD_GATEWAY, {
                     "error": payload["fetch_error"],
                 })
                 return
-            dashboard.write_outputs(payload)
+            dashboard.write_outputs(bundle)
             self._send_json(HTTPStatus.OK, payload)
         except Exception as exc:
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {
@@ -85,6 +86,7 @@ def load_build_dashboard_module():
         "qingflow",
         "allocator",
         "qualification",
+        "swiss_simulation",
         "shark_decision",
         "build_dashboard",
     ]
@@ -97,14 +99,15 @@ def load_build_dashboard_module():
 
 def initial_refresh() -> bool:
     dashboard = load_build_dashboard_module()
-    payload = dashboard.build_payload()
+    bundle = dashboard.build_dashboard_bundle()
+    payload = bundle["payload"]
     if payload.get("fetch_error"):
         print(
             f"[warn] initial refresh failed: {payload['fetch_error']}",
             file=sys.stderr,
         )
         return False
-    dashboard.write_outputs(payload)
+    dashboard.write_outputs(bundle)
     print(
         f"[ok] initial refresh completed: submitted={payload['submission']['submitted_count']} "
         f"updated={payload['updated_at_cst']}"
