@@ -3,937 +3,1462 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RM2026 区域赛实时录取看板</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='56'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E">
+<title>RMUC 2026 晋级推演台</title>
 <style>
 :root {
-  --bg:         #0b0f1a;
-  --panel:      #141a2a;
-  --panel2:     #1a2033;
-  --border:     #242c42;
-  --fg:         #e6e9f0;
-  --muted:      #8a93ab;
-  --accent:     #5ba7ff;
-  --south:      #f08862;
-  --east:       #8bd14a;
-  --north:      #54bbd1;
-  --host:       #ffcf3d;
-  --volunteer:  #8bd14a;
-  --transfer:   #ff9650;
-  /* margin colors, used across opt-card metric / sensitivity matrix */
-  --mg-safe:    #8bd14a;
-  --mg-ok:      #e8d34a;
-  --mg-tight:   #ff9650;
-  --mg-bad:     #ff6b6b;
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg:       #f6f7fa;
-    --panel:    #ffffff;
-    --panel2:   #f2f4f9;
-    --border:   #e3e7ef;
-    --fg:       #1a2032;
-    --muted:    #6a7389;
-    /* darker, higher-contrast margin colors for white background */
-    --mg-safe:  #3d9a28;
-    --mg-ok:    #c88900;
-    --mg-tight: #d56314;
-    --mg-bad:   #d23a3a;
-  }
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-soft: #f7f8fa;
+  --panel-muted: #f2f4f7;
+  --line: #e6ebf2;
+  --line-strong: #d7dfeb;
+  --ink: #172033;
+  --muted: #71809a;
+  --accent: #2256c8;
+  --gold-bg: #fff6de;
+  --gold-line: #edc76e;
+  --cyan-bg: #eefbfd;
+  --cyan-line: #9ed7df;
+  --rose-bg: #faf3f3;
+  --rose-line: #e9d2d2;
+  --south: #d56243;
+  --east: #4f8f3a;
+  --north: #1b84a6;
+  --shadow: 0 12px 28px rgba(24, 38, 73, 0.06);
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
-               "Helvetica Neue", "Microsoft YaHei", system-ui, sans-serif;
-  background: var(--bg); color: var(--fg);
-  line-height: 1.45;
-  padding: 20px 16px 48px;
-  -webkit-font-smoothing: antialiased;
+  font-family: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 12px;
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-header { max-width: 1440px; margin: 0 auto 20px; }
-h1 {
-  margin: 0 0 6px; font-size: 22px; letter-spacing: 0.5px;
-  display: flex; align-items: center; gap: 8px;
+button { font: inherit; }
+.shell {
+  max-width: 1600px;
+  min-height: calc(100vh - 24px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  gap: 10px;
 }
-h1 .badge {
-  font-size: 10px; letter-spacing: 1px; font-weight: 600;
-  background: var(--accent); color: #001a3a;
-  padding: 2px 6px; border-radius: 3px;
-}
-.meta { color: var(--muted); font-size: 13px; }
-.meta span.sep { margin: 0 8px; opacity: 0.5; }
-.stats {
-  max-width: 1440px; margin: 0 auto 16px;
-  display: flex; flex-wrap: wrap; gap: 8px;
-  font-size: 12px;
-}
-.stat {
-  background: var(--panel2); border: 1px solid var(--border);
-  padding: 6px 10px; border-radius: 6px; color: var(--muted);
-}
-.stat b { color: var(--fg); font-weight: 600; margin-right: 4px; }
-.grid {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-.region {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px 18px 8px;
-  display: flex; flex-direction: column;
-}
-.region header {
-  margin: 0 0 12px; padding: 0;
-  display: flex; align-items: baseline; justify-content: space-between;
-}
-.region h2 {
-  margin: 0; font-size: 18px; font-weight: 600;
-  display: flex; align-items: baseline; gap: 6px;
-}
-.region h2 .city { font-size: 12px; color: var(--muted); font-weight: 400; }
-.region[data-key="南部"] h2 { color: var(--south); }
-.region[data-key="东部"] h2 { color: var(--east); }
-.region[data-key="北部"] h2 { color: var(--north); }
-.count { font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 700; }
-.count.over { color: var(--transfer); }
-.count .cap { color: var(--muted); font-size: 14px; font-weight: 400; margin-left: 2px; }
-.breakdown {
-  display: flex; gap: 10px; font-size: 11px; color: var(--muted);
-  padding-bottom: 10px; border-bottom: 1px solid var(--border);
-  margin-bottom: 4px;
-}
-.breakdown span b { color: var(--fg); }
-ul { list-style: none; margin: 0; padding: 0; }
-li {
-  padding: 10px 2px;
-  border-bottom: 1px solid var(--border);
-  display: grid; grid-template-columns: 1fr auto;
-  gap: 2px 10px; font-size: 13px;
-}
-li:last-child { border-bottom: none; }
-.row-main { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.school { font-weight: 500; }
-.city-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
-.tag {
-  display: inline-block; padding: 1px 5px; border-radius: 3px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-  font-family: -apple-system, sans-serif;
-}
-.tag.host      { background: var(--host);      color: #3a2700; }
-.tag.volunteer { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-.tag.transfer  { background: var(--transfer);  color: #3a1a00; }
-.from-tag { color: var(--muted); font-size: 10px; }
-.dist {
-  color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums;
-  align-self: center;
-}
-.empty {
-  text-align: center; color: var(--muted); padding: 40px 20px;
-  font-size: 13px;
-}
-footer {
-  max-width: 1440px; margin: 28px auto 0;
-  color: var(--muted); font-size: 11px; text-align: center;
-}
+.hero,
+.banner,
+.formula-card,
+.ranking-card,
+.region-card,
+.stat,
 #err {
-  max-width: 1440px; margin: 8px auto;
-  padding: 10px 14px; border-radius: 8px;
-  background: #401c1c; color: #ffb8b8;
-  border: 1px solid #6a2e2e; font-size: 12px;
-  display: none;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
-
-/* ─── SHARK 决策面板 ─── */
-#decision {
-  max-width: 1440px; margin: 48px auto 0;
-  display: none;            /* JS 渲染成功后才显示 */
+.hero {
+  border-radius: 18px;
+  padding: 14px 18px 12px;
 }
-#decision .d-title {
-  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-  margin: 0 0 4px;
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-#decision .d-title h2 {
-  margin: 0; font-size: 20px; font-weight: 700;
-  letter-spacing: 0.3px;
+.eyebrow {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-#decision .d-title .d-tag {
-  font-size: 10px; letter-spacing: 1.5px; font-weight: 700;
-  background: #6b52ff; color: #fff;
-  padding: 2px 8px; border-radius: 3px;
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #30a46c;
 }
-#decision .d-subtitle {
-  color: var(--muted); font-size: 12px; margin: 0 0 20px;
+h1 {
+  margin: 8px 0 4px;
+  font-size: 28px;
+  line-height: 1.05;
 }
-
-#decision .d-row {
-  display: grid; gap: 12px; margin-bottom: 16px;
-  grid-template-columns: 1.2fr 1fr 1.2fr;
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 900px;
 }
-@media (max-width: 980px) { #decision .d-row { grid-template-columns: 1fr; } }
-
-.d-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.d-card h4 {
-  margin: 0 0 10px; font-size: 11px;
-  text-transform: uppercase; letter-spacing: 1px;
-  color: var(--muted); font-weight: 600;
-}
-.d-card .kv { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
-.d-card .kv span:first-child { color: var(--muted); }
-.d-card .kv span:last-child { color: var(--fg); font-variant-numeric: tabular-nums; }
-.d-card .kv b { font-weight: 600; }
-.d-card .big {
-  font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums;
-}
-.d-card .pill {
-  display: inline-block; font-size: 10px; font-weight: 700;
-  letter-spacing: 0.5px; padding: 2px 6px; border-radius: 3px;
-  background: var(--panel2); color: var(--fg);
-  border: 1px solid var(--border);
-}
-.d-card .pill.runner_up { background: var(--transfer); color: #3a1a00; border-color: transparent; }
-.d-card .pill.champion { background: var(--host); color: #3a2700; border-color: transparent; }
-
-/* Recommendation banner (自带颜色变量,在两种 color-scheme 下都可读) */
-.rec-banner {
-  --rb-bg-from:  #1a2c52;
-  --rb-bg-to:    #152742;
-  --rb-border:   #3d5a9e;
-  --rb-label:    #8bbbff;
-  --rb-choice:   #ffffff;
-  --rb-summary:  #c4d6ef;
-  background: linear-gradient(135deg, var(--rb-bg-from) 0%, var(--rb-bg-to) 100%);
-  border: 1px solid var(--rb-border);
-  border-radius: 12px; padding: 16px 20px;
-  margin-bottom: 16px;
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-}
-.rec-banner .rec-label {
-  font-size: 10px; letter-spacing: 2px; font-weight: 700;
-  color: var(--rb-label); text-transform: uppercase;
-}
-.rec-banner .rec-choice {
-  font-size: 28px; font-weight: 800; letter-spacing: 1px;
-  color: var(--rb-choice);
-}
-.rec-banner .rec-choice .rec-icon { margin-right: 6px; color: var(--rb-label); }
-.rec-banner .rec-summary {
-  flex: 1 1 auto; font-size: 13px; color: var(--rb-summary);
-  line-height: 1.6; min-width: 200px;
-}
-@media (prefers-color-scheme: light) {
-  .rec-banner {
-    --rb-bg-from:  #eaf1ff;
-    --rb-bg-to:    #dde7fa;
-    --rb-border:   #5ba7ff;
-    --rb-label:    #2a68c2;
-    --rb-choice:   #0b1a3a;
-    --rb-summary:  #2d3a55;
-  }
-}
-
-/* 3 option cards */
-#decision .opt-grid {
-  display: grid; gap: 12px; margin-bottom: 20px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-@media (max-width: 800px) { #decision .opt-grid { grid-template-columns: 1fr; } }
-
-.opt-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-  position: relative;
-}
-.opt-card[data-best="true"] {
-  /* 用 accent 的半透明叠加在 panel 上,既能高亮又不会在 light/dark 模式间失衡 */
-  border-color: #5ba7ff;
-  background:
-    linear-gradient(180deg, rgba(91,167,255,0.15) 0%, rgba(91,167,255,0.04) 100%),
-    var(--panel);
-  box-shadow: 0 0 0 1px rgba(91,167,255,0.35);
-}
-.opt-card .opt-badge {
-  position: absolute; top: -8px; right: 12px;
-  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-  background: var(--accent); color: #001a3a;
-  padding: 2px 8px; border-radius: 3px;
-}
-.opt-card h3 {
-  margin: 0 0 10px; font-size: 14px; font-weight: 600;
-}
-.opt-card h3 .opt-choice {
-  font-size: 22px; font-weight: 800; margin-left: 4px;
-}
-.opt-card .flow {
-  font-size: 12px; color: var(--muted); margin-bottom: 12px;
-  padding-bottom: 10px; border-bottom: 1px solid var(--border);
-}
-.opt-card .flow b { color: var(--fg); font-weight: 600; }
-.opt-card .flow .arr { margin: 0 6px; opacity: 0.5; }
-.opt-card .flow .st { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 4px; letter-spacing: 0.3px; }
-.opt-card .flow .st.volunteer {
-  background: rgba(91,167,255,0.16);
-  color: var(--accent);
-  border: 1px solid rgba(91,167,255,0.45);
-}
-.opt-card .flow .st.transfer { background: var(--transfer); color: #3a1a00; }
-.opt-card .flow .st.host { background: var(--host); color: #3a2700; }
-
-.opt-card .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
-.opt-card .metric { font-size: 11px; color: var(--muted); }
-.opt-card .metric b {
-  display: block; color: var(--fg);
-  font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;
-  margin-top: 1px;
-}
-.opt-card .metric b.margin-good  { color: var(--mg-safe); }
-.opt-card .metric b.margin-ok    { color: var(--mg-ok); }
-.opt-card .metric b.margin-tight { color: var(--mg-tight); }
-.opt-card .metric b.margin-bad   { color: var(--mg-bad); }
-.opt-card .worst {
-  margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border);
-  font-size: 11px; color: var(--muted);
-}
-.opt-card .worst b { font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 800; }
-.opt-card .worst b.margin-good  { color: var(--mg-safe); }
-.opt-card .worst b.margin-ok    { color: var(--mg-ok); }
-.opt-card .worst b.margin-tight { color: var(--mg-tight); }
-.opt-card .worst b.margin-bad   { color: var(--mg-bad); }
-
-/* Evidence section */
-.ev-section {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px 20px;
-  margin-bottom: 16px;
-}
-.ev-section > h3 {
-  margin: 0 0 16px; font-size: 16px; font-weight: 700;
-  display: flex; align-items: center; gap: 8px;
-}
-.ev-section h3 { display: flex; align-items: center; gap: 8px; }
-.ev-section .ev-num {
-  display: inline-flex; align-items: center; justify-content: center;
-  flex: 0 0 auto;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--accent); color: #001a3a;
-  font-size: 11px; font-weight: 800;
-}
-.ev-section .ev-body { font-size: 13px; line-height: 1.7; color: var(--fg); }
-.ev-section .ev-body ul { margin: 0; padding-left: 18px; }
-.ev-section .ev-body li { margin-bottom: 4px; }
-.ev-section .ev-body .muted { color: var(--muted); }
-.ev-section .ev-body b { font-weight: 600; }
-.ev-section .ev-body code {
-  background: var(--panel2); padding: 1px 6px; border-radius: 3px;
-  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px;
-}
-.ev-note {
-  margin-top: 10px; padding: 10px 12px;
-  background: var(--panel2); border-left: 3px solid var(--accent);
-  border-radius: 0 4px 4px 0; font-size: 12px; color: var(--muted);
-}
-.ev-note b { color: var(--fg); }
-
-/* Evidence tables */
-.ev-section table {
-  width: 100%; border-collapse: collapse;
-  font-size: 12px; margin-top: 8px;
-}
-.ev-section th, .ev-section td {
-  padding: 6px 8px; text-align: left;
-  border-bottom: 1px solid var(--border);
-  font-variant-numeric: tabular-nums;
-}
-.ev-section th {
-  color: var(--muted); font-weight: 600; font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.5px;
-}
-.ev-section td.num { text-align: right; }
-.ev-section tr.highlight td { background: rgba(91,167,255,0.08); }
-.ev-section tr.shark-row td {
-  background: rgba(139,209,74,0.12); font-weight: 600;
-}
-
-/* Sensitivity matrix */
-.sens-table {
-  width: 100%; border-collapse: separate; border-spacing: 0;
-  font-size: 12px;
-}
-.sens-table th {
-  padding: 10px 8px; text-align: left;
-  color: var(--muted); font-weight: 600; font-size: 10px;
-  text-transform: uppercase; letter-spacing: 1px;
-  border-bottom: 1px solid var(--border);
-  background: var(--panel2);
-}
-.sens-table th.col { text-align: center; min-width: 110px; }
-.sens-table td {
-  padding: 10px 8px; border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-.sens-table td.scenario-name { font-weight: 600; font-size: 12px; color: var(--fg); }
-.sens-table td.scenario-desc { font-size: 11px; color: var(--muted); }
-.sens-table td.cell {
-  text-align: center; font-variant-numeric: tabular-nums;
-  min-width: 110px;
-}
-.sens-table td.cell .m {
-  display: inline-block; font-size: 16px; font-weight: 700;
-  min-width: 28px;
-}
-.sens-table td.cell .detail {
-  display: block; font-size: 10px; color: var(--muted); margin-top: 2px;
-}
-.sens-table td.cell.best { background: rgba(91,167,255,0.12); border-radius: 4px; }
-/* 全局 margin 余裕着色类,在任何容器里用 .margin-X 都能正确上色 */
-.margin-good,  b.margin-good  { color: var(--mg-safe); }
-.margin-ok,    b.margin-ok    { color: var(--mg-ok); }
-.margin-tight, b.margin-tight { color: var(--mg-tight); }
-.margin-bad,   b.margin-bad   { color: var(--mg-bad); }
-
-/* Worst case summary row */
-.sens-table tr.worst-row td { border-top: 2px solid var(--border); }
-.sens-table tr.worst-row td.scenario-name {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
-  color: var(--muted); font-weight: 700;
-}
-
-/* stronger-teams list */
-.strong-list {
-  display: grid; grid-template-columns: auto 1fr auto auto auto;
-  gap: 4px 12px; margin-top: 6px; font-size: 12px;
+.hero-actions {
+  display: flex;
+  gap: 8px;
   align-items: center;
 }
-.strong-list .ff { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
-.strong-list .sch { color: var(--fg); }
-.strong-list .city-tag { color: var(--muted); font-size: 11px; }
-.strong-list .det { color: var(--muted); font-size: 11px; }
-.strong-list .tt { font-size: 10px; color: var(--muted); }
-.strong-list .tt.jia { color: var(--host); font-weight: 700; }
-.strong-list .shark-you {
-  border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;
-  color: #8bd14a; font-weight: 700;
+.refresh-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: linear-gradient(135deg, #2256c8, #1b459c);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
 }
-
-/* 2-col layout for wide evidence */
-.ev-twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 900px) { .ev-twocol { grid-template-columns: 1fr; } }
+.refresh-btn[disabled] {
+  opacity: 0.72;
+  cursor: progress;
+}
+.hero-meta {
+  display: flex;
+  gap: 10px 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.hero-meta .links {
+  display: inline-flex;
+  gap: 10px;
+}
+.sync-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 11px;
+}
+.sync-status.success {
+  background: rgba(48, 164, 108, 0.08);
+  border-color: rgba(48, 164, 108, 0.22);
+  color: #1f7a50;
+}
+.sync-status.error {
+  background: rgba(193, 91, 78, 0.08);
+  border-color: rgba(193, 91, 78, 0.2);
+  color: #a13c3c;
+}
+.sync-status.idle {
+  background: rgba(34, 86, 200, 0.06);
+  border-color: rgba(34, 86, 200, 0.16);
+  color: #355ea6;
+}
+#err {
+  display: none;
+  border-radius: 14px;
+  padding: 10px 12px;
+  color: #a13c3c;
+  background: #fff5f5;
+  border-color: #f0d6d6;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+.stat {
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+.stat .label {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.stat .value {
+  margin-top: 6px;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1;
+}
+.stat .hint {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.tabs {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-soft);
+  width: fit-content;
+}
+.tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tab-btn.active {
+  color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(24, 38, 73, 0.08);
+}
+.panel {
+  display: none;
+  min-height: 0;
+}
+#panel-advancement.active,
+#panel-strength.active,
+#panel-region-strength.active {
+  display: grid;
+  gap: 10px;
+  overflow: hidden;
+}
+#panel-advancement.active {
+  grid-template-rows: auto 1fr;
+}
+#panel-strength.active,
+#panel-region-strength.active {
+  grid-template-rows: auto 1fr;
+}
+.banner,
+.formula-card,
+.ranking-card {
+  border-radius: 18px;
+  padding: 12px 16px;
+}
+.banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.banner h2,
+.formula-card h2,
+.ranking-card h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.banner p,
+.formula-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.pill-row,
+.meta-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+}
+.pill strong { color: var(--ink); }
+.region-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+.region-card {
+  min-height: 0;
+  min-block-size: clamp(520px, 62vh, 760px);
+  border-radius: 18px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.region-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.region-head h3 {
+  margin: 0;
+  font-size: 22px;
+}
+.region-card[data-region="南部"] h3 { color: var(--south); }
+.region-card[data-region="东部"] h3 { color: var(--east); }
+.region-card[data-region="北部"] h3 { color: var(--north); }
+.city {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.region-count {
+  text-align: right;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+.region-count span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.spot-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.spot-box {
+  border-radius: 14px;
+  padding: 10px 10px 8px;
+  border: 1px solid var(--line);
+}
+.spot-box.national { background: var(--gold-bg); border-color: var(--gold-line); }
+.spot-box.revival { background: var(--cyan-bg); border-color: var(--cyan-line); }
+.spot-box.total { background: var(--panel-soft); }
+.spot-box .k {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.spot-box .v {
+  margin-top: 4px;
+  font-size: 19px;
+  font-weight: 800;
+}
+.mini-table {
+  display: grid;
+  gap: 4px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.mini-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.mini-row strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.member-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 2px 0 0;
+  display: grid;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 0;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  overflow-y: auto;
+}
+.member {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+}
+.member.qual-national { background: var(--gold-bg); border-color: var(--gold-line); }
+.member.qual-revival { background: var(--cyan-bg); border-color: var(--cyan-line); }
+.member.qual-none { background: var(--rose-bg); border-color: var(--rose-line); }
+.member.boundary {
+  box-shadow: 0 0 0 2px rgba(34, 86, 200, 0.08);
+}
+.member-main {
+  min-width: 0;
+}
+.member-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.member-title .school {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.member-title .team {
+  font-size: 10px;
+  color: var(--muted);
+}
+.member-sub {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.member-side {
+  text-align: right;
+  white-space: nowrap;
+}
+.score {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+.score-label {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.badge.qual-national { background: rgba(201, 141, 22, 0.16); color: #8a5f00; }
+.badge.qual-revival { background: rgba(17, 132, 166, 0.12); color: #0d6f87; }
+.badge.qual-none { background: rgba(193, 91, 78, 0.12); color: #9b3f34; }
+.badge.flow-host { background: rgba(201, 141, 22, 0.14); color: #8a5f00; }
+.badge.flow-volunteer { background: rgba(34, 86, 200, 0.1); color: var(--accent); }
+.badge.flow-transfer { background: rgba(193, 91, 78, 0.12); color: #9b3f34; }
+.badge.boundary { background: #ffffff; color: var(--ink); border: 1px solid var(--line-strong); }
+.badge.submit-live { background: rgba(34, 86, 200, 0.08); color: var(--accent); }
+.badge.submit-prediction { background: rgba(113, 128, 154, 0.16); color: #5f6c81; }
+.member.unsubmitted,
+.member.unsubmitted.qual-national,
+.member.unsubmitted.qual-revival,
+.member.unsubmitted.qual-none {
+  background: #f4f6f9;
+  border-color: #d9dfe8;
+}
+.member.unsubmitted .member-title .school,
+.member.unsubmitted .score {
+  color: #556279;
+}
+.member.unsubmitted .member-sub,
+.member.unsubmitted .score-label,
+.member.unsubmitted .member-title .team {
+  color: #8a96a8;
+}
+.hidden-block {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-muted);
+  color: var(--muted);
+}
+.hidden-block summary {
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  list-style: none;
+}
+.hidden-block summary::-webkit-details-marker { display: none; }
+.hidden-list {
+  border-top: 1px solid var(--line);
+  padding: 6px 10px 8px;
+  display: grid;
+  gap: 5px;
+}
+.hidden-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+}
+.hidden-item .name {
+  color: #4f5d74;
+  font-weight: 700;
+}
+.empty {
+  padding: 18px 12px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--panel-soft);
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  font-size: 12px;
+}
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.formula-item {
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.formula-item .title {
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.formula-item .formula {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.ranking-card {
+  min-height: 0;
+  min-block-size: clamp(560px, 64vh, 860px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.strength-stage {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+.strength-stage-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.strength-stage-head h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.strength-stage-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  max-width: 920px;
+}
+.strength-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.strength-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  background: linear-gradient(180deg, #ffffff, #f7f9fc);
+}
+.strength-card[data-region="南部"] {
+  border-color: rgba(213, 98, 67, 0.28);
+  background: linear-gradient(180deg, rgba(213, 98, 67, 0.08), #ffffff 55%);
+}
+.strength-card[data-region="南部"] h3 { color: var(--south); }
+.strength-card[data-region="东部"] {
+  border-color: rgba(79, 143, 58, 0.28);
+  background: linear-gradient(180deg, rgba(79, 143, 58, 0.08), #ffffff 55%);
+}
+.strength-card[data-region="东部"] h3 { color: var(--east); }
+.strength-card[data-region="北部"] {
+  border-color: rgba(27, 132, 166, 0.28);
+  background: linear-gradient(180deg, rgba(27, 132, 166, 0.08), #ffffff 55%);
+}
+.strength-card[data-region="北部"] h3 { color: var(--north); }
+.strength-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+.strength-rank {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.strength-card h3 {
+  margin: 4px 0 0;
+  font-size: 24px;
+  line-height: 1;
+}
+.strength-lead {
+  text-align: right;
+}
+.strength-lead .v {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+}
+.strength-lead .k {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.strength-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.strength-mini {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.72);
+}
+.strength-mini .k {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.strength-mini .v {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+.strength-metrics {
+  display: grid;
+  gap: 8px;
+}
+.strength-metric {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+.strength-metric .label {
+  color: var(--muted);
+}
+.strength-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(23, 32, 51, 0.08);
+  overflow: hidden;
+}
+.strength-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+.strength-card[data-region="南部"] .strength-fill {
+  background: linear-gradient(90deg, rgba(213, 98, 67, 0.58), rgba(213, 98, 67, 0.96));
+}
+.strength-card[data-region="东部"] .strength-fill {
+  background: linear-gradient(90deg, rgba(79, 143, 58, 0.58), rgba(79, 143, 58, 0.96));
+}
+.strength-card[data-region="北部"] .strength-fill {
+  background: linear-gradient(90deg, rgba(27, 132, 166, 0.58), rgba(27, 132, 166, 0.96));
+}
+.strength-metric .value {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.strength-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 11px;
+}
+.ranking-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ranking-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.table-wrap {
+  min-height: 0;
+  overflow: auto;
+  margin-top: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+  font-size: 12px;
+}
+th {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+th.sortable:hover {
+  color: var(--ink);
+  background: var(--panel-soft);
+}
+th.sortable.active {
+  color: var(--accent);
+}
+.sort-indicator {
+  margin-left: 4px;
+  font-size: 9px;
+}
+td.rank {
+  font-size: 18px;
+  font-weight: 800;
+}
+td.score-cell {
+  font-size: 16px;
+  font-weight: 800;
+}
+tr.qual-national td { background: rgba(255, 246, 222, 0.68); }
+tr.qual-revival td { background: rgba(238, 251, 253, 0.7); }
+tr.unsubmitted td { color: var(--muted); }
+.muted { color: var(--muted); }
+footer {
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+@media (max-width: 1200px) {
+  .shell { min-height: calc(100vh - 24px); }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .region-grid { grid-template-columns: 1fr; }
+  .strength-grid { grid-template-columns: 1fr; }
+  .strength-mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formula-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #panel-advancement.active,
+  #panel-strength.active,
+  #panel-region-strength.active { overflow: visible; }
+  .region-card,
+  .ranking-card { min-height: auto; }
+  .member-list,
+  .table-wrap { overflow: visible; }
+}
+@media (max-width: 720px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spot-strip,
+  .formula-grid { grid-template-columns: 1fr; }
+  .strength-mini-grid { grid-template-columns: 1fr; }
+  .strength-metric { grid-template-columns: 64px 1fr auto; }
+  .member { grid-template-columns: 1fr; }
+  .member-side { text-align: left; }
+  .tabs { width: 100%; display: flex; }
+  .tab-btn { flex: 1 1 0; }
+}
 </style>
 </head>
 <body>
-<header>
-  <h1>
-    RoboMaster 2026 区域赛
-    <span class="badge">LIVE</span>
-    实时录取看板
-  </h1>
-  <div class="meta">
-    更新于 <span id="updated">—</span>
-    <span class="sep">·</span>
-    数据源 <a id="src" href="#" target="_blank" rel="noopener">参赛反馈看板</a>
-    <span class="sep">·</span>
-    <a id="ann" href="#" target="_blank" rel="noopener">官方公告</a>
-    <span class="sep">·</span>
-    导出 <a href="./data.csv" download>CSV</a> ·
-    <a href="./data.json" title="脚本可直接 GET 此 URL 获取完整 JSON（含扁平 teams 数组，跨域开放）">JSON</a>
+<div class="shell">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="eyebrow"><span class="live-dot"></span>Live Qualification Engine</div>
+        <h1>RMUC 2026 晋级推演台</h1>
+        <p class="subtitle">页面支持整体滚动；分赛区卡片会按赛区实力顺序展示全部学校。未提交志愿的学校会以灰色卡片显示当前预测结果。</p>
+      </div>
+      <div class="hero-actions">
+        <button id="refreshBtn" class="refresh-btn" type="button">刷新数据</button>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span>更新时间 <strong id="updated">—</strong></span>
+      <span id="syncStatus" class="sync-status idle">当前页面显示的是本地已生成数据。</span>
+      <span class="links">
+        <a id="src" href="#" target="_blank" rel="noopener">参赛反馈看板</a>
+        <a id="ann" href="#" target="_blank" rel="noopener">公告 1910</a>
+        <a href="./data.csv" download>CSV</a>
+        <a href="./data.json" target="_blank" rel="noopener">JSON</a>
+      </span>
+    </div>
+  </section>
+
+  <div id="err"></div>
+  <div id="stats" class="stats"></div>
+
+  <div class="tabs" role="tablist" aria-label="Dashboard Tabs">
+    <button class="tab-btn active" data-tab="advancement" type="button">晋级推演台</button>
+    <button class="tab-btn" data-tab="region-strength" type="button">赛区强度</button>
+    <button class="tab-btn" data-tab="strength" type="button">综合实力榜</button>
   </div>
-</header>
-<div id="err"></div>
-<div class="stats" id="stats"></div>
-<main class="grid" id="grid"></main>
 
-<section id="decision"></section>
+  <section id="panel-advancement" class="panel active"></section>
+  <section id="panel-region-strength" class="panel"></section>
+  <section id="panel-strength" class="panel"></section>
 
-<footer>
-  按公告《RoboMaster 2026 区域赛参赛反馈》第 2 条 "志愿优先录取 + 地理就近 +
-  积分榜排名" 规则计算 · 距离取自公告附表 · 每 30 分钟自动刷新
-</footer>
+  <footer>
+    全国赛名额按公告精确计算；复活赛名额为模型推演值。点击刷新会重新抓取轻流并更新本地页面。
+  </footer>
+</div>
+
 <script>
-const STATUS_LABEL = { host: "承办", volunteer: "志愿", transfer: "调剂" };
+const REGION_ORDER = { "南部": 0, "东部": 1, "北部": 2 };
+let currentData = null;
+const MAX_SORT = 10 ** 9;
+const QUALIFICATION_ORDER = { national: 0, revival: 1, none: 2 };
+const STRENGTH_SORT_DEFAULTS = {
+  strength_rank_global: "asc",
+  school: "asc",
+  assigned: "asc",
+  strength_score: "desc",
+  rmul_bonus: "desc",
+  full_form_score: "desc",
+  history_bonus: "desc",
+  points_score: "desc",
+  qualification_status: "asc",
+  is_submitted: "desc",
+};
+let strengthSortState = {
+  key: "strength_rank_global",
+  direction: STRENGTH_SORT_DEFAULTS.strength_rank_global,
+};
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
 
 function fmtAgo(iso) {
   const then = new Date(iso);
   const ms = Date.now() - then.getTime();
   const min = Math.floor(ms / 60000);
-  if (min < 1)      return "刚刚";
-  if (min < 60)     return `${min} 分钟前`;
-  const h = Math.floor(min / 60);
-  if (h < 24)       return `${h} 小时前`;
-  return `${Math.floor(h / 24)} 天前`;
+  if (min < 1) return "刚刚";
+  if (min < 60) return `${min} 分钟前`;
+  const hour = Math.floor(min / 60);
+  if (hour < 24) return `${hour} 小时前`;
+  return `${Math.floor(hour / 24)} 天前`;
 }
 
-function render(d) {
-  const up = document.getElementById("updated");
-  up.textContent = `${d.updated_at_cst} CST · ${fmtAgo(d.updated_at_utc)}`;
-  document.getElementById("src").href = d.source.board;
-  document.getElementById("ann").href = d.source.announcement;
+function showError(message) {
+  const err = document.getElementById("err");
+  err.style.display = "block";
+  err.textContent = message;
+}
 
-  const stats = document.getElementById("stats");
-  stats.innerHTML = "";
-  const pills = [
-    ["已反馈", d.total_teams],
-    ["承办院校", `${d.hosts_seen ?? 0}（RMUC+RMUL 合计）`],
-    ["被调剂", d.transferred_count],
-    ["积分榜覆盖", `${d.ranks_covered ?? 0}/${d.total_teams}`],
-    ["单区容量", d.capacity],
+function clearError() {
+  const err = document.getElementById("err");
+  err.style.display = "none";
+  err.textContent = "";
+}
+
+function qualificationClass(status) {
+  return `qual-${status || "none"}`;
+}
+
+function numOr(value, fallback = 0) {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : fallback;
+}
+
+function fixedOr(value, digits = 1, fallback = "—") {
+  const num = Number(value);
+  return Number.isFinite(num) ? num.toFixed(digits) : fallback;
+}
+
+function inferSubmitted(member) {
+  if (typeof member?.is_submitted === "boolean") return member.is_submitted;
+  return member?.volunteer_source === "submitted"
+    || member?.volunteer_source_label === "实时提交";
+}
+
+function compareNumber(a, b) {
+  if (a === b) return 0;
+  return a < b ? -1 : 1;
+}
+
+function compareText(a, b) {
+  return String(a ?? "").localeCompare(String(b ?? ""), "zh-CN");
+}
+
+function nullableRank(value) {
+  return value == null ? MAX_SORT : numOr(value, MAX_SORT);
+}
+
+function componentScore(team, key) {
+  return numOr(team?.strength_components?.[key], 0);
+}
+
+function compareRegionMembers(a, b) {
+  return compareNumber(nullableRank(a?.strength_rank_region), nullableRank(b?.strength_rank_region))
+    || compareNumber(nullableRank(a?.strength_rank_global), nullableRank(b?.strength_rank_global))
+    || compareNumber(numOr(b?.strength_score, -1), numOr(a?.strength_score, -1))
+    || compareText(a?.school, b?.school);
+}
+
+function compareStrengthTeams(a, b, key, direction) {
+  let cmp = 0;
+  if (key === "school") {
+    cmp = compareText(a.school, b.school);
+  } else if (key === "assigned") {
+    cmp = compareNumber(numOr(REGION_ORDER[a.assigned], 9), numOr(REGION_ORDER[b.assigned], 9));
+  } else if (key === "strength_score") {
+    cmp = compareNumber(numOr(a.strength_score, 0), numOr(b.strength_score, 0));
+  } else if (key === "rmul_bonus") {
+    cmp = compareNumber(componentScore(a, "rmul_bonus"), componentScore(b, "rmul_bonus"));
+  } else if (key === "full_form_score") {
+    cmp = compareNumber(componentScore(a, "full_form_score"), componentScore(b, "full_form_score"));
+  } else if (key === "history_bonus") {
+    cmp = compareNumber(componentScore(a, "history_bonus"), componentScore(b, "history_bonus"));
+  } else if (key === "points_score") {
+    cmp = compareNumber(componentScore(a, "points_score"), componentScore(b, "points_score"));
+  } else if (key === "qualification_status") {
+    cmp = compareNumber(
+      numOr(QUALIFICATION_ORDER[a.qualification_status], 9),
+      numOr(QUALIFICATION_ORDER[b.qualification_status], 9)
+    );
+  } else if (key === "is_submitted") {
+    cmp = compareNumber(inferSubmitted(a) ? 1 : 0, inferSubmitted(b) ? 1 : 0);
+  } else {
+    cmp = compareNumber(nullableRank(a.strength_rank_global), nullableRank(b.strength_rank_global));
+  }
+
+  if (cmp !== 0) return direction === "desc" ? -cmp : cmp;
+  return compareRegionMembers(a, b);
+}
+
+function setStrengthSort(key) {
+  const defaultDirection = STRENGTH_SORT_DEFAULTS[key] || "asc";
+  if (strengthSortState.key === key) {
+    strengthSortState.direction = strengthSortState.direction === "asc" ? "desc" : "asc";
+  } else {
+    strengthSortState = { key, direction: defaultDirection };
+  }
+  if (currentData) renderStrength(currentData);
+}
+
+function sortIndicator(key) {
+  if (strengthSortState.key !== key) return "↕";
+  return strengthSortState.direction === "asc" ? "↑" : "↓";
+}
+
+function sortableHeader(label, key) {
+  const active = strengthSortState.key === key ? "active" : "";
+  return `<th class="sortable ${active}" data-sort="${key}">${esc(label)}<span class="sort-indicator">${sortIndicator(key)}</span></th>`;
+}
+
+function normalizeRegion(region = {}) {
+  const primaryMembers = Array.isArray(region.members) ? region.members : [];
+  const hiddenMembers = Array.isArray(region.hidden_members) ? region.hidden_members : [];
+  const dedupedMembers = [];
+  const seenSchools = new Set();
+  [...primaryMembers, ...hiddenMembers].forEach((member) => {
+    if (!member?.school || seenSchools.has(member.school)) return;
+    seenSchools.add(member.school);
+    dedupedMembers.push(member);
+  });
+  const combinedMembers = dedupedMembers.sort(compareRegionMembers);
+  const submittedCount = combinedMembers.filter((member) => inferSubmitted(member)).length;
+  const estimatedCount = combinedMembers.length - submittedCount;
+  const counts = region?.counts ? {
+    host: numOr(region.counts.host),
+    volunteer: numOr(region.counts.volunteer),
+    transfer: numOr(region.counts.transfer),
+  } : combinedMembers.reduce((acc, member) => {
+    const key = member?.status;
+    if (key && Object.prototype.hasOwnProperty.call(acc, key)) acc[key] += 1;
+    return acc;
+  }, { host: 0, volunteer: 0, transfer: 0 });
+  return {
+    ...region,
+    count: numOr(region.count, combinedMembers.length),
+    visible_count: numOr(region.visible_count, combinedMembers.length),
+    hidden_count: numOr(region.hidden_count, estimatedCount),
+    submitted_count: numOr(region.submitted_count, submittedCount),
+    estimated_count: numOr(region.estimated_count, estimatedCount),
+    members: combinedMembers,
+    hidden_members: hiddenMembers,
+    counts,
+  };
+}
+
+function normalizeSummary(summary = {}, region = {}) {
+  return {
+    ...summary,
+    national_spots: numOr(summary.national_spots, numOr(region.national_spots)),
+    revival_spots: numOr(summary.revival_spots, numOr(region.revival_spots)),
+    top16_count: numOr(summary.top16_count, numOr(region.top16_count)),
+    floating_spots: numOr(summary.floating_spots, numOr(region.floating_spots)),
+    advancing_total: numOr(
+      summary.advancing_total,
+      numOr(
+        region.advancing_total,
+        numOr(summary.national_spots, numOr(region.national_spots))
+          + numOr(summary.revival_spots, numOr(region.revival_spots))
+      )
+    ),
+  };
+}
+
+function normalizeStrengthStats(stats = {}) {
+  return {
+    team_count: numOr(stats.team_count),
+    avg_strength_score: numOr(stats.avg_strength_score),
+    median_strength_score: numOr(stats.median_strength_score),
+    stdev_strength_score: numOr(stats.stdev_strength_score),
+    top8_avg_strength_score: numOr(stats.top8_avg_strength_score),
+    min_strength_score: numOr(stats.min_strength_score),
+    max_strength_score: numOr(stats.max_strength_score),
+    q1_strength_score: numOr(stats.q1_strength_score),
+    q3_strength_score: numOr(stats.q3_strength_score),
+    iqr_strength_score: numOr(stats.iqr_strength_score),
+  };
+}
+
+function metricPercent(value, minValue, maxValue, higherBetter = true) {
+  if (maxValue <= minValue) return 100;
+  const raw = higherBetter
+    ? (value - minValue) / (maxValue - minValue)
+    : (maxValue - value) / (maxValue - minValue);
+  return Math.max(12, Math.min(100, 12 + raw * 88));
+}
+
+function renderStats(data) {
+  const panel = data.advancement_panel;
+  const nationalTotal = Object.values(panel.national_by_region || {}).reduce((sum, v) => sum + v, 0);
+  const revivalTotal = Object.values(panel.revival_by_region || {}).reduce((sum, v) => sum + v, 0);
+  const cards = [
+    ["已提交", data.submission.submitted_count, `当前已填报 ${data.submission.submitted_count} 支学校`],
+    ["未提交", data.submission.estimated_count, "灰色卡片展示当前预测结果"],
+    ["国赛名额", nationalTotal, "公告精确计算"],
+    ["复活赛推演", revivalTotal, "模型推演结果"],
+    ["被调剂", data.transferred_count, data.adjustment_order.length ? data.adjustment_order.join(" → ") : "当前无需调剂"],
+    ["权益院校", data.hosts_seen, "RMUC + RMUL 志愿优先录取"],
   ];
-  if (d.adjustment_order && d.adjustment_order.length) {
-    pills.push(["调剂顺序", d.adjustment_order.join(" → ")]);
-  }
-  for (const [k, v] of pills) {
-    const el = document.createElement("div");
-    el.className = "stat";
-    el.innerHTML = `<b>${v}</b> ${k}`;
-    stats.appendChild(el);
-  }
-
-  if (d.fetch_error) {
-    const err = document.getElementById("err");
-    err.style.display = "block";
-    err.textContent = "抓取失败：" + d.fetch_error + "（显示上次成功数据）";
-  }
-
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  for (const r of d.regions) {
-    const el = document.createElement("section");
-    el.className = "region";
-    el.dataset.key = r.key;
-    const over = r.count > d.capacity;
-    el.innerHTML = `
-      <header>
-        <h2>${r.name}<span class="city">${r.city}</span></h2>
-        <div class="count ${over ? "over" : ""}">${r.count}<span class="cap">/${d.capacity}</span></div>
-      </header>
-      <div class="breakdown">
-        <span>承办 <b>${r.counts.host}</b></span>
-        <span>志愿 <b>${r.counts.volunteer}</b></span>
-        <span>调入 <b>${r.counts.transfer}</b></span>
-      </div>
-    `;
-    if (!r.members.length) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.textContent = "暂无数据";
-      el.appendChild(empty);
-    } else {
-      const ul = document.createElement("ul");
-      for (const m of r.members) {
-        const li = document.createElement("li");
-        const tag = STATUS_LABEL[m.status] || m.status;
-        const fromTag = m.status === "transfer"
-          ? ` <span class="from-tag">← ${m.original_volunteer}</span>` : "";
-        li.innerHTML = `
-          <div>
-            <div class="row-main">
-              <span class="school">${m.school}</span>
-              <span class="tag ${m.status}">${tag}</span>${fromTag}
-            </div>
-            <div class="city-sub">${m.city}${m.rank != null ? " · 积分 #" + m.rank : ""}</div>
-          </div>
-          <div class="dist">${m.dist_km} km</div>
-        `;
-        ul.appendChild(li);
-      }
-      el.appendChild(ul);
-    }
-    grid.appendChild(el);
-  }
-
-  if (d.shark_decision) {
-    renderDecision(d.shark_decision);
-  }
-}
-
-// ─── SHARK 决策面板渲染 ───
-
-const REGIONS = ["南部", "东部", "北部"];
-
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function marginClass(m) {
-  if (m >= 3)   return "good";
-  if (m >= 1)   return "ok";
-  if (m === 0)  return "tight";
-  return "bad";
-}
-
-function marginSign(m) { return m > 0 ? `+${m}` : String(m); }
-
-function renderDecision(sd) {
-  const root = document.getElementById("decision");
-  root.style.display = "block";
-
-  const t = sd.target;
-  const rival = sd.same_city_rival;
-  const obs = sd.observed_state;
-  const rec = sd.recommendation;
-  const bestIdx = REGIONS.indexOf(rec.volunteer);
-  const bestOpt = sd.options[bestIdx];
-
-  root.innerHTML = `
-    <div class="d-title">
-      <h2>SHARK 决策面板</h2>
-      <span class="d-tag">STRATEGIC</span>
+  document.getElementById("stats").innerHTML = cards.map(([label, value, hint]) => `
+    <div class="stat">
+      <div class="label">${esc(label)}</div>
+      <div class="value">${esc(value)}</div>
+      <div class="hint">${esc(hint)}</div>
     </div>
-    <p class="d-subtitle">
-      对 ${esc(t.school)} 的三种志愿选择做反事实模拟，
-      基于真实调剂算法 + 5 种博弈压力测试
-    </p>
-
-    ${renderTopRow(t, rival, obs)}
-    ${renderRecBanner(rec, bestOpt)}
-    ${renderOptions(sd.options, rec)}
-    ${renderEvidence(sd, bestOpt)}
-    ${renderSensitivity(sd.sensitivity, rec)}
-  `;
+  `).join("");
 }
 
-function renderTopRow(t, rival, obs) {
-  const rmulBadge = t.rmul_2026_top4
-    ? `<span class="pill ${t.rmul_2026_top4}">RMUL ${t.rmul_2026_top4_cn}</span>`
-    : "";
-  const detailBadge = t.detail_2025
-    ? `<span class="pill">${esc(t.detail_2025_cn || t.detail_2025)}</span>`
-    : `<span class="pill">未参赛</span>`;
-
-  return `
-    <div class="d-row">
-      <div class="d-card">
-        <h4>目标队伍</h4>
-        <div class="big">${esc(t.team || "SHARK")}</div>
-        <div class="kv"><span>学校</span><span>${esc(t.school)}</span></div>
-        <div class="kv"><span>城市</span><span>${esc(t.city)}</span></div>
-        <div class="kv"><span>队伍类型</span><span>${esc(t.team_type)}</span></div>
-        <div class="kv"><span>积分榜排名</span><span><b>#${t.rank ?? "—"}</b></span></div>
-        <div class="kv"><span>本年完整形态</span><span><b>#${t.ff ?? "—"}</b></span></div>
-        <div class="kv"><span>2025 战绩</span><span>${detailBadge}</span></div>
-        <div class="kv"><span>2026 RMUL</span><span>${rmulBadge || "—"}</span></div>
-        <div class="kv"><span>距南部 / 东部 / 北部</span>
-          <span>${t.dist["南部"]} / <b>${t.dist["东部"]}</b> / ${t.dist["北部"]} km</span>
-        </div>
-      </div>
-
-      <div class="d-card">
-        <h4>同城耦合对手</h4>
-        ${rival ? `
-          <div class="big">${esc(rival.team || rival.school.slice(0,4))}</div>
-          <div class="kv"><span>学校</span><span>${esc(rival.school)}</span></div>
-          <div class="kv"><span>城市</span><span>${esc(rival.city)}（同 ${esc(t.city)}）</span></div>
-          <div class="kv"><span>积分榜排名</span><span><b>#${rival.rank ?? "—"}</b></span></div>
-          <div class="kv"><span>本年完整形态</span><span>#${rival.ff ?? "—"}</span></div>
-          <div class="kv"><span>当前志愿</span><span>${
-            rival.submitted
-              ? `<b>${esc(rival.live_volunteer)}</b>`
-              : `<span class="muted">未提交</span>`
-          }</span></div>
-          <div class="ev-note" style="margin-top:8px">
-            <b>同城规则：</b>SHARK rank ${t.rank} 比 ${esc(rival.team || rival.school.slice(0,4))} rank ${rival.rank} 差 ${t.rank - rival.rank} 位 →
-            无锡同城调剂时 SHARK <b>被首选抽走</b>。
-          </div>
-        ` : `<div class="muted">roster 中无同城对手数据</div>`}
-      </div>
-
-      <div class="d-card">
-        <h4>当前看板状态</h4>
-        <div class="big">${obs.submitted_count} / ${obs.roster_total}
-          <span style="font-size:12px;color:var(--muted);font-weight:400;">支已提交</span>
-        </div>
-        <div class="kv"><span>南部 初始志愿</span><span style="color:var(--south)"><b>${obs.submitted_by_region["南部"]}</b></span></div>
-        <div class="kv"><span>东部 初始志愿</span><span style="color:var(--east)"><b>${obs.submitted_by_region["东部"]}</b></span></div>
-        <div class="kv"><span>北部 初始志愿</span><span style="color:var(--north)"><b>${obs.submitted_by_region["北部"]}</b></span></div>
-        <div class="kv" style="padding-top:8px;border-top:1px solid var(--border);margin-top:6px">
-          <span>SHARK 当前提交</span>
-          <span>${obs.shark_submitted ? `<b>${esc(obs.shark_live_volunteer)}</b>` : `<span class="muted">未提交</span>`}</span>
-        </div>
-        <div class="ev-note" style="margin-top:8px">
-          未提交队伍在模拟中按<b>就近原则</b>占位；随着真实提交数增加，推荐会自动更新。
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderRecBanner(rec, bestOpt) {
-  return `
-    <div class="rec-banner">
-      <div>
-        <div class="rec-label">RECOMMENDED</div>
-        <div class="rec-choice"><span class="rec-icon">▶</span>报志愿 ${esc(rec.volunteer)}</div>
-      </div>
-      <div class="rec-summary">
-        ${esc(rec.summary)}
-      </div>
-    </div>
-  `;
-}
-
-function renderOptions(options, rec) {
-  const cards = options.map(o => {
-    const best = o.shark_volunteer === rec.volunteer;
-    const worstM = rec.all_worst_case[o.shark_volunteer];
+function renderRegionCard(region, summary) {
+  const safeRegion = normalizeRegion(region);
+  const safeSummary = normalizeSummary(summary, safeRegion);
+  const strengthStats = normalizeStrengthStats(safeSummary.strength_stats || safeRegion.strength_stats);
+  const members = safeRegion.members || [];
+  const visibleList = members.length ? members.map((member) => {
+    const boundary = (member.boundary_markers || []).length > 0;
+    const submitted = inferSubmitted(member);
+    const flowClass = member.status === "host" ? "flow-host" : member.status === "transfer" ? "flow-transfer" : "flow-volunteer";
+    const boundaryBadges = (member.boundary_labels || []).map((label) =>
+      `<span class="badge boundary">${esc(label)}</span>`
+    ).join("");
+    const submitBadge = submitted
+      ? `<span class="badge submit-live">已填报</span>`
+      : `<span class="badge submit-prediction">预测</span>`;
+    const volunteerText = submitted
+      ? `志愿 ${esc(member.original_volunteer)}`
+      : `预测志愿 ${esc(member.original_volunteer)} (${esc(member.volunteer_source_label)})`;
     return `
-      <div class="opt-card" data-best="${best}">
-        ${best ? `<div class="opt-badge">推荐</div>` : ""}
-        <h3>报志愿<span class="opt-choice">${esc(o.shark_volunteer)}</span></h3>
-        <div class="flow">
-          <b>${esc(o.shark_volunteer)}</b><span class="arr">→</span><b>${esc(o.final_region)}</b>
-          <span class="st ${o.status}">${STATUS_LABEL[o.status]}</span>
+      <li class="member ${qualificationClass(member.qualification_status)} ${submitted ? "" : "unsubmitted"} ${boundary ? "boundary" : ""}">
+        <div class="member-main">
+          <div class="member-title">
+            <span class="school">${esc(member.school)}</span>
+            <span class="team">${esc(member.team)}</span>
+            <span class="badge ${qualificationClass(member.qualification_status)}">${esc(member.qualification_label)}</span>
+            ${submitBadge}
+            <span class="badge ${flowClass}">${esc(member.status_cn)}</span>
+            ${boundaryBadges}
+          </div>
+          <div class="member-sub">
+            ${esc(member.city)} · ${esc(member.team_type)} · 赛区 #${member.strength_rank_region ?? "—"} / 全局 #${member.strength_rank_global ?? "—"}
+            · ${volunteerText} · 积分 #${member.rank ?? "—"} · 完整 #${member.full_form_ranking ?? "—"}
+            · 2025 ${esc(member.detail_2025_cn || "—")} · RMUL ${esc(member.rmul_2026_top4_cn || "—")}
+          </div>
         </div>
-        <div class="metrics">
-          <div class="metric">ff 位次<b>#${o.ff_position}</b></div>
-          <div class="metric">全国赛名额<b>${o.spots_national}</b></div>
-          <div class="metric">基线余裕<b class="margin-${marginClass(o.margin)}">${marginSign(o.margin)}</b></div>
-          <div class="metric">规模<b>${o.region_size}</b></div>
+        <div class="member-side">
+          <div class="score">${fixedOr(member.strength_score)}</div>
+          <div class="score-label">${member.dist_km != null ? `${esc(member.dist_km)} km` : "—"}</div>
         </div>
-        <div class="worst">
-          博弈最坏余裕 <b class="margin-${marginClass(worstM)}">${marginSign(worstM)}</b>
-          <span style="opacity:0.7">（5 个情景下的最小值）</span>
+      </li>
+    `;
+  }).join("") : `<div class="empty">当前没有学校数据。</div>`;
+
+  return `
+    <article class="region-card" data-region="${esc(safeRegion.key)}">
+      <div class="region-head">
+        <div>
+          <h3>${esc(safeRegion.name)}</h3>
+          <div class="city">${esc(safeRegion.city)}</div>
+        </div>
+        <div class="region-count">
+          ${safeRegion.count}
+          <span>已提交 ${safeRegion.submitted_count} / 预测 ${safeRegion.estimated_count}</span>
         </div>
       </div>
+      <div class="spot-strip">
+        <div class="spot-box national">
+          <div class="k">国赛名额</div>
+          <div class="v">${safeSummary.national_spots}</div>
+        </div>
+        <div class="spot-box revival">
+          <div class="k">复活赛推演</div>
+          <div class="v">${safeSummary.revival_spots}</div>
+        </div>
+        <div class="spot-box total">
+          <div class="k">合计晋级</div>
+          <div class="v">${safeSummary.advancing_total}</div>
+        </div>
+      </div>
+      <div class="mini-table">
+        <div class="mini-row"><span>上一赛季 16 强数</span><strong>${safeSummary.top16_count}</strong></div>
+        <div class="mini-row"><span>浮动名额</span><strong>${safeSummary.floating_spots}</strong></div>
+        <div class="mini-row"><span>实力均分 / 中位数</span><strong>${fixedOr(strengthStats.avg_strength_score)} / ${fixedOr(strengthStats.median_strength_score)}</strong></div>
+        <div class="mini-row"><span>Top 8 均分 / 标准差</span><strong>${fixedOr(strengthStats.top8_avg_strength_score)} / ${fixedOr(strengthStats.stdev_strength_score, 2)}</strong></div>
+        <div class="mini-row"><span>承办 / 志愿 / 调入 / 预测</span><strong>${safeRegion.counts.host} / ${safeRegion.counts.volunteer} / ${safeRegion.counts.transfer} / ${safeRegion.estimated_count}</strong></div>
+      </div>
+      <ul class="member-list">${visibleList}</ul>
+    </article>
+  `;
+}
+
+function renderRegionStrength(data) {
+  const panel = data.advancement_panel || {};
+  const regions = [...(data.regions || [])]
+    .map((region) => normalizeRegion(region))
+    .sort((a, b) => REGION_ORDER[a.key] - REGION_ORDER[b.key]);
+  const regionByKey = Object.fromEntries(regions.map((region) => [region.key, region]));
+  const summaries = [...(panel.region_summaries || [])]
+    .map((summary) => {
+      const region = regionByKey[summary.key] || {};
+      return {
+        ...summary,
+        region,
+        strength_stats: normalizeStrengthStats(summary.strength_stats || region.strength_stats),
+      };
+    })
+    .sort((a, b) => (
+      numOr(b.strength_stats.avg_strength_score) - numOr(a.strength_stats.avg_strength_score)
+      || REGION_ORDER[a.key] - REGION_ORDER[b.key]
+    ));
+
+  const avgValues = summaries.map((summary) => summary.strength_stats.avg_strength_score);
+  const medianValues = summaries.map((summary) => summary.strength_stats.median_strength_score);
+  const top8Values = summaries.map((summary) => summary.strength_stats.top8_avg_strength_score);
+  const stdevValues = summaries.map((summary) => summary.strength_stats.stdev_strength_score);
+  const avgMin = Math.min(...avgValues, 0);
+  const avgMax = Math.max(...avgValues, 0);
+  const medianMin = Math.min(...medianValues, 0);
+  const medianMax = Math.max(...medianValues, 0);
+  const top8Min = Math.min(...top8Values, 0);
+  const top8Max = Math.max(...top8Values, 0);
+  const stdevMin = Math.min(...stdevValues, 0);
+  const stdevMax = Math.max(...stdevValues, 0);
+  const strongestAvg = summaries[0];
+  const strongestTop8 = [...summaries].sort((a, b) => (
+    numOr(b.strength_stats.top8_avg_strength_score) - numOr(a.strength_stats.top8_avg_strength_score)
+    || REGION_ORDER[a.key] - REGION_ORDER[b.key]
+  ))[0];
+  const mostStable = [...summaries].sort((a, b) => (
+    numOr(a.strength_stats.stdev_strength_score) - numOr(b.strength_stats.stdev_strength_score)
+    || REGION_ORDER[a.key] - REGION_ORDER[b.key]
+  ))[0];
+
+  const cards = summaries.map((summary, idx) => {
+    const stats = summary.strength_stats;
+    const region = summary.region || {};
+    const metrics = [
+      ["均分", stats.avg_strength_score, metricPercent(stats.avg_strength_score, avgMin, avgMax, true)],
+      ["中位数", stats.median_strength_score, metricPercent(stats.median_strength_score, medianMin, medianMax, true)],
+      ["Top 8", stats.top8_avg_strength_score, metricPercent(stats.top8_avg_strength_score, top8Min, top8Max, true)],
+      ["稳定性", stats.stdev_strength_score, metricPercent(stats.stdev_strength_score, stdevMin, stdevMax, false)],
+    ];
+    return `
+      <article class="strength-card" data-region="${esc(summary.key)}">
+        <div class="strength-card-top">
+          <div>
+            <div class="strength-rank">整体强度 #${idx + 1}</div>
+            <h3>${esc(summary.name)}</h3>
+          </div>
+          <div class="strength-lead">
+            <div class="v">${fixedOr(stats.avg_strength_score)}</div>
+            <div class="k">当前赛区均分</div>
+          </div>
+        </div>
+        <div class="strength-mini-grid">
+          <div class="strength-mini">
+            <div class="k">中位数</div>
+            <div class="v">${fixedOr(stats.median_strength_score)}</div>
+          </div>
+          <div class="strength-mini">
+            <div class="k">Top 8 均分</div>
+            <div class="v">${fixedOr(stats.top8_avg_strength_score)}</div>
+          </div>
+          <div class="strength-mini">
+            <div class="k">标准差</div>
+            <div class="v">${fixedOr(stats.stdev_strength_score, 2)}</div>
+          </div>
+          <div class="strength-mini">
+            <div class="k">IQR</div>
+            <div class="v">${fixedOr(stats.iqr_strength_score, 2)}</div>
+          </div>
+        </div>
+        <div class="strength-metrics">
+          ${metrics.map(([label, value, percent]) => `
+            <div class="strength-metric">
+              <span class="label">${esc(label)}</span>
+              <div class="strength-track">
+                <div class="strength-fill" style="width:${fixedOr(percent, 1, "0.0")}%"></div>
+              </div>
+              <span class="value">${fixedOr(value, label === "稳定性" ? 2 : 1)}</span>
+            </div>
+          `).join("")}
+        </div>
+        <div class="strength-footer">
+          <span>区间 ${fixedOr(stats.min_strength_score)} - ${fixedOr(stats.max_strength_score)}</span>
+          <span>已提交 ${numOr(region.submitted_count)} / 预测 ${numOr(region.estimated_count)}</span>
+        </div>
+      </article>
     `;
   }).join("");
-  return `<div class="opt-grid">${cards}</div>`;
+
+  document.getElementById("panel-region-strength").innerHTML = `
+    <section class="strength-stage">
+      <div class="strength-stage-head">
+        <div>
+          <h2>赛区强度剖面</h2>
+          <p>基于当前录取结果统计 32 支队伍的综合实力分。均分和中位数看整体厚度，Top 8 均分看头部竞争力，标准差越低说明赛区内部越整齐。</p>
+        </div>
+        <div class="pill-row">
+          <span class="pill"><strong>整体均分领先</strong>${strongestAvg ? `${esc(strongestAvg.name)} ${fixedOr(strongestAvg.strength_stats.avg_strength_score)}` : "—"}</span>
+          <span class="pill"><strong>头部最强</strong>${strongestTop8 ? `${esc(strongestTop8.name)} ${fixedOr(strongestTop8.strength_stats.top8_avg_strength_score)}` : "—"}</span>
+          <span class="pill"><strong>最稳定</strong>${mostStable ? `${esc(mostStable.name)} ${fixedOr(mostStable.strength_stats.stdev_strength_score, 2)}` : "—"}</span>
+        </div>
+      </div>
+      <div class="strength-grid">${cards}</div>
+    </section>
+  `;
 }
 
-function renderEvidence(sd, bestOpt) {
-  const rec = sd.recommendation;
-  const obs = sd.observed_state;
-  const t16 = bestOpt.top16_by_region;
-  const flo = bestOpt.floating_by_region;
-  const nat = bestOpt.national_by_region;
-  const rival = sd.same_city_rival;
+function renderAdvancement(data) {
+  const panel = data.advancement_panel;
+  const modelNote = String(panel.model_note || "")
+    .replace("未提交志愿的学校仅参与推演，不在主看板展开显示。", "未提交志愿的学校会按当前预测结果显示在主看板中。");
+  const summaries = [...(panel.region_summaries || [])].sort((a, b) => REGION_ORDER[a.key] - REGION_ORDER[b.key]);
+  const regions = [...(data.regions || [])]
+    .map((region) => normalizeRegion(region))
+    .sort((a, b) => REGION_ORDER[a.key] - REGION_ORDER[b.key]);
+  const regionByKey = Object.fromEntries(regions.map((region) => [region.key, region]));
 
-  // ① 当前状态推理
-  const smallest = Object.entries(bestOpt.initial_counts)
-    .sort((a, b) => a[1] - b[1])[0][0];
-  const isSmallest = smallest === rec.volunteer;
-
-  // ② 浮动名额证据
-  const eligRegions = Object.entries(t16).filter(([r, c]) => c > 4);
-  const natEntries = REGIONS.map(r =>
-    `<tr${r === bestOpt.final_region ? ` class="shark-row"` : ""}>
-       <td>${r}</td>
-       <td class="num">${t16[r]}</td>
-       <td class="num">${t16[r] > 4 ? "✓" : "—"}</td>
-       <td class="num">${flo[r]}</td>
-       <td class="num"><b>${nat[r]}</b></td>
-     </tr>`
-  ).join("");
-
-  // ③ 强于 SHARK 的队列表
-  const strong = bestOpt.stronger_in_region || [];
-  const strongRows = strong.map(s => `
-    <tr>
-      <td class="num"><b style="color:var(--accent)">#${s.ff}</b></td>
-      <td>${esc(s.school)}</td>
-      <td><span class="city-tag">${esc(s.city || "")}</span></td>
-      <td>${esc({
-          champion: "冠军", runner_up: "亚军", third_place: "季军", fourth_place: "殿军",
-          quarter_finalist: "八强", top_16: "十六强", top_32: "三十二强"
-        }[s.detail_2025] || "—")}</td>
-      <td>${s.team_type === "甲级" ? `<b style="color:var(--host)">甲</b>` : ""}</td>
-    </tr>
-  `).join("");
-  const sharkRowStrong = `
-    <tr class="shark-row">
-      <td class="num"><b>#${sd.target.ff}</b></td>
-      <td>${esc(sd.target.school)}</td>
-      <td><span class="city-tag">${esc(sd.target.city)}</span></td>
-      <td>—</td>
-      <td></td>
-    </tr>
+  document.getElementById("panel-advancement").innerHTML = `
+    <section class="banner">
+      <div>
+        <h2>晋级推演台</h2>
+        <p>${esc(modelNote)}</p>
+      </div>
+      <div class="pill-row">
+        <span class="pill"><strong>提交</strong>${data.submission.submitted_count}/${data.submission.roster_total}</span>
+        <span class="pill"><strong>未提交</strong>${data.submission.estimated_count}</span>
+        <span class="pill"><strong>调剂顺序</strong>${data.adjustment_order.length ? esc(data.adjustment_order.join(" → ")) : "无需调剂"}</span>
+      </div>
+    </section>
+    <div class="region-grid">
+      ${summaries.map((summary) => renderRegionCard(regionByKey[summary.key], summary)).join("")}
+    </div>
   `;
+}
 
-  // ④ 同城耦合
-  const wuxi = bestOpt.wuxi_same_city || [];
-  const wuxiList = wuxi.map(w => `
-    <li>
-      <b>${esc(w.school)}</b> (rank #${w.rank ?? "?"}, ff #${w.ff ?? "?"})
-      — 模拟志愿 <code>${esc(w.volunteer)}</code>
-      → 最终 <code>${esc(w.assigned)}</code>
-      <span class="muted">[${STATUS_LABEL[w.status] || w.status}]</span>
-    </li>
+function renderStrength(data) {
+  const ranking = [...(data.strength_ranking || [])]
+    .sort((a, b) => compareStrengthTeams(a, b, strengthSortState.key, strengthSortState.direction));
+  const rows = ranking.map((team) => `
+    <tr class="${qualificationClass(team.qualification_status)} ${inferSubmitted(team) ? "" : "unsubmitted"}">
+      <td class="rank">${team.strength_rank_global}</td>
+      <td>
+        <strong>${esc(team.school)}</strong>
+        <div class="muted">${esc(team.team)} · ${esc(team.city)} · ${esc(team.team_type)}</div>
+      </td>
+      <td>${esc(team.assigned)}</td>
+      <td class="score-cell">${fixedOr(team.strength_score)}</td>
+      <td>${esc(team.rmul_2026_top4_cn || "—")}<div class="muted">+${fixedOr(componentScore(team, "rmul_bonus"), 1, "0.0")}</div></td>
+      <td>#${team.full_form_ranking ?? "—"}<div class="muted">+${fixedOr(componentScore(team, "full_form_score"), 1, "0.0")}</div></td>
+      <td>${esc(team.detail_2025_cn || "—")}<div class="muted">+${fixedOr(componentScore(team, "history_bonus"), 1, "0.0")}</div></td>
+      <td>${team.rank != null ? `#${team.rank}` : "—"}<div class="muted">${team.points ?? "—"} 分 · +${fixedOr(componentScore(team, "points_score"), 1, "0.0")}</div></td>
+      <td>${esc(team.qualification_label)}</td>
+      <td>${inferSubmitted(team) ? "已提交" : "预测"}<div class="muted">${esc(team.volunteer_source_label || "—")}</div></td>
+    </tr>
   `).join("");
 
-  return `
-    <div class="ev-section">
-      <h3><span class="ev-num">?</span>为什么推荐报 ${esc(rec.volunteer)}？完整证据链</h3>
-      <div class="ev-body">
-
-        <div class="ev-twocol">
-          <div>
-            <h3 style="font-size:14px;margin:0 0 8px"><span class="ev-num">1</span>当前看板状态推理</h3>
-            <ul>
-              <li>已提交 <b>${obs.submitted_count}</b>/${obs.roster_total} 支，
-                初始分布 南 ${obs.submitted_by_region["南部"]} / 东 ${obs.submitted_by_region["东部"]} / 北 ${obs.submitted_by_region["北部"]}</li>
-              <li>在模拟中加入就近补位后，初始志愿 <b>南 ${bestOpt.initial_counts["南部"]} / 东 ${bestOpt.initial_counts["东部"]} / 北 ${bestOpt.initial_counts["北部"]}</b></li>
-              <li>调剂处理顺序 <code>${bestOpt.adjustment_order.join(" → ")}</code></li>
-              <li>当前最小赛区: <b style="color:var(--accent)">${smallest}</b>${
-                isSmallest
-                  ? ` → 作为报此赛区的志愿者，<b>SHARK 在首轮 target pool 里，不会被抽走</b>（allocator.py 第 337–344 行）`
-                  : " → 调剂路径较长，细节见下"
-              }</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 style="font-size:14px;margin:0 0 8px"><span class="ev-num">2</span>全国赛名额测算（规则 2.2）</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>赛区</th>
-                  <th class="num">上赛季16强数</th>
-                  <th class="num">参与浮动</th>
-                  <th class="num">浮动名额</th>
-                  <th class="num">全国赛名额</th>
-                </tr>
-              </thead>
-              <tbody>${natEntries}</tbody>
-            </table>
-            <div class="ev-note">
-              规则：16 强数 <b>&gt; 4</b> 的赛区参与 4 个浮动名额分配，按比例 × 4，
-              最大余数法向下取整。 目前 <b>${eligRegions.length}</b> 个赛区符合资格
-              (${eligRegions.map(([r]) => r).join("、") || "无"})。
-            </div>
-          </div>
+  const panel = document.getElementById("panel-strength");
+  panel.innerHTML = `
+    <section class="formula-card">
+      <h2>综合实力模型</h2>
+      <p>2025 国赛名次仍是最高权重，而且档位差拉得更平；2026 RMUL 加分保持为此前的 50%，完整形态继续负责中段分层，积分只做轻修正。</p>
+      <div class="formula-grid">
+        <div class="formula-item">
+          <div class="title">2025 国赛战绩</div>
+          <div class="formula">冠军 40 / 亚军 36 / 季军 33 / 殿军 30 / 八强 25 / 十六强 20 / 三十二强 16</div>
         </div>
-
-        <h3 style="font-size:14px;margin:20px 0 8px"><span class="ev-num">3</span>SHARK 在 ${esc(bestOpt.final_region)} 内的 ff 位次</h3>
-        <p class="muted" style="margin:0 0 8px">
-          按本年完整形态排名计算，比 SHARK(ff #${sd.target.ff}) 更强的队伍共 <b>${strong.length}</b> 支：
-        </p>
+        <div class="formula-item">
+          <div class="title">2026 RMUL</div>
+          <div class="formula">冠军 16 / 亚军 14.5 / 季军 13 / 殿军 11.5</div>
+        </div>
+        <div class="formula-item">
+          <div class="title">完整形态</div>
+          <div class="formula">28 × ((96 - rank) / 95)<sup>1.8</sup></div>
+        </div>
+        <div class="formula-item">
+          <div class="title">积分修正</div>
+          <div class="formula">优先使用 points 归一化，缺失时按 rank 百分位映射到 0..9</div>
+        </div>
+      </div>
+    </section>
+    <section class="ranking-card">
+      <div class="ranking-head">
+        <div>
+          <h2>综合实力榜</h2>
+          <p>点击表头可按综合分、RMUL、完整形态、2025 战绩、积分修正等指标排序。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th class="num">ff</th>
-              <th>学校</th>
-              <th>城市</th>
-              <th>2025 战绩</th>
-              <th>类型</th>
+              ${sortableHeader("排名", "strength_rank_global")}
+              ${sortableHeader("学校", "school")}
+              ${sortableHeader("预测赛区", "assigned")}
+              ${sortableHeader("综合分", "strength_score")}
+              ${sortableHeader("RMUL", "rmul_bonus")}
+              ${sortableHeader("完整形态", "full_form_score")}
+              ${sortableHeader("2025 战绩", "history_bonus")}
+              ${sortableHeader("积分修正", "points_score")}
+              ${sortableHeader("资格", "qualification_status")}
+              ${sortableHeader("志愿状态", "is_submitted")}
             </tr>
           </thead>
-          <tbody>
-            ${strongRows}
-            ${sharkRowStrong}
-          </tbody>
+          <tbody>${rows}</tbody>
         </table>
-        <div class="ev-note">
-          SHARK 在 ${esc(bestOpt.final_region)} 内按 ff 排 <b>第 ${bestOpt.ff_position} 位</b>，
-          全国赛 <b>${bestOpt.spots_national}</b> 个名额 −
-          <b>${bestOpt.ff_position}</b> =
-          余裕 <b class="margin-${marginClass(bestOpt.margin)}" style="font-size:16px">${marginSign(bestOpt.margin)}</b> 位。
-          ${bestOpt.margin >= 3 ? "（安全区间）" :
-            bestOpt.margin >= 1 ? "（紧但可控）" :
-            bestOpt.margin === 0 ? "（极度紧张）" : "（出圈）"}
-        </div>
-
-        <h3 style="font-size:14px;margin:20px 0 8px"><span class="ev-num">4</span>无锡同城耦合分析</h3>
-        <ul>${wuxiList || "<li class='muted'>无无锡同城队</li>"}</ul>
-        <div class="ev-note">
-          ${rival && rival.rank !== null ? `
-            <b>关键约束：</b>同城调剂规则（公告 2.③）"排名靠后者优先调剂"。
-            SHARK rank #${sd.target.rank} vs ${esc(rival.team || rival.school.slice(0,4))} rank #${rival.rank}
-            → SHARK 差 <b>${sd.target.rank - rival.rank}</b> 位 → 同城被抽时 SHARK 总是先走。
-            <br><br>
-            这意味着 SHARK 的位置 <b>永远在 boundary 上、最脆弱</b>。唯一免疫方式是直接报 SHARK 最想落位的赛区
-            (本推荐: ${esc(rec.volunteer)}) — 这样 SHARK 根本不进 pool，耦合失效。
-          ` : "无耦合对手数据"}
-        </div>
-
       </div>
-    </div>
+    </section>
   `;
+
+  panel.querySelectorAll("th.sortable").forEach((th) => {
+    th.addEventListener("click", () => setStrengthSort(th.dataset.sort));
+  });
 }
 
-function renderSensitivity(sens, rec) {
-  const scenarioRows = sens.map(sc => {
-    const cells = sc.results.map(r => {
-      const isBest = r.shark_volunteer === rec.volunteer;
-      return `
-        <td class="cell ${isBest ? "best" : ""}">
-          <div class="m margin-${marginClass(r.margin)}">${marginSign(r.margin)}</div>
-          <div class="detail">→${r.final_region}·#${r.ff_position}/${r.spots_national}</div>
-        </td>
-      `;
-    }).join("");
-    return `
-      <tr>
-        <td class="scenario-name">${esc(sc.name)}</td>
-        <td class="scenario-desc">${esc(sc.description)}</td>
-        ${cells}
-      </tr>
-    `;
-  }).join("");
-
-  // worst-case summary row
-  const worstRow = `
-    <tr class="worst-row">
-      <td class="scenario-name">最坏余裕</td>
-      <td class="scenario-desc">worst-case margin across ${sens.length} scenarios</td>
-      ${REGIONS.map(r => {
-        const wm = rec.all_worst_case[r];
-        const isBest = r === rec.volunteer;
-        return `
-          <td class="cell ${isBest ? "best" : ""}">
-            <div class="m margin-${marginClass(wm)}" style="font-size:22px">${marginSign(wm)}</div>
-          </td>
-        `;
-      }).join("")}
-    </tr>
-  `;
-
-  return `
-    <div class="ev-section">
-      <h3><span class="ev-num">5</span>博弈压力测试矩阵（5 情景 × 3 志愿）</h3>
-      <div class="ev-body">
-        <p class="muted" style="margin:0 0 8px">
-          每格显示该组合下 SHARK 的 <b>余裕位数</b>（= 全国赛名额 − ff 位次），
-          副标注 <code>→最终赛区·ff位/名额</code>。
-          绿色 = 安全 (≥3)、黄色 = 紧 (1–2)、橙色 = 0、红色 = 出圈。
-        </p>
-        <table class="sens-table">
-          <thead>
-            <tr>
-              <th style="width:22%">情景</th>
-              <th style="width:30%">描述</th>
-              <th class="col">报南部</th>
-              <th class="col">报东部</th>
-              <th class="col">报北部</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${scenarioRows}
-            ${worstRow}
-          </tbody>
-        </table>
-        <div class="ev-note">
-          <b>推荐逻辑：</b>取每列的最小值（最坏情况下的余裕），选 worst-case 最高的一列作为最稳健的选择。
-          并列时优先 <b>志愿身份</b> 而非调剂（避免调剂过程中的不可控风险）。
-        </div>
-      </div>
-    </div>
-  `;
+function renderMeta(data) {
+  document.getElementById("updated").textContent = `${data.updated_at_cst} CST · ${fmtAgo(data.updated_at_utc)}`;
+  document.getElementById("src").href = data.source.board;
+  document.getElementById("ann").href = data.source.announcement;
+  const meta = data.refresh_meta || {};
+  const sync = document.getElementById("syncStatus");
+  const status = meta.status || "idle";
+  sync.className = `sync-status ${status}`;
+  sync.textContent = meta.message || `当前页面显示的是 ${data.updated_at_cst} 的已生成数据。`;
 }
+
+function render(data) {
+  currentData = data;
+  renderMeta(data);
+  renderStats(data);
+  renderAdvancement(data);
+  renderRegionStrength(data);
+  renderStrength(data);
+  if (data.fetch_error) {
+    showError(`抓取失败：${data.fetch_error}`);
+  } else {
+    clearError();
+  }
+}
+
+function setTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+  document.querySelectorAll(".panel").forEach((panel) => {
+    panel.classList.toggle("active", panel.id === `panel-${tab}`);
+  });
+}
+
+async function loadInitialData() {
+  const res = await fetch(`./data.json?t=${Date.now()}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+
+async function refreshData() {
+  const button = document.getElementById("refreshBtn");
+  const previous = button.textContent;
+  button.disabled = true;
+  button.textContent = "刷新中...";
+  try {
+    const res = await fetch("./api/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+      cache: "no-store"
+    });
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.error || `HTTP ${res.status}`);
+    render(payload);
+  } catch (error) {
+    const suffix = currentData
+      ? `（已保留上次成功数据：${currentData.updated_at_cst} CST）`
+      : "";
+    showError(`刷新失败：${error.message}${suffix}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = previous;
+  }
+}
+
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => setTab(btn.dataset.tab));
+});
+document.getElementById("refreshBtn").addEventListener("click", refreshData);
 
 (async () => {
   try {
-    const res = await fetch("./data.json?t=" + Date.now(), { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    render(await res.json());
-  } catch (e) {
-    document.getElementById("grid").innerHTML =
-      `<div class="empty">数据加载失败：${e.message}</div>`;
+    render(await loadInitialData());
+  } catch (error) {
+    document.getElementById("panel-advancement").innerHTML = `<div class="empty">数据加载失败：${esc(error.message)}</div>`;
+    document.getElementById("panel-region-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
+    document.getElementById("panel-strength").innerHTML = `<div class="empty">请先刷新并生成 data.json。</div>`;
+    showError(`初始加载失败：${error.message}`);
   }
 })();
 </script>

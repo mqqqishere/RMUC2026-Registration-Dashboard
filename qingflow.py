@@ -29,12 +29,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import ssl
 import sys
+import time
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
+
+try:
+    import certifi
+except Exception:  # pragma: no cover - optional dependency
+    certifi = None
 
 API_ROOT = "https://qingflow.com/api"
 UA = (
@@ -51,6 +59,38 @@ class QingflowError(RuntimeError):
     pass
 
 
+def _build_ssl_context() -> ssl.SSLContext:
+    cafile = os.environ.get("SSL_CERT_FILE")
+    if cafile:
+        return ssl.create_default_context(cafile=cafile)
+    if certifi is not None:
+        return ssl.create_default_context(cafile=certifi.where())
+    return ssl.create_default_context()
+
+
+SSL_CONTEXT = _build_ssl_context()
+
+
+def _urlopen(req: urllib.request.Request, timeout: int):
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        try:
+            return urllib.request.urlopen(req, timeout=timeout, context=SSL_CONTEXT)
+        except urllib.error.URLError as e:
+            transient = isinstance(e.reason, TimeoutError)
+            if isinstance(e.reason, ssl.SSLCertVerificationError):
+                cafile = os.environ.get("SSL_CERT_FILE")
+                if not cafile and certifi is not None:
+                    cafile = certifi.where()
+                raise QingflowError(
+                    "SSL certificate verification failed when contacting Qingflow. "
+                    f"CA bundle: {cafile or 'system default'}"
+                ) from e
+            if attempt >= attempts or not transient:
+                raise
+            time.sleep(0.4 * attempt)
+
+
 def _request(method: str, path: str, body: Optional[dict] = None,
              timeout: int = 20) -> dict:
     url = f"{API_ROOT}{path}"
@@ -62,10 +102,12 @@ def _request(method: str, path: str, body: Optional[dict] = None,
     if body is not None:
         req.add_header("Content-Type", "application/json")
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with _urlopen(req, timeout=timeout) as resp:
             raw = resp.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         raise QingflowError(f"HTTP {e.code} on {path}: {e.read()[:200]!r}") from e
+    except urllib.error.URLError as e:
+        raise QingflowError(f"Network error on {path}: {e}") from e
     try:
         payload = json.loads(raw)
     except json.JSONDecodeError as e:

@@ -1,0 +1,179 @@
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1321, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1077)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/scripts/build_dashboard.py", line 225, in build_payload
+    live_teams = allocator.load_teams_live(
+        BOARD_URL, distances, ranks={}, verbose=False
+    )
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/allocator.py", line 223, in load_teams_live
+    view = qingflow.fetch_view(view_key, verbose=verbose)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 258, in fetch_view
+    questions = fetch_view_config(view_key)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 195, in fetch_view_config
+    data = api_get(f"/view/{view_key}/viewConfig/baseInfo")
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 83, in api_get
+    return _request("GET", path)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 65, in _request
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1369, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        context=self._context)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1324, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1077)>
+[warn] initial refresh failed: URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1077)>
+127.0.0.1 - - [09/Apr/2026 19:02:47] "GET /data.json HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:02:48] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [09/Apr/2026 19:02:48] "GET /data.json?t=1775732568111 HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1321, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1077)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/scripts/build_dashboard.py", line 225, in build_payload
+    live_teams = allocator.load_teams_live(
+        BOARD_URL, distances, ranks={}, verbose=False
+    )
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/allocator.py", line 223, in load_teams_live
+    view = qingflow.fetch_view(view_key, verbose=verbose)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 258, in fetch_view
+    questions = fetch_view_config(view_key)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 195, in fetch_view_config
+    data = api_get(f"/view/{view_key}/viewConfig/baseInfo")
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 83, in api_get
+    return _request("GET", path)
+  File "/Users/ggllxx_mac/RoboMaster/Codes/RMUC2026-Registration-Dashboard/qingflow.py", line 65, in _request
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1369, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        context=self._context)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1324, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1077)>
+127.0.0.1 - - [09/Apr/2026 19:03:22] "POST /api/refresh HTTP/1.1" 502 -
+127.0.0.1 - - [09/Apr/2026 19:08:16] "GET /data.json HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:08:31] "GET /data.json HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:08:53] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:09:01] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:09:01] "GET /data.json?t=1775732941618 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:10:27] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:13:37] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:14:33] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:18:22] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [09/Apr/2026 19:18:22] "GET /data.json?t=1775733502138 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:18:49] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:21:31] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:25:01] "POST /api/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [09/Apr/2026 19:26:39] "POST /api/refresh HTTP/1.1" 200 -
