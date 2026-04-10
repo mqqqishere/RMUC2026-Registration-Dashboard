@@ -264,6 +264,38 @@ h1 {
   color: var(--muted);
   font-size: 12px;
 }
+.banner-main {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+.analysis-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.analysis-select-wrap {
+  display: grid;
+  gap: 4px;
+  min-width: min(360px, 100%);
+}
+.analysis-select-wrap label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.analysis-select {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
 .pill-row,
 .meta-pills {
   display: flex;
@@ -400,6 +432,60 @@ h1 {
 .member.boundary {
   box-shadow: 0 0 0 2px rgba(34, 86, 200, 0.08);
 }
+.member.choice-suboptimal {
+  border-color: rgba(191, 136, 54, 0.34);
+}
+.member.choice-adjusted_to_optimal {
+  box-shadow: 0 0 0 1px rgba(113, 128, 154, 0.14);
+}
+.member.metric-positive-high {
+  background: linear-gradient(180deg, rgba(36, 133, 170, 0.12), rgba(239, 251, 255, 0.98));
+  border-color: rgba(36, 133, 170, 0.28);
+}
+.member.metric-positive-mid {
+  background: linear-gradient(180deg, rgba(72, 160, 191, 0.1), rgba(244, 251, 254, 0.98));
+  border-color: rgba(72, 160, 191, 0.22);
+}
+.member.metric-positive-low {
+  background: linear-gradient(180deg, rgba(214, 177, 113, 0.1), rgba(255, 249, 239, 0.98));
+  border-color: rgba(214, 177, 113, 0.24);
+}
+.member.metric-positive-risk {
+  background: linear-gradient(180deg, rgba(203, 120, 110, 0.1), rgba(255, 245, 244, 0.98));
+  border-color: rgba(203, 120, 110, 0.24);
+}
+.member.metric-revival-heavy {
+  background: linear-gradient(180deg, rgba(201, 141, 22, 0.12), rgba(255, 248, 236, 0.98));
+  border-color: rgba(201, 141, 22, 0.26);
+}
+.member.metric-revival-mid {
+  background: linear-gradient(180deg, rgba(214, 167, 69, 0.11), rgba(255, 250, 242, 0.98));
+  border-color: rgba(214, 167, 69, 0.24);
+}
+.member.metric-revival-low {
+  background: linear-gradient(180deg, rgba(137, 149, 170, 0.1), rgba(247, 249, 252, 0.98));
+  border-color: rgba(137, 149, 170, 0.22);
+}
+.member.metric-revival-thin {
+  background: linear-gradient(180deg, rgba(94, 128, 171, 0.08), rgba(244, 248, 253, 0.98));
+  border-color: rgba(94, 128, 171, 0.2);
+}
+.member.metric-risk-high {
+  background: linear-gradient(180deg, rgba(193, 91, 78, 0.14), rgba(255, 242, 241, 0.98));
+  border-color: rgba(193, 91, 78, 0.28);
+}
+.member.metric-risk-mid {
+  background: linear-gradient(180deg, rgba(222, 146, 84, 0.12), rgba(255, 247, 240, 0.98));
+  border-color: rgba(222, 146, 84, 0.25);
+}
+.member.metric-risk-low {
+  background: linear-gradient(180deg, rgba(162, 171, 186, 0.1), rgba(247, 249, 252, 0.98));
+  border-color: rgba(162, 171, 186, 0.22);
+}
+.member.metric-risk-safe {
+  background: linear-gradient(180deg, rgba(70, 148, 132, 0.1), rgba(242, 251, 248, 0.98));
+  border-color: rgba(70, 148, 132, 0.22);
+}
 .member-main {
   min-width: 0;
 }
@@ -433,8 +519,19 @@ h1 {
   font-weight: 900;
   line-height: 1;
 }
+.score-kicker {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 .score-label {
   margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.score-sub {
+  margin-top: 2px;
   color: var(--muted);
   font-size: 10px;
 }
@@ -456,6 +553,93 @@ h1 {
 .badge.boundary { background: #ffffff; color: var(--ink); border: 1px solid var(--line-strong); }
 .badge.submit-live { background: rgba(34, 86, 200, 0.08); color: var(--accent); }
 .badge.submit-prediction { background: rgba(113, 128, 154, 0.16); color: #5f6c81; }
+.badge.choice-suboptimal {
+  background: rgba(191, 136, 54, 0.12);
+  color: #8a5f00;
+  border: 1px solid rgba(191, 136, 54, 0.24);
+}
+.badge.choice-adjusted_to_optimal {
+  background: rgba(113, 128, 154, 0.08);
+  color: #67758b;
+  border: 1px solid rgba(113, 128, 154, 0.18);
+}
+.badge.metric-neutral {
+  background: rgba(255, 255, 255, 0.84);
+  color: #51617a;
+  border: 1px solid rgba(113, 128, 154, 0.22);
+}
+.badge.metric-positive-high {
+  background: rgba(36, 133, 170, 0.12);
+  color: #14607d;
+  border: 1px solid rgba(36, 133, 170, 0.22);
+}
+.badge.metric-positive-mid {
+  background: rgba(72, 160, 191, 0.1);
+  color: #2c7188;
+  border: 1px solid rgba(72, 160, 191, 0.2);
+}
+.badge.metric-positive-low {
+  background: rgba(214, 177, 113, 0.12);
+  color: #8a6725;
+  border: 1px solid rgba(214, 177, 113, 0.24);
+}
+.badge.metric-positive-risk {
+  background: rgba(203, 120, 110, 0.12);
+  color: #995047;
+  border: 1px solid rgba(203, 120, 110, 0.22);
+}
+.badge.metric-revival-heavy {
+  background: rgba(201, 141, 22, 0.12);
+  color: #8a5f00;
+  border: 1px solid rgba(201, 141, 22, 0.22);
+}
+.badge.metric-revival-mid {
+  background: rgba(214, 167, 69, 0.12);
+  color: #8f6a1c;
+  border: 1px solid rgba(214, 167, 69, 0.22);
+}
+.badge.metric-revival-low {
+  background: rgba(137, 149, 170, 0.12);
+  color: #627086;
+  border: 1px solid rgba(137, 149, 170, 0.2);
+}
+.badge.metric-revival-thin {
+  background: rgba(94, 128, 171, 0.1);
+  color: #496688;
+  border: 1px solid rgba(94, 128, 171, 0.2);
+}
+.badge.metric-risk-high {
+  background: rgba(193, 91, 78, 0.14);
+  color: #a13c3c;
+  border: 1px solid rgba(193, 91, 78, 0.22);
+}
+.badge.metric-risk-mid {
+  background: rgba(222, 146, 84, 0.12);
+  color: #9a5a21;
+  border: 1px solid rgba(222, 146, 84, 0.22);
+}
+.badge.metric-risk-low {
+  background: rgba(162, 171, 186, 0.12);
+  color: #67758b;
+  border: 1px solid rgba(162, 171, 186, 0.2);
+}
+.badge.metric-risk-safe {
+  background: rgba(70, 148, 132, 0.12);
+  color: #2e7567;
+  border: 1px solid rgba(70, 148, 132, 0.22);
+}
+.choice-note {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+.member.choice-suboptimal .choice-note {
+  color: #8b6332;
+}
+.member.choice-adjusted_to_optimal .choice-note {
+  color: #6f7a8b;
+}
 .member.unsubmitted,
 .member.unsubmitted.qual-national,
 .member.unsubmitted.qual-revival,
@@ -469,6 +653,8 @@ h1 {
 }
 .member.unsubmitted .member-sub,
 .member.unsubmitted .score-label,
+.member.unsubmitted .score-kicker,
+.member.unsubmitted .score-sub,
 .member.unsubmitted .member-title .team {
   color: #8a96a8;
 }
@@ -1720,6 +1906,8 @@ footer {
   .sim-stage-row,
   .sim-bubble-row,
   .gs-ranking-row { grid-template-columns: 1fr; }
+  .analysis-toolbar { align-items: stretch; }
+  .analysis-select-wrap { min-width: 100%; }
   .member { grid-template-columns: 1fr; }
   .member-side { text-align: left; }
   .tabs { width: 100%; display: flex; }
@@ -1738,7 +1926,7 @@ footer {
       <div>
         <div class="eyebrow"><span class="live-dot"></span>Live Qualification Engine</div>
         <h1>RMUC 2026 晋级推演台</h1>
-        <p class="subtitle">页面支持整体滚动；分赛区卡片会按赛区实力顺序展示全部学校。未提交志愿的学校会以灰色卡片显示当前预测结果。</p>
+        <p class="subtitle">页面支持整体滚动；首页看板可在纯实力分与多种瑞士轮概率口径之间切换。未提交志愿的学校会以灰色卡片显示当前预测结果。</p>
       </div>
       <div class="hero-actions">
         <button id="refreshBtn" class="refresh-btn" type="button">刷新数据</button>
@@ -1776,7 +1964,7 @@ footer {
   <section id="panel-shark-decision" class="panel"></section>
 
   <footer id="footerNote">
-    全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 5 分钟自动同步；页面每 60 秒检查新发布数据。
+    全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 10 分钟自动同步；页面每 60 秒检查新发布数据。
   </footer>
 </div>
 
@@ -1796,6 +1984,19 @@ const currentHost = window.location.hostname || "";
 const POLL_INTERVAL_MS = 60 * 1000;
 const MAX_SORT = 10 ** 9;
 const QUALIFICATION_ORDER = { national: 0, revival: 1, none: 2 };
+const QUALIFICATION_LABELS = { national: "国赛", revival: "复活赛", none: "未晋级" };
+const ADVANCEMENT_ANALYSIS_OPTIONS = [
+  { key: "swiss_revival_probability", label: "瑞士轮 · 复活及以上概率", short: "复活及以上", type: "probability", tone: "positive" },
+  { key: "swiss_national_probability", label: "瑞士轮 · 国赛概率", short: "国赛概率", type: "probability", tone: "positive" },
+  { key: "swiss_top8_probability", label: "瑞士轮 · Top 8 概率", short: "Top 8", type: "probability", tone: "positive" },
+  { key: "swiss_top4_probability", label: "瑞士轮 · Top 4 概率", short: "Top 4", type: "probability", tone: "positive" },
+  { key: "swiss_revival_only_probability", label: "瑞士轮 · 仅复活概率", short: "仅复活", type: "probability", tone: "revival" },
+  { key: "swiss_out_probability", label: "瑞士轮 · 出局概率", short: "出局概率", type: "probability", tone: "risk" },
+  { key: "strength_score", label: "纯实力分分析", short: "实力分", type: "strength", tone: "strength" },
+];
+const ADVANCEMENT_ANALYSIS_BY_KEY = Object.fromEntries(
+  ADVANCEMENT_ANALYSIS_OPTIONS.map((entry) => [entry.key, entry])
+);
 const SWISS_STAGE_ORDER = ["champion", "runner_up", "top4", "top8", "national", "revival", "out"];
 const SWISS_STAGE_LABELS = {
   champion: "冠军",
@@ -1822,6 +2023,7 @@ let strengthSortState = {
   key: "strength_rank_global",
   direction: STRENGTH_SORT_DEFAULTS.strength_rank_global,
 };
+let advancementAnalysisKey = "swiss_revival_probability";
 
 function isPrivateIPv4(host) {
   if (/^10\./.test(host) || /^192\.168\./.test(host)) return true;
@@ -1880,6 +2082,38 @@ function qualificationClass(status) {
   return `qual-${status || "none"}`;
 }
 
+function qualificationLabel(status) {
+  return QUALIFICATION_LABELS[status || "none"] || QUALIFICATION_LABELS.none;
+}
+
+function currentAdvancementAnalysis() {
+  return ADVANCEMENT_ANALYSIS_BY_KEY[advancementAnalysisKey]
+    || ADVANCEMENT_ANALYSIS_OPTIONS[0];
+}
+
+function isAdvancementStrengthMode() {
+  return currentAdvancementAnalysis().type === "strength";
+}
+
+function advancementMetricValue(entry, key = advancementAnalysisKey) {
+  if (key === "strength_score") return numOr(entry?.strength_score, -1);
+  return numOr(entry?.[key], -1);
+}
+
+function advancementMetricDisplay(value, key = advancementAnalysisKey) {
+  return key === "strength_score"
+    ? fixedOr(value)
+    : percentOr(value);
+}
+
+function originalQualificationStatus(entry) {
+  return entry?.qualification_status || "none";
+}
+
+function originalQualificationLabel(entry) {
+  return entry?.qualification_label || qualificationLabel(originalQualificationStatus(entry));
+}
+
 function numOr(value, fallback = 0) {
   const num = Number(value);
   return Number.isFinite(num) ? num : fallback;
@@ -1915,6 +2149,28 @@ function inferSubmitted(member) {
     || member?.volunteer_source_label === "实时提交";
 }
 
+function currentQualificationStatus(entry) {
+  if (entry?.current_qualification_status) return entry.current_qualification_status;
+  const national = Number(entry?.swiss_national_probability);
+  const revivalOnly = Number(entry?.swiss_revival_only_probability);
+  const out = Number(entry?.swiss_out_probability);
+  const hasSwiss = [national, revivalOnly, out].some((value) => Number.isFinite(value));
+  if (hasSwiss) {
+    const safeNational = Number.isFinite(national) ? national : 0;
+    const safeRevivalOnly = Number.isFinite(revivalOnly) ? revivalOnly : 0;
+    const safeOut = Number.isFinite(out) ? out : 0;
+    if (safeNational >= Math.max(safeRevivalOnly, safeOut)) return "national";
+    if (safeRevivalOnly >= safeOut) return "revival";
+    return "none";
+  }
+  return entry?.qualification_status || "none";
+}
+
+function currentQualificationLabel(entry) {
+  if (entry?.current_qualification_label) return entry.current_qualification_label;
+  return qualificationLabel(currentQualificationStatus(entry));
+}
+
 function compareNumber(a, b) {
   if (a === b) return 0;
   return a < b ? -1 : 1;
@@ -1932,11 +2188,89 @@ function componentScore(team, key) {
   return numOr(team?.strength_components?.[key], 0);
 }
 
-function compareRegionMembers(a, b) {
+function compareStrengthRegionMembers(a, b) {
   return compareNumber(nullableRank(a?.strength_rank_region), nullableRank(b?.strength_rank_region))
     || compareNumber(nullableRank(a?.strength_rank_global), nullableRank(b?.strength_rank_global))
     || compareNumber(numOr(b?.strength_score, -1), numOr(a?.strength_score, -1))
     || compareText(a?.school, b?.school);
+}
+
+function compareSwissMetricMembers(a, b, key = advancementAnalysisKey) {
+  return compareNumber(advancementMetricValue(b, key), advancementMetricValue(a, key))
+    || compareNumber(numOr(b?.swiss_revival_probability, -1), numOr(a?.swiss_revival_probability, -1))
+    || compareNumber(numOr(b?.swiss_national_probability, -1), numOr(a?.swiss_national_probability, -1))
+    || compareNumber(numOr(a?.swiss_average_rank, MAX_SORT), numOr(b?.swiss_average_rank, MAX_SORT))
+    || compareNumber(nullableRank(a?.swiss_rank_region), nullableRank(b?.swiss_rank_region))
+    || compareNumber(nullableRank(a?.swiss_rank_global), nullableRank(b?.swiss_rank_global))
+    || compareStrengthRegionMembers(a, b);
+}
+
+function compareRegionMembers(a, b) {
+  if (isAdvancementStrengthMode()) return compareStrengthRegionMembers(a, b);
+  return compareSwissMetricMembers(a, b, advancementAnalysisKey);
+}
+
+function resolveProbabilityTone(entry, key = advancementAnalysisKey) {
+  const value = advancementMetricValue(entry, key);
+  const analysis = ADVANCEMENT_ANALYSIS_BY_KEY[key] || currentAdvancementAnalysis();
+  if (analysis.tone === "risk") {
+    if (value >= 0.6) return { cardClass: "metric-risk-high", badgeClass: "metric-risk-high", badgeLabel: "高风险" };
+    if (value >= 0.35) return { cardClass: "metric-risk-mid", badgeClass: "metric-risk-mid", badgeLabel: "警戒" };
+    if (value >= 0.15) return { cardClass: "metric-risk-low", badgeClass: "metric-risk-low", badgeLabel: "观察" };
+    return { cardClass: "metric-risk-safe", badgeClass: "metric-risk-safe", badgeLabel: "安全" };
+  }
+  if (analysis.tone === "revival") {
+    if (value >= 0.45) return { cardClass: "metric-revival-heavy", badgeClass: "metric-revival-heavy", badgeLabel: "复活态" };
+    if (value >= 0.25) return { cardClass: "metric-revival-mid", badgeClass: "metric-revival-mid", badgeLabel: "泡泡位" };
+    if (value >= 0.1) return { cardClass: "metric-revival-low", badgeClass: "metric-revival-low", badgeLabel: "过渡带" };
+    return { cardClass: "metric-revival-thin", badgeClass: "metric-revival-thin", badgeLabel: "占比低" };
+  }
+  if (value >= 0.8) return { cardClass: "metric-positive-high", badgeClass: "metric-positive-high", badgeLabel: "高位" };
+  if (value >= 0.55) return { cardClass: "metric-positive-mid", badgeClass: "metric-positive-mid", badgeLabel: "稳态" };
+  if (value >= 0.3) return { cardClass: "metric-positive-low", badgeClass: "metric-positive-low", badgeLabel: "观察" };
+  return { cardClass: "metric-positive-risk", badgeClass: "metric-positive-risk", badgeLabel: "风险" };
+}
+
+function advancementDisplayState(entry) {
+  if (isAdvancementStrengthMode()) {
+    return {
+      cardClass: qualificationClass(originalQualificationStatus(entry)),
+      primaryBadgeClass: qualificationClass(originalQualificationStatus(entry)),
+      primaryBadgeLabel: originalQualificationLabel(entry),
+      secondaryBadgeClass: "",
+      secondaryBadgeLabel: "",
+    };
+  }
+  const tone = resolveProbabilityTone(entry, advancementAnalysisKey);
+  return {
+    cardClass: tone.cardClass,
+    primaryBadgeClass: tone.badgeClass,
+    primaryBadgeLabel: tone.badgeLabel,
+    secondaryBadgeClass: "metric-neutral",
+    secondaryBadgeLabel: currentQualificationLabel(entry),
+  };
+}
+
+function advancementPrimaryMetricLine(entry) {
+  const analysis = currentAdvancementAnalysis();
+  return {
+    kicker: analysis.short,
+    value: advancementMetricDisplay(advancementMetricValue(entry), analysis.key),
+  };
+}
+
+function advancementMetaLines(entry) {
+  const distanceText = entry?.dist_km != null ? `${esc(entry.dist_km)} km` : "—";
+  if (isAdvancementStrengthMode()) {
+    return {
+      label: `复活及以上 ${percentOr(entry?.swiss_revival_probability)} · 国赛 ${percentOr(entry?.swiss_national_probability)}`,
+      sub: distanceText,
+    };
+  }
+  return {
+    label: `实力分 ${fixedOr(entry?.strength_score)} · ${distanceText}`,
+    sub: `复活及以上 ${percentOr(entry?.swiss_revival_probability)} · 国赛 ${percentOr(entry?.swiss_national_probability)}`,
+  };
 }
 
 function compareStrengthTeams(a, b, key, direction) {
@@ -1957,8 +2291,8 @@ function compareStrengthTeams(a, b, key, direction) {
     cmp = compareNumber(componentScore(a, "points_score"), componentScore(b, "points_score"));
   } else if (key === "qualification_status") {
     cmp = compareNumber(
-      numOr(QUALIFICATION_ORDER[a.qualification_status], 9),
-      numOr(QUALIFICATION_ORDER[b.qualification_status], 9)
+      numOr(QUALIFICATION_ORDER[currentQualificationStatus(a)], 9),
+      numOr(QUALIFICATION_ORDER[currentQualificationStatus(b)], 9)
     );
   } else if (key === "is_submitted") {
     cmp = compareNumber(inferSubmitted(a) ? 1 : 0, inferSubmitted(b) ? 1 : 0);
@@ -1967,7 +2301,7 @@ function compareStrengthTeams(a, b, key, direction) {
   }
 
   if (cmp !== 0) return direction === "desc" ? -cmp : cmp;
-  return compareRegionMembers(a, b);
+  return compareStrengthRegionMembers(a, b);
 }
 
 function setStrengthSort(key) {
@@ -2321,6 +2655,8 @@ function renderRegionCard(region, summary) {
   const visibleList = members.length ? members.map((member) => {
     const boundary = (member.boundary_markers || []).length > 0;
     const submitted = inferSubmitted(member);
+    const choiceAlignment = member.choice_alignment || "";
+    const displayState = advancementDisplayState(member);
     const flowClass = member.status === "host" ? "flow-host" : member.status === "transfer" ? "flow-transfer" : "flow-volunteer";
     const boundaryBadges = (member.boundary_labels || []).map((label) =>
       `<span class="badge boundary">${esc(label)}</span>`
@@ -2328,29 +2664,53 @@ function renderRegionCard(region, summary) {
     const submitBadge = submitted
       ? `<span class="badge submit-live">已填报</span>`
       : `<span class="badge submit-prediction">预测</span>`;
+    const displayBadges = isAdvancementStrengthMode()
+      ? `<span class="badge ${displayState.primaryBadgeClass}">${esc(displayState.primaryBadgeLabel)}</span>`
+      : `
+          <span class="badge ${displayState.primaryBadgeClass}">${esc(displayState.primaryBadgeLabel)}</span>
+          <span class="badge ${displayState.secondaryBadgeClass}">${esc(displayState.secondaryBadgeLabel)}</span>
+        `;
+    const choiceBadge = choiceAlignment === "suboptimal"
+      ? `<span class="badge choice-suboptimal">${esc(member.choice_alignment_label || "未按最优")}</span>`
+      : choiceAlignment === "adjusted_to_optimal"
+        ? `<span class="badge choice-adjusted_to_optimal">${esc(member.choice_alignment_label || "调后最优")}</span>`
+        : "";
+    const rankingMeta = isAdvancementStrengthMode()
+      ? `实力 #${member.strength_rank_region ?? "—"} / 全局 #${member.strength_rank_global ?? "—"}`
+      : `瑞士 #${member.swiss_rank_region ?? "—"} / 全局 #${member.swiss_rank_global ?? "—"}`;
     const volunteerText = submitted
       ? `志愿 ${esc(member.original_volunteer)}`
       : `预测志愿 ${esc(member.original_volunteer)} (${esc(member.volunteer_source_label)})`;
+    const primaryMetric = advancementPrimaryMetricLine(member);
+    const metaLines = advancementMetaLines(member);
+    const choiceNote = member.choice_alignment_detail
+      ? `<div class="choice-note">${esc(member.choice_alignment_detail)}</div>`
+      : "";
     return `
-      <li class="member ${qualificationClass(member.qualification_status)} ${submitted ? "" : "unsubmitted"} ${boundary ? "boundary" : ""}">
+      <li class="member ${displayState.cardClass} ${submitted ? "" : "unsubmitted"} ${boundary ? "boundary" : ""} ${choiceAlignment ? `choice-${choiceAlignment}` : ""}">
         <div class="member-main">
           <div class="member-title">
             <span class="school">${esc(member.school)}</span>
             <span class="team">${esc(member.team)}</span>
-            <span class="badge ${qualificationClass(member.qualification_status)}">${esc(member.qualification_label)}</span>
+            ${displayBadges}
             ${submitBadge}
             <span class="badge ${flowClass}">${esc(member.status_cn)}</span>
+            ${choiceBadge}
             ${boundaryBadges}
           </div>
           <div class="member-sub">
-            ${esc(member.city)} · ${esc(member.team_type)} · 赛区 #${member.strength_rank_region ?? "—"} / 全局 #${member.strength_rank_global ?? "—"}
+            ${esc(member.city)} · ${esc(member.team_type)} · ${rankingMeta}
+            · 原始实力 ${fixedOr(member.strength_score)}
             · ${volunteerText} · 积分 #${member.rank ?? "—"} · 完整 #${member.full_form_ranking ?? "—"}
             · 2025 ${esc(member.detail_2025_cn || "—")} · RMUL ${esc(member.rmul_2026_top4_cn || "—")}
           </div>
+          ${choiceNote}
         </div>
         <div class="member-side">
-          <div class="score">${fixedOr(member.strength_score)}</div>
-          <div class="score-label">${member.dist_km != null ? `${esc(member.dist_km)} km` : "—"}</div>
+          <div class="score-kicker">${esc(primaryMetric.kicker)}</div>
+          <div class="score">${primaryMetric.value}</div>
+          <div class="score-label">${metaLines.label}</div>
+          <div class="score-sub">${metaLines.sub}</div>
         </div>
       </li>
     `;
@@ -2516,6 +2876,10 @@ function renderAdvancement(data) {
   const panel = data.advancement_panel;
   const modelNote = String(panel.model_note || "")
     .replace("未提交志愿的学校仅参与推演，不在主看板展开显示。", "未提交志愿的学校会按当前预测结果显示在主看板中。");
+  const analysis = currentAdvancementAnalysis();
+  const analysisOptions = ADVANCEMENT_ANALYSIS_OPTIONS.map((option) => `
+    <option value="${esc(option.key)}" ${option.key === analysis.key ? "selected" : ""}>${esc(option.label)}</option>
+  `).join("");
   const summaries = [...(panel.region_summaries || [])].sort((a, b) => REGION_ORDER[a.key] - REGION_ORDER[b.key]);
   const regions = [...(data.regions || [])]
     .map((region) => normalizeRegion(region))
@@ -2524,20 +2888,37 @@ function renderAdvancement(data) {
 
   document.getElementById("panel-advancement").innerHTML = `
     <section class="banner">
-      <div>
-        <h2>晋级推演台</h2>
-        <p>${esc(modelNote)}</p>
-      </div>
-      <div class="pill-row">
-        <span class="pill"><strong>提交</strong>${data.submission.submitted_count}/${data.submission.roster_total}</span>
-        <span class="pill"><strong>未提交</strong>${data.submission.estimated_count}</span>
-        <span class="pill"><strong>调剂顺序</strong>${data.adjustment_order.length ? esc(data.adjustment_order.join(" → ")) : "无需调剂"}</span>
+      <div class="banner-main">
+        <div>
+          <h2>晋级推演台</h2>
+          <p>${esc(modelNote)}</p>
+        </div>
+        <div class="analysis-toolbar">
+          <div class="analysis-select-wrap">
+            <label for="advancementMetricSelect">看板分析</label>
+            <select id="advancementMetricSelect" class="analysis-select">${analysisOptions}</select>
+          </div>
+          <div class="pill-row">
+            <span class="pill"><strong>当前口径</strong>${esc(analysis.label)}</span>
+            <span class="pill"><strong>提交</strong>${data.submission.submitted_count}/${data.submission.roster_total}</span>
+            <span class="pill"><strong>未提交</strong>${data.submission.estimated_count}</span>
+            <span class="pill"><strong>调剂顺序</strong>${data.adjustment_order.length ? esc(data.adjustment_order.join(" → ")) : "无需调剂"}</span>
+          </div>
+        </div>
       </div>
     </section>
     <div class="region-grid">
       ${summaries.map((summary) => renderRegionCard(regionByKey[summary.key], summary)).join("")}
     </div>
   `;
+
+  const select = document.getElementById("advancementMetricSelect");
+  if (select) {
+    select.addEventListener("change", (event) => {
+      advancementAnalysisKey = event.target.value;
+      if (currentData) renderAdvancement(currentData);
+    });
+  }
 }
 
 function renderSharkDecision(data) {
@@ -3698,8 +4079,11 @@ function renderSwissSimulation(data) {
 function renderStrength(data) {
   const ranking = [...(data.strength_ranking || [])]
     .sort((a, b) => compareStrengthTeams(a, b, strengthSortState.key, strengthSortState.direction));
-  const rows = ranking.map((team) => `
-    <tr class="${qualificationClass(team.qualification_status)} ${inferSubmitted(team) ? "" : "unsubmitted"}">
+  const rows = ranking.map((team) => {
+    const qualificationStatus = currentQualificationStatus(team);
+    const qualificationLabelText = currentQualificationLabel(team);
+    return `
+    <tr class="${qualificationClass(qualificationStatus)} ${inferSubmitted(team) ? "" : "unsubmitted"}">
       <td class="rank">${team.strength_rank_global}</td>
       <td>
         <strong>${esc(team.school)}</strong>
@@ -3711,10 +4095,11 @@ function renderStrength(data) {
       <td>#${team.full_form_ranking ?? "—"}<div class="muted">+${fixedOr(componentScore(team, "full_form_score"), 1, "0.0")}</div></td>
       <td>${esc(team.detail_2025_cn || "—")}<div class="muted">+${fixedOr(componentScore(team, "history_bonus"), 1, "0.0")}</div></td>
       <td>${team.rank != null ? `#${team.rank}` : "—"}<div class="muted">${team.points ?? "—"} 分 · +${fixedOr(componentScore(team, "points_score"), 1, "0.0")}</div></td>
-      <td>${esc(team.qualification_label)}</td>
+      <td>${esc(qualificationLabelText)}</td>
       <td>${inferSubmitted(team) ? "已提交" : "预测"}<div class="muted">${esc(team.volunteer_source_label || "—")}</div></td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
 
   const panel = document.getElementById("panel-strength");
   panel.innerHTML = `
@@ -3860,7 +4245,7 @@ function updateRuntimeHints() {
     return;
   }
   button.hidden = true;
-  footer.textContent = "全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 5 分钟自动同步；页面每 60 秒检查新发布数据。";
+  footer.textContent = "全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 10 分钟自动同步；页面每 60 秒检查新发布数据。";
 }
 
 async function loadData() {

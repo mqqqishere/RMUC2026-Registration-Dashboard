@@ -126,6 +126,35 @@ class SharkDecisionTest(unittest.TestCase):
 
 
 class DashboardPayloadTest(unittest.TestCase):
+    def test_choice_alignment_hint_distinguishes_adjusted_and_suboptimal(self):
+        adjusted = build_dashboard._choice_alignment_hint({
+            "observed_state": {
+                "live_volunteer": "北部",
+                "projected_region": "东部",
+            },
+            "recommendation": {
+                "volunteer": "东部",
+                "final_region": "东部",
+            },
+        })
+        suboptimal = build_dashboard._choice_alignment_hint({
+            "observed_state": {
+                "live_volunteer": "南部",
+                "projected_region": "南部",
+            },
+            "recommendation": {
+                "volunteer": "东部",
+                "final_region": "东部",
+            },
+        })
+
+        self.assertEqual(adjusted["choice_alignment"], "adjusted_to_optimal")
+        self.assertEqual(adjusted["choice_alignment_label"], "调后最优")
+        self.assertIn("模型最优赛区 东部", adjusted["choice_alignment_detail"])
+        self.assertEqual(suboptimal["choice_alignment"], "suboptimal")
+        self.assertEqual(suboptimal["choice_alignment_label"], "未按最优")
+        self.assertIn("模型最优解为 东部", suboptimal["choice_alignment_detail"])
+
     def test_build_bundle_splits_lazy_artifacts(self):
         with mock.patch.object(build_dashboard.allocator, "load_teams_live", return_value=[]), \
              mock.patch.object(build_dashboard.swiss_simulation, "DEFAULT_SAMPLE_POOL", 2), \
@@ -148,6 +177,10 @@ class DashboardPayloadTest(unittest.TestCase):
         self.assertNotIn("sample_regions", payload["swiss_simulation"])
         self.assertEqual(payload["swiss_simulation"]["samples_path"], "global_swiss_samples.json")
         self.assertEqual(payload["swiss_simulation"]["meta"]["sample_pool_size"], 2)
+        shark_team = next(team for team in payload["teams"] if team["school"] == shark_decision.SHARK_SCHOOL)
+        self.assertIn("swiss_revival_probability", shark_team)
+        self.assertIn("swiss_rank_region", shark_team)
+        self.assertIn("choice_alignment", shark_team)
 
         self.assertEqual(volunteer_decision["default_school"], shark_decision.SHARK_SCHOOL)
         self.assertEqual(len(volunteer_decision["schools"]), len(payload["teams"]))
@@ -195,6 +228,16 @@ class FrontendTemplateSmokeTest(unittest.TestCase):
         self.assertIn('id="globalSwissZoomRange"', html)
         self.assertIn('id="globalSwissRandomBtn"', html)
         self.assertIn("资格确定：", html)
+        self.assertIn("瑞士轮 · 复活及以上概率", html)
+        self.assertIn("调后最优", html)
+        self.assertIn("未按最优", html)
+        self.assertIn("function currentQualificationStatus(entry)", html)
+        self.assertIn("function currentQualificationLabel(entry)", html)
+        self.assertIn('id="advancementMetricSelect"', html)
+        self.assertIn("纯实力分分析", html)
+        self.assertIn("瑞士轮 · 国赛概率", html)
+        self.assertIn("function currentAdvancementAnalysis()", html)
+        self.assertIn("function advancementDisplayState(entry)", html)
 
 
 if __name__ == "__main__":

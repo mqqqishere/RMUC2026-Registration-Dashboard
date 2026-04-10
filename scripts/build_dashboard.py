@@ -229,6 +229,128 @@ def _write_json(payload: dict, path: str):
         json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
 
 
+def _swiss_probability_sort_key(row: dict):
+    avg_rank = row.get("average_rank")
+    return (
+        -float(row.get("revival_probability") or 0.0),
+        -float(row.get("national_probability") or 0.0),
+        float(avg_rank if avg_rank is not None else 10 ** 9),
+        -float(row.get("top8_probability") or 0.0),
+        -float(row.get("top4_probability") or 0.0),
+        row.get("school", ""),
+    )
+
+
+def _choice_alignment_hint(decision_entry: dict | None) -> dict:
+    observed = (decision_entry or {}).get("observed_state") or {}
+    recommendation = (decision_entry or {}).get("recommendation") or {}
+    live_volunteer = observed.get("live_volunteer")
+    projected_region = observed.get("projected_region")
+    optimal_volunteer = recommendation.get("volunteer")
+    optimal_final_region = recommendation.get("final_region")
+
+    hint = {
+        "choice_alignment": "",
+        "choice_alignment_label": "",
+        "choice_alignment_detail": "",
+        "live_volunteer": live_volunteer,
+        "optimal_volunteer": optimal_volunteer,
+        "optimal_final_region": optimal_final_region,
+    }
+
+    if not live_volunteer or not optimal_volunteer:
+        return hint
+
+    if live_volunteer == optimal_volunteer:
+        hint["choice_alignment"] = "optimal"
+        return hint
+
+    if projected_region and optimal_final_region and projected_region == optimal_final_region:
+        hint.update({
+            "choice_alignment": "adjusted_to_optimal",
+            "choice_alignment_label": "调后最优",
+            "choice_alignment_detail": (
+                f"当前填 {live_volunteer}，但当前已调剂到模型最优赛区 {optimal_final_region}。"
+            ),
+        })
+        return hint
+
+    projected_phrase = (
+        f"，当前会落在 {projected_region}"
+        if projected_region and projected_region != live_volunteer
+        else ""
+    )
+    optimal_phrase = (
+        optimal_volunteer
+        if not optimal_final_region or optimal_final_region == optimal_volunteer
+        else f"{optimal_volunteer}（落点 {optimal_final_region}）"
+    )
+    hint.update({
+        "choice_alignment": "suboptimal",
+        "choice_alignment_label": "未按最优",
+        "choice_alignment_detail": (
+            f"当前填 {live_volunteer}{projected_phrase}；模型最优解为 {optimal_phrase}。"
+        ),
+    })
+    return hint
+
+
+def _annotate_homepage_payload(
+    payload: dict,
+    volunteer_decision: dict | None,
+    swiss_full: dict | None,
+):
+    swiss_rows = list((swiss_full or {}).get("schools") or [])
+    swiss_by_school = {
+        row["school"]: row
+        for row in swiss_rows
+        if row.get("school")
+    }
+    swiss_rank_global = {}
+    swiss_rank_region = {}
+
+    for index, row in enumerate(sorted(swiss_rows, key=_swiss_probability_sort_key), start=1):
+        swiss_rank_global[row["school"]] = index
+
+    for region in allocator.REGIONS:
+        region_rows = [
+            row for row in swiss_rows
+            if row.get("assigned") == region and row.get("school")
+        ]
+        for index, row in enumerate(
+            sorted(region_rows, key=_swiss_probability_sort_key),
+            start=1,
+        ):
+            swiss_rank_region[row["school"]] = index
+
+    decision_schools = (volunteer_decision or {}).get("schools") or {}
+
+    def annotate_entry(entry: dict):
+        school = entry.get("school")
+        swiss_row = swiss_by_school.get(school, {})
+        entry.update({
+            "swiss_revival_probability": swiss_row.get("revival_probability"),
+            "swiss_national_probability": swiss_row.get("national_probability"),
+            "swiss_revival_only_probability": swiss_row.get("revival_only_probability"),
+            "swiss_out_probability": swiss_row.get("out_probability"),
+            "swiss_average_rank": swiss_row.get("average_rank"),
+            "swiss_top8_probability": swiss_row.get("top8_probability"),
+            "swiss_top4_probability": swiss_row.get("top4_probability"),
+            "swiss_rank_global": swiss_rank_global.get(school),
+            "swiss_rank_region": swiss_rank_region.get(school),
+            "swiss_most_likely_stage_label": swiss_row.get("most_likely_stage_label"),
+        })
+        entry.update(_choice_alignment_hint(decision_schools.get(school)))
+
+    for team in payload.get("teams", []):
+        annotate_entry(team)
+
+    for region in payload.get("regions", []):
+        for key in ("members", "hidden_members"):
+            for member in region.get(key, []):
+                annotate_entry(member)
+
+
 def write_outputs(
     bundle: dict,
     out_path: str = OUT_PATH,
@@ -403,7 +525,7 @@ def build_dashboard_bundle() -> dict:
         "top16_by_region": panel["top16_by_region"],
         "boundary_teams_by_region": panel["boundary_teams_by_region"],
         "model_note": (
-            "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、当前综合实力、赛区整体强度与轻度均衡约束的推演结果。未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
+            "全国赛名额按公告精确计算；复活赛名额为基于全国赛名额、当前综合实力、赛区整体强度与轻度均衡约束的推演结果。主看板支持在纯实力分与多种瑞士轮概率口径之间切换；未提交志愿的学校会按当前预测结果显示在主看板中；赛区强度面板按当前录取结果统计均分、中位数、标准差与头部均分。"
         ),
     }
     volunteer_decision = shark_decision.build_decision_panel(
@@ -439,6 +561,7 @@ def build_dashboard_bundle() -> dict:
         **{key: value for key, value in swiss_full.items() if key != "sample_regions"},
         "samples_path": os.path.basename(GLOBAL_SWISS_SAMPLES_PATH),
     }
+    _annotate_homepage_payload(payload, volunteer_decision, swiss_full)
     return {
         "payload": payload,
         "volunteer_decision": {
