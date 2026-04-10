@@ -155,6 +155,8 @@ class TeamState:
     base_margin_sum: float = 0.0
     outpost_margin_sum: float = 0.0
     damage_sum: float = 0.0
+    opponent_sos: int = 0
+    faced_by: List["TeamState"] = field(default_factory=list)
 
     @property
     def school(self) -> str:
@@ -348,6 +350,7 @@ def _apply_series_metrics(
     outpost_margin_sum: float,
     damage_sum: float,
 ):
+    previous_diff = state.game_wins - state.game_losses
     state.opponents.append(opponent.school)
     state.wins += 1 if match_won else 0
     state.losses += 0 if match_won else 1
@@ -357,6 +360,13 @@ def _apply_series_metrics(
     state.base_margin_sum += base_margin_sum
     state.outpost_margin_sum += outpost_margin_sum
     state.damage_sum += damage_sum
+    current_diff = state.game_wins - state.game_losses
+    diff_delta = current_diff - previous_diff
+    if diff_delta:
+        for prior_opponent in state.faced_by:
+            prior_opponent.opponent_sos += diff_delta
+    state.opponent_sos += opponent.game_wins - opponent.game_losses
+    opponent.faced_by.append(state)
 
 
 def _run_series_slow(left: TeamState, right: TeamState, best_of: int, rng: random.Random) -> dict:
@@ -504,10 +514,8 @@ def simulate_series(left: TeamState, right: TeamState, best_of: int, rng: random
 
 
 def _opponent_sos(state: TeamState, state_map: Dict[str, TeamState]) -> int:
-    return sum(
-        state_map[school].game_wins - state_map[school].game_losses
-        for school in state.opponents
-    )
+    _ = state_map
+    return state.opponent_sos
 
 
 def _avg(value: float, count: int) -> float:
@@ -571,13 +579,17 @@ def _sort_states(
     state_map: Dict[str, TeamState],
     rng: random.Random,
 ) -> List[TeamState]:
-    buckets: Dict[Tuple[object, ...], List[TeamState]] = defaultdict(list)
-    for state in states:
-        buckets[key_func(state, state_map)].append(state)
-
+    keyed = [(key_func(state, state_map), state) for state in states]
+    keyed.sort(key=lambda item: item[0])
     ordered: List[TeamState] = []
-    for key in sorted(buckets):
-        tied = buckets[key]
+    index = 0
+    while index < len(keyed):
+        key = keyed[index][0]
+        tied = [keyed[index][1]]
+        index += 1
+        while index < len(keyed) and keyed[index][0] == key:
+            tied.append(keyed[index][1])
+            index += 1
         if len(tied) == 1:
             ordered.extend(tied)
         else:
