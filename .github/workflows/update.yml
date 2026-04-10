@@ -3,7 +3,7 @@ name: Build and deploy dashboard
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "2-52/10 * * * *"
+    - cron: "*/5 * * * *"
   push:
     branches: [main]
     paths:
