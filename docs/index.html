@@ -152,6 +152,56 @@ h1 {
   border-color: rgba(34, 86, 200, 0.16);
   color: #355ea6;
 }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(23, 32, 51, 0.48);
+  z-index: 1000;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+.modal-card {
+  width: min(680px, 100%);
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  box-shadow: 0 24px 48px rgba(24, 38, 73, 0.18);
+  padding: 22px 22px 18px;
+}
+.modal-card h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.modal-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.modal-card .focus {
+  color: var(--ink);
+  font-weight: 700;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+.modal-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #2256c8, #1b459c);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
 #err {
   display: none;
   border-radius: 14px;
@@ -1966,6 +2016,18 @@ footer {
   <footer id="footerNote">
     全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 10 分钟自动同步；页面每 60 秒检查新发布数据。
   </footer>
+</div>
+
+<div id="disclaimerModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
+  <div class="modal-card">
+    <h2 id="disclaimerTitle">免责声明</h2>
+    <p class="focus">本页面包含完整私有分析界面，所有结果仅供内部交流和复盘参考。</p>
+    <p>战队实力、志愿建议、晋级概率和瑞士轮样本都来自统一模型，不代表官方观点，也不构成正式填报建议。</p>
+    <p>请以 RoboMaster 官方公告和最终发布结果为准。</p>
+    <div class="modal-actions">
+      <button id="disclaimerConfirm" class="modal-btn" type="button">我已知晓</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -4248,6 +4310,25 @@ function updateRuntimeHints() {
   footer.textContent = "全国赛名额按公告精确计算；复活赛名额为模型推演值。由 GitHub Actions 每 10 分钟自动同步；页面每 60 秒检查新发布数据。";
 }
 
+function initDisclaimerModal() {
+  const modal = document.getElementById("disclaimerModal");
+  const confirm = document.getElementById("disclaimerConfirm");
+  if (!modal || !confirm) return;
+
+  const close = () => {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  };
+
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  confirm.addEventListener("click", close);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+}
+
 async function loadData() {
   const res = await fetch(`./data.json?t=${Date.now()}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -4292,6 +4373,7 @@ async function refreshData() {
 }
 
 updateRuntimeHints();
+initDisclaimerModal();
 document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => setTab(btn.dataset.tab));
 });

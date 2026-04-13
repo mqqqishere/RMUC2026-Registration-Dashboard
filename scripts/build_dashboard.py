@@ -35,6 +35,7 @@ BOARD_URL = "https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02"
 ANNOUNCEMENT_URL = (
     "https://www.robomaster.com/zh-CN/resource/pages/announcement/1910"
 )
+LOCAL_VOLUNTEER_CSV_PATH = os.path.join(ROOT, "data.csv")
 OUT_PATH = os.path.join(ROOT, "docs", "data.json")
 CSV_PATH = os.path.join(ROOT, "docs", "data.csv")
 VOLUNTEER_DECISION_PATH = os.path.join(ROOT, "docs", "volunteer_decision.json")
@@ -48,6 +49,21 @@ def _now():
     cst = timezone(timedelta(hours=8))
     utc = datetime.now(timezone.utc)
     return utc, utc.astimezone(cst)
+
+
+def _load_local_live_volunteers(path: str = LOCAL_VOLUNTEER_CSV_PATH) -> Dict[str, str]:
+    if not os.path.exists(path):
+        return {}
+
+    out: Dict[str, str] = {}
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            school = (row.get("学校") or row.get("school") or "").strip()
+            volunteer = (row.get("原志愿赛区") or row.get("volunteer") or "").strip()
+            if not school or not volunteer:
+                continue
+            out[school] = volunteer
+    return out
 
 
 def _base_payload(fetch_error: str | None = None) -> dict:
@@ -369,49 +385,55 @@ def build_dashboard_bundle() -> dict:
     distances = allocator.load_distances()
     roster = qualification.load_roster()
 
+    live_source = "qingflow_live"
     try:
         live_teams = allocator.load_teams_live(
             BOARD_URL, distances, ranks={}, verbose=False
         )
         fetch_error = None
+        live_volunteers = qualification.extract_live_volunteers(live_teams)
     except Exception as exc:
         traceback.print_exc()
-        payload = _base_payload(fetch_error=f"{type(exc).__name__}: {exc}")
-        payload["submission"]["roster_total"] = len(roster)
-        payload["total_teams"] = len(roster)
-        payload["hosts_seen"] = sum(
-            1 for school in roster if allocator.is_protected_host(school)
-        )
-        payload["ranks_covered"] = sum(
-            1 for row in roster.values() if row["points_rank"] is not None
-        )
-        payload["refresh_meta"] = {
-            "status": "error",
-            "status_label": "刷新失败",
-            "message": f"轻流抓取失败：{type(exc).__name__}: {exc}",
-            "source": "qingflow_live",
-            "live_submitted_count": 0,
-        }
-        return {
-            "payload": payload,
-            "volunteer_decision": {
-                "updated_at_utc": payload["updated_at_utc"],
-                "updated_at_cst": payload["updated_at_cst"],
-                "default_school": shark_decision.SHARK_SCHOOL,
-                "school_count": 0,
-                "model_note": "",
-                "model_weights": {},
-                "schools": {},
-            },
-            "global_swiss_samples": {
-                "updated_at_utc": payload["updated_at_utc"],
-                "updated_at_cst": payload["updated_at_cst"],
-                "default_region": "",
-                "sample_regions": [],
-            },
-        }
+        fetch_error = f"{type(exc).__name__}: {exc}"
+        live_teams = []
+        live_volunteers = _load_local_live_volunteers()
+        live_source = "local_csv"
+        if not live_volunteers:
+            payload = _base_payload(fetch_error=fetch_error)
+            payload["submission"]["roster_total"] = len(roster)
+            payload["total_teams"] = len(roster)
+            payload["hosts_seen"] = sum(
+                1 for school in roster if allocator.is_protected_host(school)
+            )
+            payload["ranks_covered"] = sum(
+                1 for row in roster.values() if row["points_rank"] is not None
+            )
+            payload["refresh_meta"] = {
+                "status": "error",
+                "status_label": "刷新失败",
+                "message": f"轻流抓取失败：{fetch_error}",
+                "source": "qingflow_live",
+                "live_submitted_count": 0,
+            }
+            return {
+                "payload": payload,
+                "volunteer_decision": {
+                    "updated_at_utc": payload["updated_at_utc"],
+                    "updated_at_cst": payload["updated_at_cst"],
+                    "default_school": shark_decision.SHARK_SCHOOL,
+                    "school_count": 0,
+                    "model_note": "",
+                    "model_weights": {},
+                    "schools": {},
+                },
+                "global_swiss_samples": {
+                    "updated_at_utc": payload["updated_at_utc"],
+                    "updated_at_cst": payload["updated_at_cst"],
+                    "default_region": "",
+                    "sample_regions": [],
+                },
+            }
 
-    live_volunteers = qualification.extract_live_volunteers(live_teams)
     projected_teams, volunteer_source = qualification.build_projected_teams(
         roster, distances, live_volunteers
     )
@@ -435,13 +457,25 @@ def build_dashboard_bundle() -> dict:
         "roster_total": len(projected_teams),
         "estimated_count": len(projected_teams) - len(live_volunteers),
     }
-    payload["refresh_meta"] = {
-        "status": "success",
-        "status_label": "实时抓取成功",
-        "message": f"本页展示的是 {payload['updated_at_cst']} 的最新轻流刷新结果，当前抓到 {len(live_volunteers)} 支已填报学校。",
-        "source": "qingflow_live",
-        "live_submitted_count": len(live_volunteers),
-    }
+    if live_source == "local_csv":
+        payload["refresh_meta"] = {
+            "status": "success",
+            "status_label": "本地缓存已接管",
+            "message": (
+                f"轻流当前不可用，本页展示的是 {payload['updated_at_cst']} 基于仓库根目录 "
+                f"data.csv 生成的缓存结果，当前载入 {len(live_volunteers)} 支学校。"
+            ),
+            "source": "local_csv",
+            "live_submitted_count": len(live_volunteers),
+        }
+    else:
+        payload["refresh_meta"] = {
+            "status": "success",
+            "status_label": "实时抓取成功",
+            "message": f"本页展示的是 {payload['updated_at_cst']} 的最新轻流刷新结果，当前抓到 {len(live_volunteers)} 支已填报学校。",
+            "source": "qingflow_live",
+            "live_submitted_count": len(live_volunteers),
+        }
 
     flat_teams = []
     region_outputs = []
