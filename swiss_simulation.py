@@ -22,7 +22,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 DEFAULT_ITERATIONS = int(os.environ.get("SWISS_SIM_ITERATIONS", "1400"))
 DEFAULT_SAMPLE_POOL = int(os.environ.get("SWISS_SIM_SAMPLE_POOL", "24"))
-DEFAULT_SCHOOL = "江南大学霞客湾校区"
+DEFAULT_SCHOOL = "上海交通大学"
 MODEL_VERSION = "swiss-sim-v1.1"
 
 REGION_ORDER = {"南部": 0, "东部": 1, "北部": 2}

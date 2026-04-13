@@ -29,7 +29,7 @@ import allocator as A  # noqa: E402
 import qualification as Q  # noqa: E402
 import swiss_simulation as S  # noqa: E402
 
-SHARK_SCHOOL = "江南大学霞客湾校区"
+SHARK_SCHOOL = "上海交通大学"
 ROSTER_PATH = os.path.join(ROOT, "robomaster_2026_teams.csv")
 RUNTIME_DIR = os.path.join(ROOT, ".runtime")
 REGION_CACHE_PATH = os.path.join(RUNTIME_DIR, "decision_region_cache.json")

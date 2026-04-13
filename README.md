@@ -208,16 +208,15 @@ $$
 
 ### 1. RMUL 奖励项
 
-$$
-B_{\text{rmul}} =
-\begin{cases}
-17.0 & \text{champion} \\
-15.5 & \text{runner\_up} \\
-14.0 & \text{third\_place} \\
-12.5 & \text{fourth\_place} \\
-0 & \text{otherwise}
-\end{cases}
-$$
+设 RMUL 档位类别为 $c$，则 $B_{\text{rmul}} = f_{\text{rmul}}(c)$，具体映射如下：
+
+| RMUL 档位 | 分值 |
+| --- | ---: |
+| `champion` | 17.0 |
+| `runner_up` | 15.5 |
+| `third_place` | 14.0 |
+| `fourth_place` | 12.5 |
+| 其他 | 0 |
 
 ### 2. 完整形态分
 
@@ -235,20 +234,19 @@ $$
 
 ### 3. 历史战绩项
 
-$$
-H_{\text{history}} =
-\begin{cases}
-40 & \text{champion} \\
-36 & \text{runner\_up} \\
-33 & \text{third\_place} \\
-30 & \text{fourth\_place} \\
-25 & \text{quarter\_finalist} \\
-20 & \text{top\_16} \\
-16 & \text{top\_32} \\
-8 & \text{revival} \\
-0 & \text{otherwise}
-\end{cases}
-$$
+设历史成绩类别为 $h$，则 $H_{\text{history}} = f_{\text{history}}(h)$，具体映射如下：
+
+| 历史战绩 | 分值 |
+| --- | ---: |
+| `champion` | 40 |
+| `runner_up` | 36 |
+| `third_place` | 33 |
+| `fourth_place` | 30 |
+| `quarter_finalist` | 25 |
+| `top_16` | 20 |
+| `top_32` | 16 |
+| `revival` | 8 |
+| 其他 | 0 |
 
 ### 4. 积分项
 
