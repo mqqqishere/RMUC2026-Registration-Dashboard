@@ -120,12 +120,21 @@ python3 scripts/build_dashboard.py
 
 # 启动本地看板
 python3 scripts/start_dashboard.py
+
+# 关闭本地看板
+python3 scripts/start_dashboard.py --stop
 ```
 
 如果不想触发线上刷新，只想看当前已经生成的 `docs/`：
 
 ```bash
 python3 scripts/start_dashboard.py --skip-initial-refresh
+```
+
+如果本地服务已经启动，也可以单独执行以下命令关闭：
+
+```bash
+python3 scripts/start_dashboard.py --stop
 ```
 
 ## 项目结构
@@ -395,7 +404,7 @@ $$
 
 最终输出的是赛制口径下的经验概率，而非解析闭式解。
 
-## 为什么 README 不鼓励直接把逐队实力数据当成“公开实力榜”
+## 逐队实力分的解释边界
 
 模型输出并不等同于可直接发布的公开排行榜。
 
@@ -422,6 +431,9 @@ python3 qingflow.py https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d
 python3 allocator.py \
   --url https://qingflow.com/appView/e3bol1op1c02/shareView/e3bol20d1c02 \
   --output result.csv
+
+# 关闭本地服务
+python3 scripts/start_dashboard.py --stop
 
 # 运行测试
 python3 -m unittest discover -s tests
