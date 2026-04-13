@@ -1,35 +1,13 @@
-name: Build and deploy dashboard
+name: Refresh dashboard data (manual only)
 
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: "*/5 * * * *"
-  push:
-    branches: [main]
-    paths:
-      - "allocator.py"
-      - "qualification.py"
-      - "swiss_simulation.py"
-      - "qingflow.py"
-      - "distances.csv"
-      - "ranks.csv"
-      - "robomaster_2026_teams.csv"
-      - "scripts/build_dashboard.py"
-      - "scripts/shark_decision.py"
-      - "docs/index.html"
-      - ".github/workflows/update.yml"
-
-concurrency:
-  group: github-pages
-  cancel-in-progress: true
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
-  build:
+  refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -42,15 +20,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Setup Pages
-        if: github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v5
-
       - name: Build dashboard docs
         run: python scripts/build_dashboard.py
 
       - name: Commit refreshed data
-        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -65,21 +38,3 @@ jobs:
             git pull --rebase --autostash
           done
           exit 1
-
-      - name: Upload Pages artifact
-        if: github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs
-
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
