@@ -115,6 +115,19 @@ h1 {
   opacity: 0.72;
   cursor: progress;
 }
+.custom-weight-btn {
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.custom-weight-btn:hover {
+  background: var(--panel-soft);
+}
 .hero-meta {
   display: flex;
   gap: 10px 14px;
@@ -201,6 +214,85 @@ h1 {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+}
+.ghost-btn {
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.custom-strength-card {
+  width: min(980px, 100%);
+  max-height: min(88vh, 980px);
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  box-shadow: 0 24px 48px rgba(24, 38, 73, 0.18);
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 10px;
+}
+.custom-strength-head h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+.custom-strength-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.custom-strength-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.custom-strength-meta {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: auto;
+}
+.custom-strength-list {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-soft);
+  padding: 10px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+}
+.custom-strength-item {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px;
+  cursor: grab;
+}
+.custom-strength-item.dragging {
+  opacity: 0.55;
+}
+.custom-strength-rank {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.custom-strength-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+.custom-strength-sub {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
 }
 #err {
   display: none;
@@ -1962,6 +2054,10 @@ footer {
   .member-side { text-align: left; }
   .tabs { width: 100%; display: flex; }
   .tab-btn { flex: 1 1 0; }
+  .custom-strength-card { padding: 14px; }
+  .custom-strength-toolbar { align-items: stretch; }
+  .custom-strength-meta { margin-left: 0; width: 100%; }
+  .custom-strength-item { grid-template-columns: 36px 1fr; }
   .gs-flow-viewport {
     min-height: auto;
     max-height: none;
@@ -1980,6 +2076,7 @@ footer {
       </div>
       <div class="hero-actions">
         <button id="refreshBtn" class="refresh-btn" type="button">刷新数据</button>
+        <button id="customStrengthBtn" class="custom-weight-btn" type="button">自定义队伍权重</button>
       </div>
     </div>
     <div class="hero-meta">
@@ -2027,6 +2124,22 @@ footer {
     <div class="modal-actions">
       <button id="disclaimerConfirm" class="modal-btn" type="button">我已知晓</button>
     </div>
+  </div>
+</div>
+
+<div id="customStrengthModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="customStrengthTitle">
+  <div class="custom-strength-card">
+    <div class="custom-strength-head">
+      <h2 id="customStrengthTitle">自定义队伍权重</h2>
+      <p>拖动全部队伍卡片（96 支）完成实力重排序，保存后按新的模型排序；可随时重置回默认模型。</p>
+    </div>
+    <div class="custom-strength-toolbar">
+      <button id="customStrengthSaveBtn" class="modal-btn" type="button">保存排序</button>
+      <button id="customStrengthResetBtn" class="ghost-btn" type="button">重置默认</button>
+      <button id="customStrengthCloseBtn" class="ghost-btn" type="button">关闭</button>
+      <span id="customStrengthMeta" class="custom-strength-meta">—</span>
+    </div>
+    <div id="customStrengthList" class="custom-strength-list"></div>
   </div>
 </div>
 
@@ -2086,6 +2199,11 @@ let strengthSortState = {
   direction: STRENGTH_SORT_DEFAULTS.strength_rank_global,
 };
 let advancementAnalysisKey = "swiss_revival_probability";
+const CUSTOM_STRENGTH_STORAGE_KEY = "rmuc2026.custom_strength_order.v1";
+let customStrengthOrder = [];
+let customStrengthRankMap = {};
+let customStrengthDraftOrder = [];
+let customStrengthDraggingSchool = "";
 
 function isPrivateIPv4(host) {
   if (/^10\./.test(host) || /^192\.168\./.test(host)) return true;
@@ -2250,8 +2368,80 @@ function componentScore(team, key) {
   return numOr(team?.strength_components?.[key], 0);
 }
 
+function defaultStrengthOrder(data) {
+  return (data?.strength_ranking || [])
+    .map((team) => team?.school)
+    .filter((school) => Boolean(school));
+}
+
+function sanitizeStrengthOrder(order, data) {
+  const defaults = defaultStrengthOrder(data);
+  const validSet = new Set(defaults);
+  const picked = [];
+  const seen = new Set();
+  (Array.isArray(order) ? order : []).forEach((school) => {
+    if (!validSet.has(school) || seen.has(school)) return;
+    seen.add(school);
+    picked.push(school);
+  });
+  defaults.forEach((school) => {
+    if (seen.has(school)) return;
+    seen.add(school);
+    picked.push(school);
+  });
+  return picked;
+}
+
+function readCustomStrengthOrder() {
+  try {
+    const raw = localStorage.getItem(CUSTOM_STRENGTH_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed?.schools)) return null;
+    return parsed.schools;
+  } catch (_) {
+    return null;
+  }
+}
+
+function writeCustomStrengthOrder(order) {
+  try {
+    localStorage.setItem(CUSTOM_STRENGTH_STORAGE_KEY, JSON.stringify({
+      schools: order,
+      updated_at: new Date().toISOString(),
+    }));
+  } catch (_) {
+    // ignore storage failures and keep in-memory behavior
+  }
+}
+
+function clearCustomStrengthOrder() {
+  try {
+    localStorage.removeItem(CUSTOM_STRENGTH_STORAGE_KEY);
+  } catch (_) {
+    // ignore storage failures and keep in-memory behavior
+  }
+}
+
+function applyCustomStrengthOrderFromData(data) {
+  const defaults = defaultStrengthOrder(data);
+  const stored = readCustomStrengthOrder();
+  customStrengthOrder = stored ? sanitizeStrengthOrder(stored, data) : defaults;
+  customStrengthRankMap = Object.fromEntries(
+    customStrengthOrder.map((school, index) => [school, index + 1])
+  );
+}
+
+function strengthRankForDisplay(team) {
+  const rank = team?.school ? customStrengthRankMap[team.school] : null;
+  if (Number.isFinite(rank)) return rank;
+  const fallback = nullableRank(team?.strength_rank_global);
+  return fallback >= MAX_SORT ? "—" : fallback;
+}
+
 function compareStrengthRegionMembers(a, b) {
-  return compareNumber(nullableRank(a?.strength_rank_region), nullableRank(b?.strength_rank_region))
+  return compareNumber(numOr(strengthRankForDisplay(a), MAX_SORT), numOr(strengthRankForDisplay(b), MAX_SORT))
+    || compareNumber(nullableRank(a?.strength_rank_region), nullableRank(b?.strength_rank_region))
     || compareNumber(nullableRank(a?.strength_rank_global), nullableRank(b?.strength_rank_global))
     || compareNumber(numOr(b?.strength_score, -1), numOr(a?.strength_score, -1))
     || compareText(a?.school, b?.school);
@@ -2359,7 +2549,7 @@ function compareStrengthTeams(a, b, key, direction) {
   } else if (key === "is_submitted") {
     cmp = compareNumber(inferSubmitted(a) ? 1 : 0, inferSubmitted(b) ? 1 : 0);
   } else {
-    cmp = compareNumber(nullableRank(a.strength_rank_global), nullableRank(b.strength_rank_global));
+    cmp = compareNumber(numOr(strengthRankForDisplay(a), MAX_SORT), numOr(strengthRankForDisplay(b), MAX_SORT));
   }
 
   if (cmp !== 0) return direction === "desc" ? -cmp : cmp;
@@ -2688,6 +2878,134 @@ async function ensureVolunteerDecisionLoaded(data) {
   return await volunteerDecisionPromise;
 }
 
+function closeCustomStrengthModal() {
+  const modal = document.getElementById("customStrengthModal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function moveCustomStrengthDraftBefore(dragSchool, targetSchool) {
+  if (!dragSchool || !targetSchool || dragSchool === targetSchool) return;
+  const from = customStrengthDraftOrder.indexOf(dragSchool);
+  const target = customStrengthDraftOrder.indexOf(targetSchool);
+  if (from < 0 || target < 0) return;
+  const next = [...customStrengthDraftOrder];
+  const [item] = next.splice(from, 1);
+  let insertAt = target;
+  if (from < target) insertAt -= 1;
+  next.splice(insertAt, 0, item);
+  customStrengthDraftOrder = next;
+}
+
+function renderCustomStrengthEditor(data) {
+  const list = document.getElementById("customStrengthList");
+  const meta = document.getElementById("customStrengthMeta");
+  if (!list || !meta) return;
+  const teams = data?.strength_ranking || [];
+  const bySchool = Object.fromEntries(teams.map((team) => [team.school, team]));
+  const orderedTeams = customStrengthDraftOrder
+    .map((school) => bySchool[school])
+    .filter((team) => Boolean(team));
+  meta.textContent = `共 ${orderedTeams.length} 支队伍，拖动卡片完成重排序`;
+  list.innerHTML = orderedTeams.map((team, index) => `
+    <div class="custom-strength-item" draggable="true" data-school="${esc(team.school)}">
+      <div class="custom-strength-rank">#${index + 1}</div>
+      <div>
+        <div class="custom-strength-title">${esc(team.school)} · ${esc(team.team)}</div>
+        <div class="custom-strength-sub">${esc(team.assigned || "—")}赛区 · ${esc(team.city || "—")} · 综合分 ${fixedOr(team.strength_score)}</div>
+      </div>
+      <div class="custom-strength-sub">${esc(team.team_type || "—")}</div>
+    </div>
+  `).join("");
+
+  list.querySelectorAll(".custom-strength-item").forEach((item) => {
+    item.addEventListener("dragstart", (event) => {
+      customStrengthDraggingSchool = item.dataset.school || "";
+      item.classList.add("dragging");
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", customStrengthDraggingSchool);
+      }
+    });
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+      customStrengthDraggingSchool = "";
+    });
+    item.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+    });
+    item.addEventListener("drop", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const targetSchool = item.dataset.school || "";
+      moveCustomStrengthDraftBefore(customStrengthDraggingSchool, targetSchool);
+      renderCustomStrengthEditor(data);
+    });
+  });
+
+  list.ondragover = (event) => {
+    event.preventDefault();
+  };
+  list.ondrop = (event) => {
+    event.preventDefault();
+    const dragSchool = customStrengthDraggingSchool;
+    if (!dragSchool) return;
+    const from = customStrengthDraftOrder.indexOf(dragSchool);
+    if (from < 0) return;
+    const next = [...customStrengthDraftOrder];
+    const [item] = next.splice(from, 1);
+    next.push(item);
+    customStrengthDraftOrder = next;
+    renderCustomStrengthEditor(data);
+  };
+}
+
+async function openCustomStrengthModal() {
+  if (!currentData) {
+    await refreshPublishedData(true);
+    if (!currentData) return;
+  }
+  customStrengthDraftOrder = sanitizeStrengthOrder(customStrengthOrder, currentData);
+  renderCustomStrengthEditor(currentData);
+  const modal = document.getElementById("customStrengthModal");
+  if (!modal) return;
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function initCustomStrengthModal() {
+  const openBtn = document.getElementById("customStrengthBtn");
+  const closeBtn = document.getElementById("customStrengthCloseBtn");
+  const saveBtn = document.getElementById("customStrengthSaveBtn");
+  const resetBtn = document.getElementById("customStrengthResetBtn");
+  const modal = document.getElementById("customStrengthModal");
+  if (!openBtn || !closeBtn || !saveBtn || !resetBtn || !modal) return;
+
+  openBtn.addEventListener("click", () => { void openCustomStrengthModal(); });
+  closeBtn.addEventListener("click", closeCustomStrengthModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeCustomStrengthModal();
+  });
+  saveBtn.addEventListener("click", () => {
+    if (!currentData) return;
+    const normalized = sanitizeStrengthOrder(customStrengthDraftOrder, currentData);
+    writeCustomStrengthOrder(normalized);
+    applyCustomStrengthOrderFromData(currentData);
+    render(currentData);
+    closeCustomStrengthModal();
+  });
+  resetBtn.addEventListener("click", () => {
+    if (!currentData) return;
+    clearCustomStrengthOrder();
+    applyCustomStrengthOrderFromData(currentData);
+    customStrengthDraftOrder = [...customStrengthOrder];
+    renderCustomStrengthEditor(currentData);
+    render(currentData);
+  });
+}
+
 function renderStats(data) {
   const panel = data.advancement_panel;
   const nationalTotal = Object.values(panel.national_by_region || {}).reduce((sum, v) => sum + v, 0);
@@ -2738,7 +3056,7 @@ function renderRegionCard(region, summary) {
         ? `<span class="badge choice-adjusted_to_optimal">${esc(member.choice_alignment_label || "调后最优")}</span>`
         : "";
     const rankingMeta = isAdvancementStrengthMode()
-      ? `实力 #${member.strength_rank_region ?? "—"} / 全局 #${member.strength_rank_global ?? "—"}`
+      ? `实力 #${member.strength_rank_region ?? "—"} / 全局 #${strengthRankForDisplay(member)}`
       : `瑞士 #${member.swiss_rank_region ?? "—"} / 全局 #${member.swiss_rank_global ?? "—"}`;
     const volunteerText = submitted
       ? `志愿 ${esc(member.original_volunteer)}`
@@ -4146,7 +4464,7 @@ function renderStrength(data) {
     const qualificationLabelText = currentQualificationLabel(team);
     return `
     <tr class="${qualificationClass(qualificationStatus)} ${inferSubmitted(team) ? "" : "unsubmitted"}">
-      <td class="rank">${team.strength_rank_global}</td>
+      <td class="rank">${strengthRankForDisplay(team)}</td>
       <td>
         <strong>${esc(team.school)}</strong>
         <div class="muted">${esc(team.team)} · ${esc(team.city)} · ${esc(team.team_type)}</div>
@@ -4263,6 +4581,7 @@ async function loadVolunteerDecisionStage() {
 }
 
 function render(data) {
+  applyCustomStrengthOrderFromData(data);
   currentData = data;
   renderMeta(data);
   renderStats(data);
@@ -4374,6 +4693,7 @@ async function refreshData() {
 
 updateRuntimeHints();
 initDisclaimerModal();
+initCustomStrengthModal();
 document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => setTab(btn.dataset.tab));
 });
